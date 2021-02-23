@@ -1,18 +1,14 @@
-local moreDice = RegisterMod("More Dice", 1)
-local game = Game()
-local rng = RNG()
-local player
---dice
+local mod = RegisterMod("More Dice", 1)
+
 local i = {
-	DNeg1 = Isaac.GetItemIdByName("D Negative 1"),
-	D0 = Isaac.GetItemIdByName("D0"),
-	DHalf = Isaac.GetItemIdByName("D0.5"),
-	DOtherHalf = Isaac.GetItemIdByName("D Other 0.5"),
-	D2 = Isaac.GetItemIdByName("D2"),
-	D3 = Isaac.GetItemIdByName("D3"),
-	D5 = Isaac.GetItemIdByName("D5"),
-	D9 = Isaac.GetItemIdByName("D9"),
-	D11 = Isaac.GetItemIdByName("D11")
+	DNeg1 = "D Negative 1",
+	D0 = "D0",
+	DHalf = "D0.5",
+	DOtherHalf = "D Other 0.5",
+	D2 = "D2",
+	D3 = "D3",
+	D5 = "D5",
+	D9 = "D9",
 }
 
 local flags = {
@@ -51,11 +47,145 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	401,402,403,404,405,406,407,408,409,410,411,412,413
 }
 
+local debugLog = {}
+
+local function addLog(text, index)
+    index = index or #debugLog + 1
+    for i = 1, index do
+        if not debugLog[i] then
+            debugLog[i] = ""
+        end
+    end
+
+    debugLog[index] = tostring(text)
+end
+
 local itemConfig = Isaac.GetItemConfig()
 local numCollectibles = #itemConfig:GetCollectibles()
 
+local zeroVector = Vector(0, 0)
+
+local ents
+local enemies
+local level
+local room
+local player
+local game = Game()
+local invStuff = {}
+local api
+local rng = RNG()
+
+local function convert(tbl, contentType)
+    local ret = {}
+    for k, v in pairs(tbl) do
+        local id
+        if contentType == "I" then
+            id = Isaac.GetItemIdByName(v)
+        -- elseif contentType == "T" then
+        --     id = Isaac.GetTrinketIdByName(v)
+        -- elseif contentType == "ET" then
+        --     id = Isaac.GetEntityTypeByName(v)
+        -- elseif contentType == "EV" then
+        --     id = Isaac.GetEntityVariantByName(v)
+        -- elseif contentType == "S" then
+        --     id = Isaac.GetSoundIdByName(v)
+        -- elseif contentType == "P" then
+        --     id = Isaac.GetPillEffectByName(v)
+        end
+
+        if id ~= -1 then
+            ret[k] = id
+        else
+            Isaac.DebugString(k .. " invalid name!")
+            ret[k] = id
+        end
+    end
+
+    return ret
+end
+
+i = convert(i, "I")
+-- t = convert(t, "T")
+-- et = convert(et, "ET")
+-- ev = convert(ev, "EV")
+-- s = convert(s, "S")
+-- pi = convert(pi, "P")
+
+local function onActiveUse(id, fn)
+    mod:AddCallback(ModCallbacks.MC_USE_ITEM, function(_, ...)
+        return fn(...)
+    end, id)
+end
+
+local function onPassiveTick(id, fn)
+    mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p, ...)
+        if p:HasCollectible(id) then
+            return fn(p, ...)
+        end
+    end)
+end
+
+local itemsToCheck = {}
+
+local function onItemPickup(id, fn, remove)
+    if type(id) == "table" then
+        for _, i in ipairs(id) do
+            onItemPickup(i, fn, remove)
+        end
+    else
+        itemsToCheck[#itemsToCheck + 1] = {
+            ID = id,
+            FN = fn,
+            Remove = remove
+        }
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+    player = Isaac.GetPlayer(0)
+    for _, itemStuff in ipairs(itemsToCheck) do
+        local id, fn, remove = itemStuff.ID, itemStuff.FN, itemStuff.Remove
+        if id ~= -1 then
+            local numCollect = player:GetCollectibleNum(id)
+            local before = 0
+            if invStuff[id] then
+                before = invStuff[id]
+            else
+                invStuff[id] = before
+            end
+
+            local diff = math.abs(numCollect - before)
+
+            if diff > 0 then
+                for i = 1, diff do
+                    if (numCollect > before) and fn then
+                        fn(player)
+                    elseif (numCollect < before) and remove then
+                        remove(player)
+                    end
+                end
+            end
+        end
+    end
+
+    for _, itemStuff in ipairs(itemsToCheck) do
+        local numCollect = player:GetCollectibleNum(itemStuff.ID)
+        invStuff[itemStuff.ID] = numCollect
+    end
+end)
+
+local function getInventory()
+    local inv = {}
+    for i = 1, numCollectibles do
+        if itemConfig:GetCollectible(i) then
+            inv[i] = player:GetCollectibleNum(i)
+        end
+    end
+    return inv
+end
+
 --dice activation code
-function moreDice:DNeg1Use()
+onActiveUse(i.DNeg1, function()
 	local roomEntities = Isaac.GetRoomEntities()
 	for i, entity in pairs(roomEntities) do
 		if entity.Type == EntityType.ENTITY_PICKUP then
@@ -63,9 +193,15 @@ function moreDice:DNeg1Use()
 			entity:Remove()
 		end
 	end
-end
+end)
 
-function moreDice:DHalfUse()
+onItemPickup(i.D0, function()
+	if player:HasCollectible(i.D0) then
+		player:RemoveCollectible(i.D0)
+	end
+end)
+
+onActiveUse(i.DHalf, function()
 	local currentRoom = game:GetRoom()
 	local gridSize = currentRoom:GetGridSize()
 	local gridEnd = math.floor(gridSize/2)
@@ -77,9 +213,9 @@ function moreDice:DHalfUse()
 			end
 		end
 	end
-end
+end)
 
-function moreDice:DOtherHalfUse()
+onActiveUse(i.DOtherHalf, function()
 	local currentRoom = game:GetRoom()
 	local gridSize = currentRoom:GetGridSize()
 	local gridStart = math.floor(gridSize/2)
@@ -91,18 +227,18 @@ function moreDice:DOtherHalfUse()
 			end
 		end
 	end
-end
+end)
 
-function moreDice:D2Use()
+onActiveUse(i.D2, function()
 	local flip = rng:RandomInt(2)
 	if flip == 0 then
 		game:End(2)
 	elseif flip == 1 then
 		game:End(1)
 	end
-end
+end)
 
-function moreDice:D3Use()
+onActiveUse(i.D3, function()
 	local roomEntities = Isaac.GetRoomEntities()
 	for i, entity in pairs(roomEntities) do
 		if entity.Type == EntityType.ENTITY_PICKUP
@@ -113,7 +249,7 @@ function moreDice:D3Use()
 			entity:Remove()
 		end
 	end
-end
+end)
 
 function GenerateRandomEnemy()
 	local monster = rng:RandomInt(404) + 10
@@ -143,7 +279,7 @@ function GenerateRandomBoss()
 	end
 end
 
-function moreDice:D5Use()
+onActiveUse(i.D5, function()
 	local roomEntities = Isaac.GetRoomEntities()
 	for i, entity in ipairs(roomEntities) do
 		if entity:IsBoss() then
@@ -151,46 +287,12 @@ function moreDice:D5Use()
 			entity:Remove()
 		end
 	end
-end
+end)
 
-function moreDice:D9Use()
+onActiveUse(i.D9, function()
 	local floor = rng:RandomInt(12) + 1
 	local sub = rng:RandomInt(3)
 	local level = game:GetLevel()
 	level:SetStage(floor, sub)
 	game:StartStageTransition(true, 1)
-end
-
-function GetCollection()
-	player = Isaac.GetPlayer(0)
-	local inv = {}
-	for i = 1, numCollectibles do
-		inv[i] = player:GetCollectibleNum(i)
-	end
-	return inv
-end
-
-
-function moreDice:D11Use()
-	player = Isaac.GetPlayer(0)
-	local inv = GetCollection()
-	for i,v in pairs(inv) do
-		player:RemoveCollectible(v)
-	end
-end
-
-function moreDice:onUpdate(player)
-	if player:HasCollectible(i.D0) then
-		player:RemoveCollectible(i.D0)
-	end
-end
-
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.DNeg1Use, i.DNeg1)
-moreDice:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, moreDice.onUpdate)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.DHalfUse, i.DHalf)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.DOtherHalfUse, i.DOtherHalf)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.D2Use, i.D2)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.D3Use, i.D3)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.D5Use, i.D5)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.D9Use, i.D9)
-moreDice:AddCallback(ModCallbacks.MC_USE_ITEM, moreDice.D11Use, i.D11)
+end)
