@@ -140,8 +140,22 @@ local function onItemPickup(id, fn, remove)
     end
 end
 
+local function TriggerRoomAmbush(...)
+	room = game:GetRoom()
+	roomClosed = false
+	for i = 0, 7 do
+	    local GridEntityDoor = room:GetDoor(i)
+	    if GridEntityDoor then
+	        GridEntityDoor = GridEntityDoor:ToDoor()
+	        GridEntityDoor:Close(true)
+	    end
+	end
+	roomClosed = true
+end
+
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
     player = Isaac.GetPlayer(0)
+	room = game:GetRoom()
     for _, itemStuff in ipairs(itemsToCheck) do
         local id, fn, remove = itemStuff.ID, itemStuff.FN, itemStuff.Remove
         if id ~= -1 then
@@ -171,6 +185,11 @@ mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
         local numCollect = player:GetCollectibleNum(itemStuff.ID)
         invStuff[itemStuff.ID] = numCollect
     end
+
+	if roomClosed and room:GetAliveEnemiesCount() == 0 then
+		room:SpawnClearAward()
+		roomClosed = false
+	end
 end)
 
 local function getInventory()
@@ -361,5 +380,8 @@ end)
 
 onActiveUse(i.D14, function()
 	room = game:GetRoom()
-	room:SetWallColor(Color(1,0,0,1,255,0,0))
+	if room:IsClear() then
+		Isaac.Spawn(13, 0, 0, room:GetCenterPos(), Vector(0,0), nil)
+		TriggerRoomAmbush()
+	end
 end)
