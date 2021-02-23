@@ -380,8 +380,20 @@ end)
 
 onActiveUse(i.D14, function()
 	room = game:GetRoom()
-	if room:IsClear() then
+	if room:IsClear() and not roomClosed then
 		Isaac.Spawn(13, 0, 0, room:GetCenterPos(), Vector(0,0), nil)
 		TriggerRoomAmbush()
+	end
+
+	return true
+end)
+
+onActiveUse(i.D15, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_TEAR then
+			Isaac.Spawn(EntityType.ENTITY_PICKUP, 0, 0, entity.Position, entity.Velocity, nil)
+			entity:Remove()
+		end
 	end
 end)

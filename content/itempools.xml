@@ -62,6 +62,11 @@ token from the item pool and puts the item on the pedestal.
 				removeon="0.1"
 				decreaseby="1"
 	/>
+	<Item name="D15"
+				weight="1"
+				removeon="0.1"
+				decreaseby="1"
+	/>
 </Pool>
 <Pool name="shop">
 	<Item name="D0.5"

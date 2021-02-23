@@ -96,4 +96,9 @@
 		gfx="d14.png"
 		maxcharges="2"
 	/>
+	<active name="D15"
+		description="Tears into miracles"
+		gfx="d15.png"
+		maxcharges="1"
+	/>
 </items>
