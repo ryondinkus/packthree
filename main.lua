@@ -9,10 +9,7 @@ local i = {
 	D3 = "D3",
 	D5 = "D5",
 	D9 = "D9",
-}
-
-local flags = {
-	hasD0 = false
+	D11 = "D11"
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -184,15 +181,46 @@ local function getInventory()
     return inv
 end
 
+local function GenerateRandomEnemy()
+	local monster = rng:RandomInt(404) + 10
+	if CheckForMonster(monster) then
+		return monster
+	else
+		return GenerateRandomEnemy()
+	end
+end
+
+local function CheckForMonster(entityInt)
+	local isMonster = false
+	for i,v in pairs(enemyNumbers) do
+		if entityInt == v then
+			isMonster = true
+		end
+	end
+	return isMonster
+end
+
+local function GenerateRandomBoss()
+	local boss = rng:RandomInt(404) + 10
+	if boss:IsBoss() then
+		return boss
+	else
+		GenerateRandomBoss()
+	end
+end
+
 --dice activation code
 onActiveUse(i.DNeg1, function()
+	room = game:GetRoom()
 	local roomEntities = Isaac.GetRoomEntities()
 	for i, entity in pairs(roomEntities) do
 		if entity.Type == EntityType.ENTITY_PICKUP then
-			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLACK_HOLE, 0, entity.Position, Vector(0,0), entity)
+			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLACK_HOLE, 0, room:FindFreePickupSpawnPosition(entity.Position, 0, true), Vector(0,0), entity)
 			entity:Remove()
 		end
 	end
+
+	return true
 end)
 
 onItemPickup(i.D0, function()
@@ -202,7 +230,7 @@ onItemPickup(i.D0, function()
 end)
 
 onActiveUse(i.DHalf, function()
-	local currentRoom = game:GetRoom()
+	room = game:GetRoom()
 	local gridSize = currentRoom:GetGridSize()
 	local gridEnd = math.floor(gridSize/2)
 	for i=0,gridEnd,1 do
@@ -213,10 +241,12 @@ onActiveUse(i.DHalf, function()
 			end
 		end
 	end
+
+	return true
 end)
 
 onActiveUse(i.DOtherHalf, function()
-	local currentRoom = game:GetRoom()
+	room = game:GetRoom()
 	local gridSize = currentRoom:GetGridSize()
 	local gridStart = math.floor(gridSize/2)
 	for i=gridStart,gridSize,1 do
@@ -227,6 +257,8 @@ onActiveUse(i.DOtherHalf, function()
 			end
 		end
 	end
+
+	return true
 end)
 
 onActiveUse(i.D2, function()
@@ -236,48 +268,25 @@ onActiveUse(i.D2, function()
 	elseif flip == 1 then
 		game:End(1)
 	end
+
+	return true
 end)
 
 onActiveUse(i.D3, function()
+	room = game:GetRoom()
 	local roomEntities = Isaac.GetRoomEntities()
 	for i, entity in pairs(roomEntities) do
 		if entity.Type == EntityType.ENTITY_PICKUP
 			and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
-			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, 0, entity.Position, Vector(0,0), entity)
-			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, 0, entity.Position, Vector(0,0), entity)
-			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, 0, entity.Position, Vector(0,0), entity)
+			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, 0, room:FindFreePickupSpawnPosition(entity.Position, 0, true), Vector(0,0), entity)
+			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, 0, room:FindFreePickupSpawnPosition(entity.Position, 0, true), Vector(0,0), entity)
+			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, 0, room:FindFreePickupSpawnPosition(entity.Position, 0, true), Vector(0,0), entity)
 			entity:Remove()
 		end
 	end
+
+	return true
 end)
-
-function GenerateRandomEnemy()
-	local monster = rng:RandomInt(404) + 10
-	if CheckForMonster(monster) then
-		return monster
-	else
-		return GenerateRandomEnemy()
-	end
-end
-
-function CheckForMonster(entityInt)
-	local isMonster = false
-	for i,v in pairs(enemyNumbers) do
-		if entityInt == v then
-			isMonster = true
-		end
-	end
-	return isMonster
-end
-
-function GenerateRandomBoss()
-	local boss = rng:RandomInt(404) + 10
-	if boss:IsBoss() then
-		return boss
-	else
-		GenerateRandomBoss()
-	end
-end
 
 onActiveUse(i.D5, function()
 	local roomEntities = Isaac.GetRoomEntities()
@@ -287,6 +296,8 @@ onActiveUse(i.D5, function()
 			entity:Remove()
 		end
 	end
+
+	return true
 end)
 
 onActiveUse(i.D9, function()
@@ -295,4 +306,26 @@ onActiveUse(i.D9, function()
 	local level = game:GetLevel()
 	level:SetStage(floor, sub)
 	game:StartStageTransition(true, 1)
+
+	return true
+end)
+
+onActiveUse(i.D11, function()
+	room = game:GetRoom()
+	local inv = getInventory()
+	local allHeld = {}
+	for id, numOwned in pairs (inv) do
+		if numOwned > 0 then
+			for i = 1, numOwned do
+				allHeld[#allHeld + 1] = id
+			end
+		end
+	end
+
+	for i, v in pairs (allHeld) do
+		player:RemoveCollectible(v)
+		Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, 0, room:FindFreePickupSpawnPosition(player.Position, 0, true), Vector(0,0), player)
+	end
+
+	return true
 end)
