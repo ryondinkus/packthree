@@ -11,7 +11,9 @@ local i = {
 	D9 = "D9",
 	D11 = "D11",
 	D13 = "D13",
-	D14 = "D14"
+	D14 = "D14",
+	D15 = "D15",
+	D16 = "D16"
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -44,6 +46,12 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	97,98,99,100,101,102,
 	260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,
 	401,402,403,404,405,406,407,408,409,410,411,412,413
+}
+
+local flyNumbers = {
+	13,14,18,25,61,80,91,
+	214,222,249,256,
+	281,296
 }
 
 local debugLog = {}
@@ -394,6 +402,18 @@ onActiveUse(i.D15, function()
 		if entity.Type == EntityType.ENTITY_TEAR then
 			Isaac.Spawn(EntityType.ENTITY_PICKUP, 0, 0, entity.Position, entity.Velocity, nil)
 			entity:Remove()
+		end
+	end
+end)
+
+onActiveUse(i.D16, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		for i, fly in pairs(flyNumbers) do
+			if entity.Type == fly then
+				Isaac.Spawn(flyNumbers[rng:RandomInt(#flyNumbers)+1], 0, 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
 		end
 	end
 end)

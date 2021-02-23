@@ -67,6 +67,11 @@ token from the item pool and puts the item on the pedestal.
 				removeon="0.1"
 				decreaseby="1"
 	/>
+	<Item name="D16"
+				weight="1"
+				removeon="0.1"
+				decreaseby="1"
+	/>
 </Pool>
 <Pool name="shop">
 	<Item name="D0.5"
@@ -94,6 +99,11 @@ token from the item pool and puts the item on the pedestal.
 				removeon="0.1"
 				decreaseby="1"
 	/>
+	<Item name="D16"
+				weight="1"
+				removeon="0.1"
+				decreaseby="1"
+	/>
 </Pool>
 <Pool name="devil">
 	<Item name="D Negative 1"
@@ -116,6 +126,11 @@ token from the item pool and puts the item on the pedestal.
 </Pool>
 <Pool name="secret">
 	<Item name="D0"
+				weight="1"
+				removeon="0.1"
+				decreaseby="1"
+	/>
+	<Item name="D16"
 				weight="1"
 				removeon="0.1"
 				decreaseby="1"

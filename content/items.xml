@@ -101,4 +101,9 @@
 		gfx="d15.png"
 		maxcharges="1"
 	/>
+	<active name="D16"
+		description="Pretty fly"
+		gfx="d16.png"
+		maxcharges="1"
+	/>
 </items>
