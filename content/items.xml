@@ -86,4 +86,14 @@
 		gfx="d11.png"
 		maxcharges="6"
 	/>
+	<active name="D13"
+		description="Empowers peasants"
+		gfx="d13.png"
+		maxcharges="6"
+	/>
+	<active name="D14"
+		description="Do it again I wasn't ready"
+		gfx="d14.png"
+		maxcharges="2"
+	/>
 </items>

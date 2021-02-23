@@ -9,7 +9,9 @@ local i = {
 	D3 = "D3",
 	D5 = "D5",
 	D9 = "D9",
-	D11 = "D11"
+	D11 = "D11",
+	D13 = "D13",
+	D14 = "D14"
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -37,7 +39,7 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	36,
 	43,
 	45,46,47,48,49,50,51,52,
-	62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,
+	62,63,64,65,66,67,68,69,71,72,73,74,75,76,77,78,79,
 	81,82,83,84,
 	97,98,99,100,101,102,
 	260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,
@@ -181,31 +183,46 @@ local function getInventory()
     return inv
 end
 
+local function BossOrMonster(entityInt, bossTrue)
+	local isMonster = false
+	local isBoss = false
+	local listToCheck
+	if bossTrue then
+		listToCheck = bossNumbers
+	else
+		listToCheck = enemyNumbers
+	end
+	for i,v in pairs(listToCheck) do
+		if entityInt == v then
+			if bossTrue then
+				isBoss = true
+			else
+				isMonster = true
+			end
+		end
+	end
+	if bossTrue then
+		return isBoss
+	else
+		return isMonster
+	 end
+end
+
 local function GenerateRandomEnemy()
 	local monster = rng:RandomInt(404) + 10
-	if CheckForMonster(monster) then
+	if BossOrMonster(monster, false) then
 		return monster
 	else
 		return GenerateRandomEnemy()
 	end
 end
 
-local function CheckForMonster(entityInt)
-	local isMonster = false
-	for i,v in pairs(enemyNumbers) do
-		if entityInt == v then
-			isMonster = true
-		end
-	end
-	return isMonster
-end
-
 local function GenerateRandomBoss()
 	local boss = rng:RandomInt(404) + 10
-	if boss:IsBoss() then
+	if BossOrMonster(boss, true) then
 		return boss
 	else
-		GenerateRandomBoss()
+		return GenerateRandomBoss()
 	end
 end
 
@@ -328,4 +345,21 @@ onActiveUse(i.D11, function()
 	end
 
 	return true
+end)
+
+onActiveUse(i.D13, function()
+	local roomEntities = Isaac.GetRoomEntities()
+	for i, entity in ipairs(roomEntities) do
+		if entity:IsEnemy() and not entity:IsBoss() then
+			Isaac.Spawn(GenerateRandomBoss(), 0, 0, entity.Position, Vector(0,0), entity)
+			entity:Remove()
+		end
+	end
+
+	return true
+end)
+
+onActiveUse(i.D14, function()
+	room = game:GetRoom()
+	room:SetWallColor(Color(1,0,0,1,255,0,0))
 end)
