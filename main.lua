@@ -19,8 +19,8 @@ local i = {
 	D19 = "D19"
 }
 
-local v = {
-	d17Luck = 0
+local d17Stats = {
+	Luck = 0
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -124,6 +124,48 @@ i = convert(i, "I")
 -- ev = convert(ev, "EV")
 -- s = convert(s, "S")
 -- pi = convert(pi, "P")
+
+local flagStuff = {
+    MoveSpeed = CacheFlag.CACHE_SPEED,
+    Damage = CacheFlag.CACHE_DAMAGE,
+    MaxFireDelay = CacheFlag.CACHE_FIREDELAY,
+    ShotSpeed = CacheFlag.CACHE_SHOTSPEED,
+    TearFlags = CacheFlag.CACHE_TEARFLAG,
+    TearFallingSpeed = CacheFlag.CACHE_RANGE,
+    TearFallingAcceleration = CacheFlag.CACHE_RANGE,
+    TearHeight = CacheFlag.CACHE_RANGE,
+    LaserColor = CacheFlag.CACHE_TEARCOLOR,
+    TearColor = CacheFlag.CACHE_TEARCOLOR,
+	Luck = CacheFlag.CACHE_LUCK
+}
+
+local function applyStupidStats(p, flag, stupidStats)
+    for key, val in pairs(stupidStats) do
+        local keyLen = string.len(key)
+        local lastTwoChars = string.sub(key, keyLen - 1)
+        local notLastTwoChars = string.sub(key, 1, keyLen - 2)
+        local check = key
+        if lastTwoChars == "Eq" or lastTwoChars == "Mu" then
+            check = notLastTwoChars
+        end
+
+        if p[check] and flag == flagStuff[check] then
+            if check == "TearFlags" then
+                p[check] = p[check] | val
+            elseif lastTwoChars == "Eq" then
+                p[check] = val
+            elseif lastTwoChars == "Mu" then
+                if check == "MaxFireDelay" then
+                    p[check] = math.floor(p[check] * val)
+                else
+                    p[check] = p[check] * val
+                end
+            else
+                p[check] = p[check] + val
+            end
+        end
+    end
+end
 
 local function onActiveUse(id, fn)
     mod:AddCallback(ModCallbacks.MC_USE_ITEM, function(_, ...)
@@ -260,15 +302,9 @@ local function GenerateRandomBoss()
 	end
 end
 
-function mod:EvaluateCache(p, cacheFlag)
-	if cacheFlag == CacheFlag.CACHE_LUCK then
-		p.Luck = p.Luck + v.d17Luck
-	end
-end
-
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
     invStuff = {}
-    v.d17Luck = 0
+	d17Stats.Luck = 0
 end)
 
 --dice activation code
@@ -447,7 +483,7 @@ onActiveUse(i.D17, function()
 	player = Isaac.GetPlayer(0)
 	for i, entity in pairs(entities) do
 		if entity.Type == EntityType.ENTITY_PROJECTILE then
-			v.d17Luck = v.d17Luck + 1
+			d17Stats.Luck = d17Stats.Luck + 1
 			entity:Remove()
 		end
 	end
@@ -455,6 +491,12 @@ onActiveUse(i.D17, function()
 	player:EvaluateItems()
 
 	return true
+end)
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, p, flag)
+	if d17Stats.Luck > 0 then
+		applyStupidStats(p, flag, d17Stats)
+	end
 end)
 
 onActiveUse(i.D18, function()
@@ -480,5 +522,3 @@ onActiveUse(i.D19, function()
 
 	return true
 end)
-
-mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.EvaluateCache)
