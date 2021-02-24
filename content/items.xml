@@ -116,4 +116,9 @@
 		gfx="d18.png"
 		maxcharges="6"
 	/>
+	<active name="D19"
+		description="Nothing out of something"
+		gfx="d19.png"
+		maxcharges="1"
+	/>
 </items>

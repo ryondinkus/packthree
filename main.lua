@@ -15,7 +15,8 @@ local i = {
 	D15 = "D15",
 	D16 = "D16",
 	D17 = "D17",
-	D18 = "D18"
+	D18 = "D18",
+	D19 = "D19"
 }
 
 local v = {
@@ -276,7 +277,7 @@ onActiveUse(i.DNeg1, function()
 	local roomEntities = Isaac.GetRoomEntities()
 	for i, entity in pairs(roomEntities) do
 		if entity.Type == EntityType.ENTITY_PICKUP then
-			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLACK_HOLE, 0, room:FindFreePickupSpawnPosition(entity.Position, 0, true), Vector(0,0), entity)
+			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLACK_HOLE, 0, entity.Position, Vector(0,0), entity)
 			entity:Remove()
 		end
 	end
@@ -292,10 +293,10 @@ end)
 
 onActiveUse(i.DHalf, function()
 	room = game:GetRoom()
-	local gridSize = currentRoom:GetGridSize()
+	local gridSize = room:GetGridSize()
 	local gridEnd = math.floor(gridSize/2)
 	for i=0,gridEnd,1 do
-		local currentGrid = currentRoom:GetGridEntity(i)
+		local currentGrid = room:GetGridEntity(i)
 		if currentGrid ~= nil then
 			if currentGrid:GetType() ~= 16 then
 				currentGrid:Destroy(true)
@@ -308,10 +309,10 @@ end)
 
 onActiveUse(i.DOtherHalf, function()
 	room = game:GetRoom()
-	local gridSize = currentRoom:GetGridSize()
+	local gridSize = room:GetGridSize()
 	local gridStart = math.floor(gridSize/2)
 	for i=gridStart,gridSize,1 do
-		local currentGrid = currentRoom:GetGridEntity(i)
+		local currentGrid = room:GetGridEntity(i)
 		if currentGrid ~= nil then
 			if currentGrid:GetType() ~= 16 then
 				currentGrid:Destroy(true)
@@ -421,6 +422,8 @@ onActiveUse(i.D15, function()
 			entity:Remove()
 		end
 	end
+
+	return true
 end)
 
 onActiveUse(i.D16, function()
@@ -433,6 +436,8 @@ onActiveUse(i.D16, function()
 			end
 		end
 	end
+
+	return true
 end)
 
 --TODO: reformat this function and all cache evaluation functions to be more
@@ -448,6 +453,8 @@ onActiveUse(i.D17, function()
 	end
 	player:AddCacheFlags(CacheFlag.CACHE_LUCK)
 	player:EvaluateItems()
+
+	return true
 end)
 
 onActiveUse(i.D18, function()
@@ -459,6 +466,19 @@ onActiveUse(i.D18, function()
 			entity:Remove()
 		end
 	end
+
+	return true
+end)
+
+onActiveUse(i.D19, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP then
+			entity:Remove()
+		end
+	end
+
+	return true
 end)
 
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.EvaluateCache)
