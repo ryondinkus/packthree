@@ -111,4 +111,9 @@
 		gfx="d17.png"
 		maxcharges="6"
 	/>
+	<active name="D18"
+		description="Just the worst"
+		gfx="d18.png"
+		maxcharges="6"
+	/>
 </items>

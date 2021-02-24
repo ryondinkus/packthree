@@ -14,7 +14,8 @@ local i = {
 	D14 = "D14",
 	D15 = "D15",
 	D16 = "D16",
-	D17 = "D17"
+	D17 = "D17",
+	D18 = "D18"
 }
 
 local v = {
@@ -447,6 +448,17 @@ onActiveUse(i.D17, function()
 	end
 	player:AddCacheFlags(CacheFlag.CACHE_LUCK)
 	player:EvaluateItems()
+end)
+
+onActiveUse(i.D18, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP and
+		entity.Variant == PickupVariant.PICKUP_PILL then
+			Isaac.Spawn(EntityType.ENTITY_HUSH, 0, 0, entity.Position, Vector(0, 0), nil)
+			entity:Remove()
+		end
+	end
 end)
 
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.EvaluateCache)
