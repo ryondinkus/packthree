@@ -13,7 +13,12 @@ local i = {
 	D13 = "D13",
 	D14 = "D14",
 	D15 = "D15",
-	D16 = "D16"
+	D16 = "D16",
+	D17 = "D17"
+}
+
+local v = {
+	d17Luck = 0
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -253,6 +258,17 @@ local function GenerateRandomBoss()
 	end
 end
 
+function mod:EvaluateCache(p, cacheFlag)
+	if cacheFlag == CacheFlag.CACHE_LUCK then
+		p.Luck = p.Luck + v.d17Luck
+	end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+    invStuff = {}
+    v.d17Luck = 0
+end)
+
 --dice activation code
 onActiveUse(i.DNeg1, function()
 	room = game:GetRoom()
@@ -417,3 +433,20 @@ onActiveUse(i.D16, function()
 		end
 	end
 end)
+
+--TODO: reformat this function and all cache evaluation functions to be more
+--in line with abortionbirth standards
+onActiveUse(i.D17, function()
+	local entities = Isaac.GetRoomEntities()
+	player = Isaac.GetPlayer(0)
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PROJECTILE then
+			v.d17Luck = v.d17Luck + 1
+			entity:Remove()
+		end
+	end
+	player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+	player:EvaluateItems()
+end)
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.EvaluateCache)

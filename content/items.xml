@@ -106,4 +106,9 @@
 		gfx="d16.png"
 		maxcharges="1"
 	/>
+	<active name="D17"
+		description="Make your own luck"
+		gfx="d17.png"
+		maxcharges="6"
+	/>
 </items>
