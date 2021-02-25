@@ -121,4 +121,9 @@
 		gfx="d19.png"
 		maxcharges="1"
 	/>
+	<active name="D21"
+		description="9+10"
+		gfx="d21.png"
+		maxcharges="0"
+	/>
 </items>

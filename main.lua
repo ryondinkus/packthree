@@ -1,4 +1,5 @@
 local mod = RegisterMod("More Dice", 1)
+local rng = RNG()
 
 local i = {
 	DNeg1 = "D Negative 1",
@@ -16,11 +17,26 @@ local i = {
 	D16 = "D16",
 	D17 = "D17",
 	D18 = "D18",
-	D19 = "D19"
+	D19 = "D19",
+	D21 = "D21"
 }
 
 local d17Stats = {
 	Luck = 0
+}
+
+local d21Stats = {
+	Damage = 0,
+	MaxFireDelay = 0,
+	ShotSpeed = 0,
+	Luck = 0,
+	MoveSpeed = 0
+}
+
+local d21Info = {
+	flag1 = "",
+	flag2 = "",
+	used = false
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -87,7 +103,6 @@ local player
 local game = Game()
 local invStuff = {}
 local api
-local rng = RNG()
 
 local function convert(tbl, contentType)
     local ret = {}
@@ -101,8 +116,8 @@ local function convert(tbl, contentType)
         --     id = Isaac.GetEntityTypeByName(v)
         -- elseif contentType == "EV" then
         --     id = Isaac.GetEntityVariantByName(v)
-        -- elseif contentType == "S" then
-        --     id = Isaac.GetSoundIdByName(v)
+         -- elseif contentType == "S" then
+         --     id = Isaac.GetSoundIdByName(v)
         -- elseif contentType == "P" then
         --     id = Isaac.GetPillEffectByName(v)
         end
@@ -122,7 +137,7 @@ i = convert(i, "I")
 -- t = convert(t, "T")
 -- et = convert(et, "ET")
 -- ev = convert(ev, "EV")
--- s = convert(s, "S")
+--s = convert(s, "S")
 -- pi = convert(pi, "P")
 
 local flagStuff = {
@@ -137,6 +152,14 @@ local flagStuff = {
     LaserColor = CacheFlag.CACHE_TEARCOLOR,
     TearColor = CacheFlag.CACHE_TEARCOLOR,
 	Luck = CacheFlag.CACHE_LUCK
+}
+
+local d21Flags = {
+	CacheFlag.CACHE_SPEED,
+	CacheFlag.CACHE_DAMAGE,
+	CacheFlag.CACHE_FIREDELAY,
+	CacheFlag.CACHE_LUCK,
+	CacheFlag.CACHE_SHOTSPEED
 }
 
 local function applyStupidStats(p, flag, stupidStats)
@@ -303,8 +326,12 @@ local function GenerateRandomBoss()
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+	player = Isaac.GetPlayer(0)
     invStuff = {}
 	d17Stats.Luck = 0
+	d21Info.used = false
+	player:AddCacheFlags(CacheFlag.CACHE_ALL)
+	player:EvaluateItems()
 end)
 
 --dice activation code
@@ -521,4 +548,30 @@ onActiveUse(i.D19, function()
 	end
 
 	return true
+end)
+
+onActiveUse(i.D21, function()
+	d21Stats.Damage = rng:RandomInt(2)+9
+	d21Stats.MaxFireDelay = rng:RandomInt(2)+9
+	d21Stats.ShotSpeed = rng:RandomInt(2)+9
+	d21Stats.Luck = rng:RandomInt(2)+9
+	d21Stats.MoveSpeed = rng:RandomInt(2)+9
+	d21Info.used = true
+	local flag1 = d21Flags[rng:RandomInt(4)+1]
+	local flag2 = d21Flags[rng:RandomInt(4)+1]
+	while flag1 == flag2 do
+		flag2 = d21Flags[rng:RandomInt(4)+1]
+	end
+	player:AddCacheFlags(flag1 | flag2)
+	player:EvaluateItems()
+
+	player:RemoveCollectible(i.D21)
+
+	return true
+end)
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, p, flag)
+	if d21Info.used == true then
+		applyStupidStats(p, flag, d21Stats)
+	end
 end)
