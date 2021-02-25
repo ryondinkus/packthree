@@ -603,5 +603,26 @@ onActiveUse(i.D23, function()
 end)
 
 onActiveUse(i.D69, function()
+	room = game:GetRoom()
+	local inv = getInventory()
+	local allHeld = {}
+	local bozos = 0
+	for id, numOwned in pairs (inv) do
+		if numOwned > 0 then
+			for i = 1, numOwned do
+				allHeld[#allHeld + 1] = id
+			end
+		end
+	end
 
+	for i, v in pairs (allHeld) do
+		player:RemoveCollectible(v)
+		bozos = bozos + 1
+	end
+
+	for i=1, bozos do
+		player:AddCollectible(CollectibleType.COLLECTIBLE_BOZO, 0, false)
+	end
+
+	return true
 end)
