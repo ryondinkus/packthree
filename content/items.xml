@@ -131,4 +131,14 @@
 		gfx="d22.png"
 		maxcharges="0"
 	/>
+	<active name="D23"
+		description="Severely weakens enemies"
+		gfx="d23.png"
+		maxcharges="3"
+	/>
+	<active name="D69"
+		description="Funny guy"
+		gfx="d69.png"
+		maxcharges="0"
+	/>
 </items>

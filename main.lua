@@ -19,7 +19,9 @@ local i = {
 	D18 = "D18",
 	D19 = "D19",
 	D21 = "D21",
-	D22 = "D22"
+	D22 = "D22",
+	D23 = "D23",
+	D69 = "D69"
 }
 
 local d17Stats = {
@@ -586,4 +588,20 @@ onActiveUse(i.D22, function()
 			room:RemoveDoor(i)
 	    end
 	end
+end)
+
+onActiveUse(i.D23, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity:IsEnemy() and not entity:IsBoss() then
+			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.WORM, 0, entity.Position, Vector(0,0), nil)
+			entity:Remove()
+		end
+	end
+
+	return true
+end)
+
+onActiveUse(i.D69, function()
+
 end)
