@@ -18,7 +18,8 @@ local i = {
 	D17 = "D17",
 	D18 = "D18",
 	D19 = "D19",
-	D21 = "D21"
+	D21 = "D21",
+	D22 = "D22"
 }
 
 local d17Stats = {
@@ -573,5 +574,16 @@ end)
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, p, flag)
 	if d21Info.used == true then
 		applyStupidStats(p, flag, d21Stats)
+	end
+end)
+
+onActiveUse(i.D22, function()
+	room = game:GetRoom()
+	for i = 0, 7 do
+	    local GridEntityDoor = room:GetDoor(i)
+	    if GridEntityDoor then
+	        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, GridEntityDoor.Position, Vector(0,0), nil)
+			room:RemoveDoor(i)
+	    end
 	end
 end)

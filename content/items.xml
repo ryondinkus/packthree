@@ -126,4 +126,9 @@
 		gfx="d21.png"
 		maxcharges="0"
 	/>
+	<active name="D22"
+		description="Desperation play"
+		gfx="d22.png"
+		maxcharges="0"
+	/>
 </items>
