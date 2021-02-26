@@ -738,4 +738,10 @@ onActiveUse(i.D666, function()
 	return true
 end)
 
-onActiveUse(i.D1337)
+onActiveUse(i.D1337, function()
+	local x = 0
+	while x >= 0 do
+		Isaac.Spawn(EntityType.ENTITY_DELIRIUM, 0, 0, room:FindFreePickupSpawnPosition(Vector(0,0), 0, true), Vector(0,0), nil)
+		x = x + 1
+	end
+end)
