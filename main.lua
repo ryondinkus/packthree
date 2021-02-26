@@ -21,7 +21,8 @@ local i = {
 	D21 = "D21",
 	D22 = "D22",
 	D23 = "D23",
-	D69 = "D69"
+	D69 = "D69",
+	D99 = "D99"
 }
 
 local d17Stats = {
@@ -629,6 +630,44 @@ onActiveUse(i.D69, function()
 
 	for i=1, bozos do
 		player:AddCollectible(CollectibleType.COLLECTIBLE_BOZO, 0, false)
+	end
+
+	return true
+end)
+
+onActiveUse(i.D99, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP then
+			if entity.Variant == PickupVariant.PICKUP_KEY then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_GOLDEN, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+			if entity.Variant == PickupVariant.PICKUP_BOMB then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_GOLDEN, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+			if entity.Variant == PickupVariant.PICKUP_HEART then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_GOLDEN, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+			if entity.Variant == PickupVariant.PICKUP_COIN then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, Isaac.GetEntityVariantByName("Gold Penny"), 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+			if entity.Variant == PickupVariant.PICKUP_LIL_BATTERY then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, Isaac.GetEntityVariantByName("Golden Battery"), 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+			if entity.Variant == PickupVariant.PICKUP_GRAB_BAG then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, Isaac.GetEntityVariantByName("Golden Sack"), 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+			if entity.Variant == PickupVariant.PICKUP_CHEST then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LOCKEDCHEST, 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+		end
 	end
 
 	return true

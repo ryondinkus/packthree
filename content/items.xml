@@ -84,7 +84,7 @@
 	<active name="D11"
 		description="Desperation reroll"
 		gfx="d11.png"
-		maxcharges="6"
+		maxcharges="0"
 	/>
 	<active name="D13"
 		description="Empowers peasants"
@@ -140,5 +140,10 @@
 		description="Funny guy"
 		gfx="d69.png"
 		maxcharges="0"
+	/>
+	<active name="D99"
+		description="Wealthy pickups"
+		gfx="d99.png"
+		maxcharges="6"
 	/>
 </items>
