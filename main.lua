@@ -1,4 +1,4 @@
-local mod = RegisterMod("More Dice", 1)
+local mod = RegisterMod("Unpentance", 1)
 local rng = RNG()
 
 local i = {
@@ -335,6 +335,13 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	d21Info.used = false
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+	if Isaac.GetItemIdByName("One True Bean") == -1 then
+		Isaac.RenderText("Hey, it looks like you aren't using Abortionbirth Pack 2,", 100, 40, 255, 255, 255, 1)
+		Isaac.RenderText("which this mod NEEDS. Please go download it :)", 100, 50, 255, 255, 255, 1)
+	end
 end)
 
 --dice activation code
