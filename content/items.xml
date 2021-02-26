@@ -146,4 +146,19 @@
 		gfx="d99.png"
 		maxcharges="6"
 	/>
+	<active name="D120"
+		description="Reroll your friends"
+		gfx="d120.png"
+		maxcharges="4"
+	/>
+	<active name="D666"
+		description="Pure evil"
+		gfx="d666.png"
+		maxcharges="6"
+	/>
+	<active name="D1337"
+		description="Your client has been compromised"
+		gfx="d1337.png"
+		maxcharges="0"
+	/>
 </items>

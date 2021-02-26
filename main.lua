@@ -22,7 +22,10 @@ local i = {
 	D22 = "D22",
 	D23 = "D23",
 	D69 = "D69",
-	D99 = "D99"
+	D99 = "D99",
+	D120 = "D120",
+	D666 = "D666",
+	D1337 = "D1337"
 }
 
 local d17Stats = {
@@ -79,6 +82,24 @@ local flyNumbers = {
 	13,14,18,25,61,80,91,
 	214,222,249,256,
 	281,296
+}
+
+local familiarNumbers = {
+	8,10,57,67,73,88,94,95,96,98,99,100,112,113,117,131,144,155,163,167,170,172,
+	174,178,187,188,207,238,239,264,265,266,267,268,269,270,271,272,273,274,275,
+	276,277,278,279,280,281,318,319,320,321,322,360,361,362,363,364,365,372,375,
+	384,385,387,388,389,390,403,404,405,412,413,417,426,430,431,433,435,436,467,
+	468,469,470,471,472,473,474,491,492,500,508,509,511,518,519,526,528,537,539,
+	542,543,544,548,
+	Isaac.GetItemIdByName("Bean Bum"),Isaac.GetItemIdByName("Biggest Fan"),
+	Isaac.GetItemIdByName("Bob's Brain II"),Isaac.GetItemIdByName("Devil Bum"),
+	Isaac.GetItemIdByName("Guppy Bum"),Isaac.GetItemIdByName("Pack 2 Sack"),
+	Isaac.GetItemIdByName("Rocket Boy"),Isaac.GetItemIdByName("Sack of Beans"),
+	Isaac.GetItemIdByName("Sack of Charge"),Isaac.GetItemIdByName("Sack of Diamonds"),
+	Isaac.GetItemIdByName("Sack of Nothing"),Isaac.GetItemIdByName("Sack of Rockets"),
+	Isaac.GetItemIdByName("Sack of Sack of Sacks"),Isaac.GetItemIdByName("Sacrificial Bean"),
+	Isaac.GetItemIdByName("Skinless ???'s Body'"),Isaac.GetItemIdByName("Skinless Hushy"),
+	Isaac.GetItemIdByName("The Ghost")
 }
 
 local debugLog = {}
@@ -672,3 +693,49 @@ onActiveUse(i.D99, function()
 
 	return true
 end)
+
+onActiveUse(i.D120, function()
+	room = game:GetRoom()
+	local inv = getInventory()
+	local allHeld = {}
+	local itemsToGive = {}
+	for id, numOwned in pairs (inv) do
+		if numOwned > 0 then
+			for i = 1, numOwned do
+				allHeld[#allHeld + 1] = id
+			end
+		end
+	end
+
+	for i, v in pairs (allHeld) do
+		for j, w in pairs(familiarNumbers) do
+			if v == w then
+				newFamiliar = familiarNumbers[rng:RandomInt(#familiarNumbers)+1]
+				table.insert(itemsToGive, newFamiliar)
+				player:RemoveCollectible(v)
+			end
+		end
+	end
+
+	for i, v in pairs(itemsToGive) do
+		player:AddCollectible(v, 0, false)
+	end
+
+	return true
+end)
+
+onActiveUse(i.D666, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP
+		and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
+			newEnemy = enemyNumbers[rng:RandomInt(#enemyNumbers)+1]
+			Isaac.Spawn(newEnemy, 0, 0, entity.Position, Vector(0,0), nil)
+			entity:Remove()
+		end
+	end
+
+	return true
+end)
+
+onActiveUse(i.D1337)
