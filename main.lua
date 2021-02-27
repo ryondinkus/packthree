@@ -779,3 +779,31 @@ onActiveUse(i.DF, function()
 
 	return true
 end)
+
+onActiveUse(i.FlatD6, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP
+		and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
+			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, entity.Position, Vector(0,0), nil)
+			entity:Remove()
+		end
+	end
+
+	return true
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+	print("ran")
+	player = Isaac.GetPlayer(0)
+	if player:HasCollectible(i.PassiveD6) then
+		local entities = Isaac.GetRoomEntities()
+		for i, entity in pairs(entities) do
+			if entity.Type == EntityType.ENTITY_PICKUP
+			and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+		end
+	end
+end)
