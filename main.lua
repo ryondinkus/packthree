@@ -25,7 +25,11 @@ local i = {
 	D99 = "D99",
 	D120 = "D120",
 	D666 = "D666",
-	D1337 = "D1337"
+	D1337 = "D1337",
+	D2K = "D2K",
+	DF = "DF",
+	FlatD6 = "Flat D6",
+	PassiveD6 = "PassiveD6"
 }
 
 local d17Stats = {
@@ -744,4 +748,34 @@ onActiveUse(i.D1337, function()
 		Isaac.Spawn(EntityType.ENTITY_DELIRIUM, 0, 0, room:FindFreePickupSpawnPosition(Vector(0,0), 0, true), Vector(0,0), nil)
 		x = x + 1
 	end
+end)
+
+onActiveUse(i.D2K, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity:IsEnemy() then
+			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BOMB_EXPLOSION, 0, entity.Position, Vector(0,0), nil)
+			entity:Remove()
+		end
+	end
+
+	return true
+end)
+
+onActiveUse(i.DF, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP then
+			for i = 1, 5 do
+				Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, room:FindFreePickupSpawnPosition(entity.Position, 0, true), entity.Velocity, nil)
+			end
+		end
+		if entity:IsEnemy() then
+			for i = 1, 5 do
+				Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, entity.Position, entity.Velocity, nil)
+			end
+		end
+	end
+
+	return true
 end)

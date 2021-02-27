@@ -161,4 +161,23 @@
 		gfx="d1337.png"
 		maxcharges="0"
 	/>
+	<active name="D2K"
+		description="End of the world"
+		gfx="d2k.png"
+		maxcharges="3"
+	/>
+	<active name="DF"
+		description="Hexadecimal!"
+		gfx="df.png"
+		maxcharges="6"
+	/>
+	<active name="Flat D6"
+		description="You're flat!"
+		gfx="flatd6.png"
+		maxcharges="2"
+	/>
+	<passive name="Passive D6"
+		description="Fully automatic!"
+		gfx="passived6.png"
+	/>
 </items>
