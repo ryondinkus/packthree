@@ -12,21 +12,51 @@
    harmless when directly hitting the player.
 -->
 <entities anm2root="gfx/" version="5">
-<entity name="the entity's name"
-    anm2path="animation file name in your gfx in resources folder.anm2"
-    reroll="true"
-    baseHP="10"
-    boss="0"
-    champion="1"
-    collisionDamage="1"
-    collisionMass="30"
-    collisionRadius="13"
-    friction="1"
-    numGridCollisionPoints="7"
-    shadowSize="0"
-    stageHP="0"
-    portrait="30"
-    bestiary="false"
-><gibs amount="6" blood="1" bone="0" eye="0" gut="1" large="0" />
-</entity>
+  <entity name="Muro"
+      anm2path="monsters\muro.anm2"
+      reroll="true"
+      baseHP="10"
+      boss="0"
+      champion="1"
+      collisionDamage="1"
+      collisionMass="10"
+      collisionRadius="13"
+      friction="1"
+      numGridCollisionPoints="12"
+      shadowSize="14"
+      stageHP="0"
+      portrait="25"
+      bestiary="true"
+      bestiaryTransform="0,0,1"
+      bestiartAnim="Hop"
+      id="813"
+      variant="0"
+  >
+    <gibs amount="5" blood="1" bone="1" eye="0" gut="1" large="0" />
+    <preload-snd id="69"/> <!--SOUND_MEAT_IMPACTS-->
+  </entity>
+  <entity name="Logo"
+      anm2path="monsters\logo.anm2"
+      reroll="true"
+      baseHP="10"
+      boss="0"
+      champion="1"
+      collisionDamage="1"
+      collisionMass="10"
+      collisionRadius="13"
+      friction="1"
+      numGridCollisionPoints="12"
+      shadowSize="14"
+      stageHP="0"
+      portrait="25"
+      bestiary="true"
+      bestiaryTransform="0,0,1"
+      bestiartAnim="Hop"
+      id="813"
+      variant="0"
+      subtype="1"
+  >
+    <gibs amount="5" blood="1" bone="1" eye="0" gut="1" large="0" />
+    <preload-snd id="69"/> <!--SOUND_MEAT_IMPACTS-->
+  </entity>
 </entities>

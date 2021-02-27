@@ -32,6 +32,17 @@ local i = {
 	PassiveD6 = "PassiveD6"
 }
 
+local et = {
+	Muro = "Muro"
+}
+
+local ev = {
+	Muro = "Muro"
+}
+
+local es = {
+	Logo = 1
+}
 local d17Stats = {
 	Luck = 0
 }
@@ -141,10 +152,10 @@ local function convert(tbl, contentType)
             id = Isaac.GetItemIdByName(v)
         -- elseif contentType == "T" then
         --     id = Isaac.GetTrinketIdByName(v)
-        -- elseif contentType == "ET" then
-        --     id = Isaac.GetEntityTypeByName(v)
-        -- elseif contentType == "EV" then
-        --     id = Isaac.GetEntityVariantByName(v)
+        elseif contentType == "ET" then
+        	id = Isaac.GetEntityTypeByName(v)
+        elseif contentType == "EV" then
+        	id = Isaac.GetEntityVariantByName(v)
          -- elseif contentType == "S" then
          --     id = Isaac.GetSoundIdByName(v)
         -- elseif contentType == "P" then
@@ -164,8 +175,8 @@ end
 
 i = convert(i, "I")
 -- t = convert(t, "T")
--- et = convert(et, "ET")
--- ev = convert(ev, "EV")
+et = convert(et, "ET")
+ev = convert(ev, "EV")
 --s = convert(s, "S")
 -- pi = convert(pi, "P")
 
@@ -229,6 +240,15 @@ local function onPassiveTick(id, fn)
     mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p, ...)
         if p:HasCollectible(id) then
             return fn(p, ...)
+        end
+    end)
+end
+
+local function onEntityTick(type, fn, variant, subtype)
+    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+        local found = Isaac.FindByType(type, variant or -1, subtype or -1, false, false)
+        for _, ent in ipairs(found) do
+            fn(ent)
         end
     end)
 end
@@ -309,6 +329,14 @@ local function getInventory()
         end
     end
     return inv
+end
+
+local function replaceEntity(type, variant, subtype, type2, variant2, subtype2, chance)
+    mod:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, function(_, type3, variant3, subtype3, position, velocity, spawner, seed)
+        if (not type or type3 == type) and (not variant or variant3 == variant) and (not subtype or subtype3 == subtype) and (not chance or (rng:RandomInt(chance) == 0)) then
+            return {type2, variant2, subtype2, seed}
+        end
+    end)
 end
 
 local function BossOrMonster(entityInt, bossTrue)
@@ -807,3 +835,45 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 		end
 	end
 end)
+
+
+--!!!!!!!!!!!!!ENEMIES!!!!!!!!!!!!!!!
+onEntityTick(et.Muro, function(entity)
+	entity = entity:ToNPC()
+	local data = entity:GetData()
+	local sprite = entity:GetSprite()
+
+	if entity.FrameCount <= 1 then
+		sprite:Play("Appear", true)
+		entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_NOPITS
+		data.hopping = false
+		data.cooldown = 0
+	else
+		if not sprite:IsPlaying("Appear") then
+            if data.cooldown > 0 then
+                data.cooldown = data.cooldown - 1
+            end
+
+            if data.cooldown == 0 and data.hopping == false then
+                sprite:Play("Hop", true)
+                data.hopping = true
+                data.targetPos = entity:GetPlayerTarget().Position
+                data.targetVel = entity:GetPlayerTarget().Velocity
+                local target_pos = data.targetPos
+				if entity.SubType == es.Logo then
+					entity.Velocity = (target_pos - entity.Position):Normalized() * -30
+				else
+        			entity.Velocity = (target_pos - entity.Position):Normalized() * 30
+				end
+			end
+
+			if sprite:IsFinished("Hop") then
+				sprite:Play("Idle", true)
+				data.hopping = false
+				entity.Velocity = Vector(0,0):Normalized()
+			end
+		end
+	end
+end, ev.Muro)
+
+replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, nil, 4)
