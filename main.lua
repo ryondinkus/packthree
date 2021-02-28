@@ -73,11 +73,14 @@ local enemyNumbers = { --entity numbers corresponding to enemies
 	80,
 	85,86,87,88,89,90,91,92,93,94,
 	201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,
-	220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,
+	220,221,222,223,224,225,226,227,228,229,230,231,233,234,235,236,237,238,
 	239,240,241,242,243,244,
 	246,247,248,249,250,251,252,253,254,255,256,257,258,259,
 	276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,
-	295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310
+	295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,
+	Isaac.GetEntityTypeByName("Sunec"), Isaac.GetEntityTypeByName("Shudo"),
+	Isaac.GetEntityTypeByName("Brimstoney"), Isaac.GetEntityTypeByName("Green Attack Fly"),
+	Isaac.GetEntityTypeByName("Dimensional Dukie")
 }
 
 local bossNumbers = { --entity numbers corresponding to bosses
@@ -90,13 +93,18 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	81,82,83,84,
 	97,98,99,100,101,102,
 	260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,
-	401,402,403,404,405,406,407,408,409,410,411,412,413
+	401,402,403,404,405,406,407,408,409,410,411,412,413,
+	Isaac.GetEntityTypeByName("Nerve Ending 3"), Isaac.GetEntityTypeByName("Mega Ultra Envy"),
+	Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityTypeByName("Santa"),
+	Isaac.GetEntityTypeByName("Ultra Envy"), Isaac.GetEntityTypeByName("Skinless Hush"),
+	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS")
 }
 
 local flyNumbers = {
 	13,14,18,25,61,80,91,
 	214,222,249,256,
-	281,296
+	281,296,
+	Isaac.GetEntityTypeByName("Green Attack Fly")
 }
 
 local familiarNumbers = {
@@ -282,7 +290,7 @@ local function TriggerRoomAmbush(...)
 	roomClosed = true
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function ()
     player = Isaac.GetPlayer(0)
 	room = game:GetRoom()
     for _, itemStuff in ipairs(itemsToCheck) do
