@@ -96,7 +96,7 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	Isaac.GetEntityTypeByName("Nerve Ending 3"), Isaac.GetEntityTypeByName("Mega Ultra Envy"),
 	Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityTypeByName("Santa"),
 	Isaac.GetEntityTypeByName("Ultra Envy"), Isaac.GetEntityTypeByName("Skinless Hush"),
-	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS")
+	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), LittlestHorn
 }
 
 local flyNumbers = {
@@ -627,18 +627,36 @@ onActiveUse(i.D19, function()
 	return true
 end)
 
+local function FlagToStat(flag)
+	if flag == CacheFlag.CACHE_DAMAGE then
+		return "Damage"
+	end
+	if flag == CacheFlag.CACHE_FIREDELAY then
+		return "MaxFireDelay"
+	end
+	if flag == CacheFlag.CACHE_LUCK then
+		return "Luck"
+	end
+	if flag == CacheFlag.CACHE_SPEED then
+		return "MoveSpeed"
+	end
+	if flag == CacheFlag.CACHE_SHOTSPEED then
+		return "ShotSpeed"
+	end
+	return nil
+end
+
 onActiveUse(i.D21, function()
-	d21Stats.Damage = rng:RandomInt(2)+9
-	d21Stats.MaxFireDelay = rng:RandomInt(2)+9
-	d21Stats.ShotSpeed = rng:RandomInt(2)+9
-	d21Stats.Luck = rng:RandomInt(2)+9
-	d21Stats.MoveSpeed = rng:RandomInt(2)+9
 	d21Info.used = true
 	local flag1 = d21Flags[rng:RandomInt(4)+1]
 	local flag2 = d21Flags[rng:RandomInt(4)+1]
 	while flag1 == flag2 do
 		flag2 = d21Flags[rng:RandomInt(4)+1]
 	end
+	local stat1 = FlagToStat(flag1)
+	local stat2 = FlagToStat(flag2)
+	d21Stats[stat1] = 9
+	d21Stats[stat2] = 10
 	player:AddCacheFlags(flag1 | flag2)
 	player:EvaluateItems()
 
