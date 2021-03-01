@@ -912,9 +912,40 @@ onPillUse(pi.Deafness, function()
 	f.deaf = true
 end)
 
+onPillUse(pi.HorfHorf, function()
+	player = Isaac.GetPlayer(0)
+	player:UsePill(PillEffect.PILLEFFECT_HORF, 1)
+	f.horfActive = true
+	f.horfTimer = 30
+end)
+
+onPillUse(pi.Megacraft, function()
+	player = Isaac.GetPlayer(0)
+	room = game:GetRoom()
+	for i = 1, room:GetGridSize() do
+		local pos = room:GetGridPosition(i)
+		if pos:DistanceSquared(player.Position) < 7500 and pos:DistanceSquared(player.Position) > 1225 then
+			room:SpawnGridEntity(i, api.Random(GridEntityType.GRID_ROCK, GridEntityType.GRID_ROCK_ALT), 0, room:GetSpawnSeed(), 0)
+		end
+	end
+end)
+
+onPillUse(pi.HourEnergy, function()
+	player = Isaac.GetPlayer(0)
+	player:SetActiveCharge(player:GetActiveCharge() + 1)
+end)
+
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 	if f.deaf then
 		mus:Disable()
+	end
+
+	if f.horfActive then
+		f.horfTimer = f.horfTimer - 1
+		if f.horfTimer <= 0 then
+			player:UsePill(PillEffect.PILLEFFECT_HORF, 1)
+			f.horfActive = false
+		end
 	end
 end)
 
