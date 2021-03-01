@@ -32,6 +32,18 @@ local i = {
 	PassiveD6 = "PassiveD6"
 }
 
+local pi = {
+	MaggyUp = "Maggy Up",
+	Deafness = "Deafness",
+	HorfHorf = "Horf...Horf!",
+	Megacraft = "Megacraft",
+	HourEnergy = "1 Hour Energy!",
+	DamageDown = "Damage Down",
+	SleepParalysis = "Sleep Paralysis",
+	ThreeExclamations = "!!!",
+	ThreeDots = "..."
+}
+
 local et = {
 	Muro = "Muro",
 	LittlestHorn = "Littlest Horn"
@@ -45,6 +57,11 @@ local ev = {
 local es = {
 	Logo = 1
 }
+
+local f = {
+	deaf = false
+}
+
 local d17Stats = {
 	Luck = 0
 }
@@ -150,6 +167,8 @@ local player
 local game = Game()
 local invStuff = {}
 local api
+local sfx = SFXManager()
+local mus = MusicManager()
 
 local function convert(tbl, contentType)
     local ret = {}
@@ -165,8 +184,8 @@ local function convert(tbl, contentType)
         	id = Isaac.GetEntityVariantByName(v)
          -- elseif contentType == "S" then
          --     id = Isaac.GetSoundIdByName(v)
-        -- elseif contentType == "P" then
-        --     id = Isaac.GetPillEffectByName(v)
+        elseif contentType == "P" then
+             id = Isaac.GetPillEffectByName(v)
         end
 
         if id ~= -1 then
@@ -185,7 +204,7 @@ i = convert(i, "I")
 et = convert(et, "ET")
 ev = convert(ev, "EV")
 --s = convert(s, "S")
--- pi = convert(pi, "P")
+pi = convert(pi, "P")
 
 local function apiStart()
     api = InfinityBossAPI
@@ -264,6 +283,10 @@ local function onEntityTick(type, fn, variant, subtype)
             fn(ent)
         end
     end)
+end
+
+local function onPillUse(id, fn)
+    mod:AddCallback(ModCallbacks.MC_USE_PILL, fn, id)
 end
 
 local itemsToCheck = {}
@@ -400,6 +423,8 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
     invStuff = {}
 	d17Stats.Luck = 0
 	d21Info.used = false
+	f.deaf = false
+	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
 end)
@@ -867,6 +892,31 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 	end
 end)
 
+
+--!!!!!!!!!!!!!PILLS!!!!!!!!!!!!!!!!!
+onPillUse(pi.MaggyUp, function()
+	player = Isaac.GetPlayer(0)
+	while player:GetPlayerType() ~= PlayerType.PLAYER_MAGDALENA do
+		player:AddCollectible(1, 0, false) --prevents Clicker from removing a Passive
+		player:UseActiveItem(CollectibleType.COLLECTIBLE_CLICKER, false, false, false, false) --changes the character randomly
+	end
+	local heartsToAdd = 8 - player:GetMaxHearts()
+	player:AddMaxHearts(heartsToAdd, false)
+	player:AddHearts(8)
+	player:AddBlackHearts(-24)
+	player:AddSoulHearts(-24)
+	player:AddBoneHearts(-24)
+end)
+
+onPillUse(pi.Deafness, function()
+	f.deaf = true
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+	if f.deaf then
+		mus:Disable()
+	end
+end)
 
 --!!!!!!!!!!!!!ENEMIES!!!!!!!!!!!!!!!
 onEntityTick(et.Muro, function(entity)
