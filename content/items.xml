@@ -180,4 +180,9 @@
 		description="Fully automatic!"
 		gfx="passived6.png"
 	/>
+
+	<trinket name="REALLY Lazy Worm" 
+		description="PFFFFFFTTTTTTTTT" 
+		gfx="passived6.png"
+	/>
 </items>

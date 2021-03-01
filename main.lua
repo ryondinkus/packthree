@@ -62,6 +62,10 @@ local f = {
 	deaf = false
 }
 
+local t = {
+	reallylazyworm = "REALLY Lazy Worm"
+}
+
 local d17Stats = {
 	Luck = 0
 }
@@ -78,6 +82,11 @@ local d21Info = {
 	flag1 = "",
 	flag2 = "",
 	used = false
+}
+
+local RLWInfo = {
+	Range = 120.00,
+	ShotSpeed = 0.60
 }
 
 local enemyNumbers = { --entity numbers corresponding to enemies
@@ -281,6 +290,14 @@ local function onEntityTick(type, fn, variant, subtype)
         local found = Isaac.FindByType(type, variant or -1, subtype or -1, false, false)
         for _, ent in ipairs(found) do
             fn(ent)
+        end
+    end)
+end
+
+local function onTrinketTick(id, fn)
+    mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p, ...)
+        if p:HasTrinket(id) then
+            return fn(p, ...)
         end
     end)
 end
@@ -948,6 +965,9 @@ mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 		end
 	end
 end)
+
+--!!!!!!!!!!!!!TRINKETS!!!!!!!!!!!!!!!
+
 
 --!!!!!!!!!!!!!ENEMIES!!!!!!!!!!!!!!!
 onEntityTick(et.Muro, function(entity)
