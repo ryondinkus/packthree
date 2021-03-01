@@ -33,11 +33,13 @@ local i = {
 }
 
 local et = {
-	Muro = "Muro"
+	Muro = "Muro",
+	LittlestHorn = "Littlest Horn"
 }
 
 local ev = {
-	Muro = "Muro"
+	Muro = "Muro",
+	LittlestHorn = "Littlest Horn"
 }
 
 local es = {
@@ -77,10 +79,7 @@ local enemyNumbers = { --entity numbers corresponding to enemies
 	239,240,241,242,243,244,
 	246,247,248,249,250,251,252,253,254,255,256,257,258,259,
 	276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,
-	295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,
-	Isaac.GetEntityTypeByName("Sunec"), Isaac.GetEntityTypeByName("Shudo"),
-	Isaac.GetEntityTypeByName("Brimstoney"), Isaac.GetEntityTypeByName("Green Attack Fly"),
-	Isaac.GetEntityTypeByName("Dimensional Dukie")
+	295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310
 }
 
 local bossNumbers = { --entity numbers corresponding to bosses
@@ -187,6 +186,12 @@ et = convert(et, "ET")
 ev = convert(ev, "EV")
 --s = convert(s, "S")
 -- pi = convert(pi, "P")
+
+local function apiStart()
+    api = InfinityBossAPI
+    api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
+end
 
 local flagStuff = {
     MoveSpeed = CacheFlag.CACHE_SPEED,
@@ -886,3 +891,55 @@ end, ev.Muro)
 
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, nil, 8)
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, es.Logo, 8)
+
+--!!!!!!!!!!!!!!BOSSES!!!!!!!!!!!!!!!!
+onEntityTick(et.LittlestHorn, function(entity)
+	entity = entity:ToNPC()
+	local data = entity:GetData()
+	local sprite = entity:GetSprite()
+
+	if entity.State == NpcState.STATE_INIT then
+		sprite:Play("Appear", true)
+		entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
+		data.cooldown = 0
+		entity.State = NpcState.STATE_MOVE
+	else
+		if entity.State == NpcState.STATE_MOVE then
+			sprite:Play("Idle")
+			angle = math.random(360) + 1
+			direction = Vector.FromAngle(angle);
+
+			if(entity.Velocity.X < 0.001 and entity.Velocity.Y < 0.001) then
+				entity:AddVelocity(direction:__mul(10))
+			end
+
+			if data.cooldown <= 0 then
+				entity.State = NpcState.STATE_ATTACK
+				data.cooldown = 60
+			end
+			data.cooldown = data.cooldown - 1
+		end
+
+		if entity.State == NpcState.STATE_ATTACK then
+			sprite:Play("Bomb")
+			entity.Velocity = Vector(0,0)
+			if sprite:IsEventTriggered("Bomb") then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_TROLL, entity.Position, Vector(0,0), nil)
+			end
+			if sprite:IsFinished("Bomb") then
+				entity.State = NpcState.STATE_MOVE
+			end
+		end
+	end
+end, ev.LittlestHorn)
+
+local START_FUNC = apiStart
+if InfinityBossAPI then START_FUNC()
+else if not __infinityBossInit then
+__infinityBossInit={Mod = RegisterMod("InfinityBossAPI", 1.0)}
+__infinityBossInit.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+	if not InfinityBossAPI then
+		Isaac.RenderText("A MOD requires BossAPI to run, go get it on the workshop!", 100, 60, 255, 255, 255, 1)
+	end
+end) end
+__infinityBossInit[#__infinityBossInit+1]=START_FUNC end

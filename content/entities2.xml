@@ -59,4 +59,26 @@
     <gibs amount="5" blood="1" bone="1" eye="0" gut="1" large="0" />
     <preload-snd id="69"/> <!--SOUND_MEAT_IMPACTS-->
   </entity>
+  <entity name="Littlest Horn"
+      anm2path="bosses\littlesthorn.anm2"
+      reroll="false"
+      baseHP="100"
+      boss="1"
+      champion="0"
+      collisionDamage="1"
+      collisionMass="15"
+      collisionRadius="13"
+      friction="1"
+      numGridCollisionPoints="12"
+      shadowSize="14"
+      stageHP="0"
+      portrait="81"
+      bestiary="true"
+      bestiaryTransform="0,0,1"
+      bestiartAnim="Idle"
+      id="653"
+      variant="0"
+  >
+    <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
+  </entity>
 </entities>
