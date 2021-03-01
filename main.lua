@@ -424,6 +424,7 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	d17Stats.Luck = 0
 	d21Info.used = false
 	f.deaf = false
+	f.DamageDownTimesUsed = 0
 	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
@@ -914,9 +915,23 @@ end)
 
 onPillUse(pi.HorfHorf, function()
 	player = Isaac.GetPlayer(0)
-	player:UsePill(PillEffect.PILLEFFECT_HORF, 1)
+	player:UsePill(PillEffect.PILLEFFECT_HORF, 0)
 	f.horfActive = true
 	f.horfTimer = 30
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+	if f.deaf then
+		mus:Disable()
+	end
+
+	if f.horfActive then
+		f.horfTimer = f.horfTimer - 1
+		if f.horfTimer <= 0 then
+			player:UsePill(PillEffect.PILLEFFECT_HORF, 1)
+			f.horfActive = false
+		end
+	end
 end)
 
 onPillUse(pi.Megacraft, function()
@@ -935,18 +950,61 @@ onPillUse(pi.HourEnergy, function()
 	player:SetActiveCharge(player:GetActiveCharge() + 1)
 end)
 
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
-	if f.deaf then
-		mus:Disable()
+onPillUse(pi.DamageDown, function()
+	if not f.DamageDownTimesUsed then
+		f.DamageDownTimesUsed = 0
 	end
 
-	if f.horfActive then
-		f.horfTimer = f.horfTimer - 1
-		if f.horfTimer <= 0 then
-			player:UsePill(PillEffect.PILLEFFECT_HORF, 1)
-			f.horfActive = false
+	f.DamageDownTimesUsed = f.DamageDownTimesUsed - 1
+	player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+end)
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
+    if not f.DamageDownTimesUsed then
+        f.DamageDownTimesUsed = 0
+    end
+
+    if flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage + f.DamageDownTimesUsed
+    end
+end)
+
+onPillUse(pi.SleepParalysis, function()
+	player = Isaac.GetPlayer(0)
+	room = game:GetRoom()
+	player:UsePill(PillEffect.PILLEFFECT_PARALYSIS, 0)
+	Isaac.Spawn(enemyNumbers[rng:RandomInt(#enemyNumbers) + 1], 0, 0, room:GetCenterPos(), Vector(0,0), nil)
+end)
+
+onPillUse(pi.ThreeExclamations, function()
+	player = Isaac.GetPlayer(0)
+	room = game:GetRoom()
+	local inv = getInventory()
+	local allHeld = {}
+	local items = 0
+	for id, numOwned in pairs (inv) do
+		if numOwned > 0 then
+			for i = 1, numOwned do
+				allHeld[#allHeld + 1] = id
+			end
 		end
 	end
+
+	for i, v in pairs (allHeld) do
+		player:RemoveCollectible(v)
+		items = items + 1
+	end
+
+	for i=1, items do
+		player:AddCollectible(rng:RandomInt(numCollectibles) + 1, 0, false)
+	end
+end)
+
+onPillUse(pi.ThreeDots, function()
+	local sub = rng:RandomInt(3)
+	local level = game:GetLevel()
+	level:SetStage(1, sub)
+	game:StartStageTransition(true, 1)
 end)
 
 --!!!!!!!!!!!!!ENEMIES!!!!!!!!!!!!!!!
