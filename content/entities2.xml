@@ -12,6 +12,7 @@
    harmless when directly hitting the player.
 -->
 <entities anm2root="gfx/" version="5">
+  <!--ENEMIES-->
   <entity name="Muro"
       anm2path="monsters\muro.anm2"
       reroll="true"
@@ -59,6 +60,8 @@
     <gibs amount="5" blood="1" bone="1" eye="0" gut="1" large="0" />
     <preload-snd id="69"/> <!--SOUND_MEAT_IMPACTS-->
   </entity>
+
+  <!--BOSSES-->
   <entity name="Littlest Horn"
       anm2path="bosses\littlesthorn.anm2"
       reroll="false"
@@ -80,5 +83,31 @@
       variant="0"
   >
     <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
+  </entity>
+
+<!--BEANS-->
+  <entity anm2path="items/pick ups/jellybeancerulean.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Cerulean" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="0">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeanorangespeckles.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Orange Speckled" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="1">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeanhotpink.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Hot Pink" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="2">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeanwhitebrownspeckles.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean White Brown Speckled" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="3">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeanmagenta.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Magenta" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="4">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeandarkgreen.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Dark Green" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="5">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeanburgundy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Burgundy" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="6">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+  <entity anm2path="items/pick ups/jellybeaninverted.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Inverted" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="7">
+      <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
   </entity>
 </entities>

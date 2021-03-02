@@ -1,4 +1,4 @@
-local mod = RegisterMod("Unpentance", 1)
+local mod = RegisterMod("More Dice", 1)
 local rng = RNG()
 
 local i = {
@@ -51,7 +51,8 @@ local et = {
 
 local ev = {
 	Muro = "Muro",
-	LittlestHorn = "Littlest Horn"
+	LittlestHorn = "Littlest Horn",
+	MoreJellyBean = "Jelly Bean Inverted"
 }
 
 local es = {
@@ -84,11 +85,6 @@ local d21Info = {
 	used = false
 }
 
-local RLWInfo = {
-	Range = 120.00,
-	ShotSpeed = 0.60
-}
-
 local enemyNumbers = { --entity numbers corresponding to enemies
 	10,11,12,13,14,15,16,
 	18,
@@ -101,7 +97,7 @@ local enemyNumbers = { --entity numbers corresponding to enemies
 	80,
 	85,86,87,88,89,90,91,92,93,94,
 	201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,
-	220,221,222,223,224,225,226,227,228,229,230,231,233,234,235,236,237,238,
+	220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,
 	239,240,241,242,243,244,
 	246,247,248,249,250,251,252,253,254,255,256,257,258,259,
 	276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,
@@ -118,36 +114,13 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	81,82,83,84,
 	97,98,99,100,101,102,
 	260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,
-	401,402,403,404,405,406,407,408,409,410,411,412,413,
-	Isaac.GetEntityTypeByName("Nerve Ending 3"), Isaac.GetEntityTypeByName("Mega Ultra Envy"),
-	Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityTypeByName("Santa"),
-	Isaac.GetEntityTypeByName("Ultra Envy"), Isaac.GetEntityTypeByName("Skinless Hush"),
-	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), LittlestHorn
+	401,402,403,404,405,406,407,408,409,410,411,412,413
 }
 
 local flyNumbers = {
 	13,14,18,25,61,80,91,
 	214,222,249,256,
-	281,296,
-	Isaac.GetEntityTypeByName("Green Attack Fly")
-}
-
-local familiarNumbers = {
-	8,10,57,67,73,88,94,95,96,98,99,100,112,113,117,131,144,155,163,167,170,172,
-	174,178,187,188,207,238,239,264,265,266,267,268,269,270,271,272,273,274,275,
-	276,277,278,279,280,281,318,319,320,321,322,360,361,362,363,364,365,372,375,
-	384,385,387,388,389,390,403,404,405,412,413,417,426,430,431,433,435,436,467,
-	468,469,470,471,472,473,474,491,492,500,508,509,511,518,519,526,528,537,539,
-	542,543,544,548,
-	Isaac.GetItemIdByName("Bean Bum"),Isaac.GetItemIdByName("Biggest Fan"),
-	Isaac.GetItemIdByName("Bob's Brain II"),Isaac.GetItemIdByName("Devil Bum"),
-	Isaac.GetItemIdByName("Guppy Bum"),Isaac.GetItemIdByName("Pack 2 Sack"),
-	Isaac.GetItemIdByName("Rocket Boy"),Isaac.GetItemIdByName("Sack of Beans"),
-	Isaac.GetItemIdByName("Sack of Charge"),Isaac.GetItemIdByName("Sack of Diamonds"),
-	Isaac.GetItemIdByName("Sack of Nothing"),Isaac.GetItemIdByName("Sack of Rockets"),
-	Isaac.GetItemIdByName("Sack of Sack of Sacks"),Isaac.GetItemIdByName("Sacrificial Bean"),
-	Isaac.GetItemIdByName("Skinless ???'s Body'"),Isaac.GetItemIdByName("Skinless Hushy"),
-	Isaac.GetItemIdByName("The Ghost")
+	281,296
 }
 
 local debugLog = {}
@@ -176,8 +149,6 @@ local player
 local game = Game()
 local invStuff = {}
 local api
-local sfx = SFXManager()
-local mus = MusicManager()
 
 local function convert(tbl, contentType)
     local ret = {}
@@ -185,16 +156,16 @@ local function convert(tbl, contentType)
         local id
         if contentType == "I" then
             id = Isaac.GetItemIdByName(v)
-        -- elseif contentType == "T" then
-        --     id = Isaac.GetTrinketIdByName(v)
+        elseif contentType == "T" then
+        	id = Isaac.GetTrinketIdByName(v)
         elseif contentType == "ET" then
         	id = Isaac.GetEntityTypeByName(v)
         elseif contentType == "EV" then
         	id = Isaac.GetEntityVariantByName(v)
          -- elseif contentType == "S" then
          --     id = Isaac.GetSoundIdByName(v)
-        elseif contentType == "P" then
-             id = Isaac.GetPillEffectByName(v)
+        -- elseif contentType == "P" then
+        --     id = Isaac.GetPillEffectByName(v)
         end
 
         if id ~= -1 then
@@ -209,17 +180,11 @@ local function convert(tbl, contentType)
 end
 
 i = convert(i, "I")
--- t = convert(t, "T")
+t = convert(t, "T")
 et = convert(et, "ET")
 ev = convert(ev, "EV")
 --s = convert(s, "S")
-pi = convert(pi, "P")
-
-local function apiStart()
-    api = InfinityBossAPI
-    api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
-	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
-end
+-- pi = convert(pi, "P")
 
 local flagStuff = {
     MoveSpeed = CacheFlag.CACHE_SPEED,
@@ -285,27 +250,6 @@ local function onPassiveTick(id, fn)
     end)
 end
 
-local function onEntityTick(type, fn, variant, subtype)
-    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
-        local found = Isaac.FindByType(type, variant or -1, subtype or -1, false, false)
-        for _, ent in ipairs(found) do
-            fn(ent)
-        end
-    end)
-end
-
-local function onTrinketTick(id, fn)
-    mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p, ...)
-        if p:HasTrinket(id) then
-            return fn(p, ...)
-        end
-    end)
-end
-
-local function onPillUse(id, fn)
-    mod:AddCallback(ModCallbacks.MC_USE_PILL, fn, id)
-end
-
 local itemsToCheck = {}
 
 local function onItemPickup(id, fn, remove)
@@ -335,7 +279,7 @@ local function TriggerRoomAmbush(...)
 	roomClosed = true
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function ()
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
     player = Isaac.GetPlayer(0)
 	room = game:GetRoom()
     for _, itemStuff in ipairs(itemsToCheck) do
@@ -392,6 +336,28 @@ local function replaceEntity(type, variant, subtype, type2, variant2, subtype2, 
     end)
 end
 
+local function entsCollide(ent1, ent2)
+    return ent1.Position:Distance(ent2.Position) <= (ent1.Size + ent2.Size)
+end
+
+local function onPickupPickup(variant, fn)
+    mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, function(_, p, ...)
+        if p.Variant == variant then
+            local sprite, data = p:GetSprite(), p:GetData()
+            if entsCollide(p, player) and not sprite:IsPlaying("Collect") and not sprite:IsFinished("Collect") and not sprite:IsPlaying("Appear") then
+                local ret = fn(p, player)
+                if ret ~= false then
+                    sprite:Play("Collect")
+                end
+            end
+
+            if sprite:IsFinished("Collect") then
+                p:Remove()
+            end
+        end
+    end)
+end
+
 local function BossOrMonster(entityInt, bossTrue)
 	local isMonster = false
 	local isBoss = false
@@ -435,23 +401,17 @@ local function GenerateRandomBoss()
 	end
 end
 
+local TextStreakQueue = {
+
+}
+
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	player = Isaac.GetPlayer(0)
     invStuff = {}
 	d17Stats.Luck = 0
 	d21Info.used = false
-	f.deaf = false
-	f.DamageDownTimesUsed = 0
-	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
-end)
-
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
-	if Isaac.GetItemIdByName("One True Bean") == -1 then
-		Isaac.RenderText("Hey, it looks like you aren't using Abortionbirth Pack 2,", 100, 40, 255, 255, 255, 1)
-		Isaac.RenderText("which this mod NEEDS. Please go download it :)", 100, 50, 255, 255, 255, 1)
-	end
 end)
 
 --dice activation code
@@ -670,36 +630,18 @@ onActiveUse(i.D19, function()
 	return true
 end)
 
-local function FlagToStat(flag)
-	if flag == CacheFlag.CACHE_DAMAGE then
-		return "Damage"
-	end
-	if flag == CacheFlag.CACHE_FIREDELAY then
-		return "MaxFireDelay"
-	end
-	if flag == CacheFlag.CACHE_LUCK then
-		return "Luck"
-	end
-	if flag == CacheFlag.CACHE_SPEED then
-		return "MoveSpeed"
-	end
-	if flag == CacheFlag.CACHE_SHOTSPEED then
-		return "ShotSpeed"
-	end
-	return nil
-end
-
 onActiveUse(i.D21, function()
+	d21Stats.Damage = rng:RandomInt(2)+9
+	d21Stats.MaxFireDelay = rng:RandomInt(2)+9
+	d21Stats.ShotSpeed = rng:RandomInt(2)+9
+	d21Stats.Luck = rng:RandomInt(2)+9
+	d21Stats.MoveSpeed = rng:RandomInt(2)+9
 	d21Info.used = true
 	local flag1 = d21Flags[rng:RandomInt(4)+1]
 	local flag2 = d21Flags[rng:RandomInt(4)+1]
 	while flag1 == flag2 do
 		flag2 = d21Flags[rng:RandomInt(4)+1]
 	end
-	local stat1 = FlagToStat(flag1)
-	local stat2 = FlagToStat(flag2)
-	d21Stats[stat1] = 9
-	d21Stats[stat2] = 10
 	player:AddCacheFlags(flag1 | flag2)
 	player:EvaluateItems()
 
@@ -909,6 +851,150 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 		end
 	end
 end)
+
+--!!!!!!!!!!!!PICKUPS!!!!!!!!!!!!!!!
+local TextStreakScales = {
+    [0] = Vector(3,0.2),	[1] = Vector(2.6,0.36),
+    [2] = Vector(2.2,0.52),	[3] = Vector(1.8,0.68),
+    [4] = Vector(1.4,0.84),	[5] = Vector(0.95,1.05),
+    [6] = Vector(0.97,1.03),	[7] = Vector(0.98,1.02),
+    [61] = Vector(0.99,1.03),	[62] = Vector(0.98,1.05),
+    [63] = Vector(0.96,1.08),	[64] = Vector(0.95,1.1),
+    [65] = Vector(1.36,0.92),	[66] = Vector(1.77,0.74),
+    [67] = Vector(2.18,0.56),	[68] = Vector(2.59,0.38),
+    [69] = Vector(3,0.2)
+}
+
+local TextStreakPositions = {
+    [0] = -800,	[1] = -639,
+    [2] = -450,	[3] = -250,
+    [4] = -70,	[5] = 10,
+    [6] = 6,	[7] = 3,
+    [61] = -5,	[62] = -10,
+    [63] = -15,	[64] = -20,
+    [65] = 144,	[66] = 308,
+    [67] = 472,	[68] = 636,
+    [69] =800
+}
+
+local streakSprite = Sprite()
+streakSprite:Load("gfx/streak/streak.anm2", true)
+local streakFont = Font()
+streakFont:Load("font/upheaval.fnt")
+local streakDefaultColor = KColor(1,1,1,1,0,0,0)
+local streakDefaultPos = Vector(240, 48)
+local function PlayTextStreak(text, offset, color, config, renderStartPos)
+    TextStreakQueue[#TextStreakQueue + 1] = {
+        Text = text,
+        Color = color or streakDefaultColor,
+        Frame = 0,
+        Width = streakFont:GetStringWidth(text) / 2,
+        RenderPos = renderStartPos or streakDefaultPos,
+        FontScale = Vector(1, 1),
+        Offset = offset or zeroVector
+    }
+end
+
+local function UpdateTextStreak()
+    local streakPlaying = TextStreakQueue[1]
+    if streakPlaying then
+        local sprite = streakSprite
+
+        if not streakSprite:IsPlaying("Text") then
+            streakSprite:Play("Text", true)
+        else
+            sprite:Update()
+        end
+
+        streakPlaying.Frame = sprite:GetFrame()
+        if streakPlaying.Frame >= 69 then
+            streakSprite:Stop()
+            table.remove(TextStreakQueue, 1)
+        end
+
+        streakPlaying.FontScale = (TextStreakScales[streakPlaying.Frame] or Vector(1, 1))
+        local screenX = api.GetScreenCenterPosition().X
+        streakPlaying.RenderPos.X = screenX
+        streakPlaying.PositionX = (TextStreakPositions[streakPlaying.Frame] or 0) - streakPlaying.Width * streakPlaying.FontScale.X + screenX + 0.25
+    end
+end
+
+local function RenderTextStreak()
+    local streakPlaying = TextStreakQueue[1]
+    if streakPlaying and streakSprite:IsPlaying("Text") then
+        streakSprite:Render(streakPlaying.RenderPos + streakPlaying.Offset, zeroVector, zeroVector)
+        streakFont:DrawStringScaled(streakPlaying.Text, streakPlaying.PositionX + streakPlaying.Offset.X, (streakPlaying.RenderPos.Y - 9) + streakPlaying.Offset.Y, streakPlaying.FontScale.X, 1, streakPlaying.Color, 0, true)
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, UpdateTextStreak)
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, RenderTextStreak)
+
+local jellyBeanFlavorsOld = {
+    cerulean = "Blue Raspberry",
+    orangespeckles = "Orange Cream",
+    hotpink = "Bubblegum",
+    whitebrownspeckles = "Toasted Marshmallow",
+    magenta = "Strawberry",
+    darkgreen = "Lime",
+    burgundy = "Icky",
+    inverted = "Naeb"
+}
+
+local jellyBeanFlavors = {}
+
+for k, v in pairs(jellyBeanFlavorsOld) do
+    local filename = "gfx/items/pick ups/jellybean" .. k .. ".anm2"
+    Isaac.DebugString(filename)
+    jellyBeanFlavors[filename] = v
+end
+
+onEntityTick(EntityType.ENTITY_PICKUP, function(p)
+    p = p:ToPickup()
+    p:Morph(p.Type, p.Variant, api.Random(0, 7), true)
+end, ev.MoreJellyBean, 8)
+
+onPickupPickup(ev.MoreJellyBean, function(p, player)
+    local filename = p:GetSprite():GetFilename()
+    local flavor = jellyBeanFlavors[filename]
+    if flavor then
+        Isaac.DebugString(flavor)
+        PlayTextStreak(flavor)
+        if flavor == "Toasted Marshmallow" then
+            local entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity:IsEnemy() then
+					entity:AddBurn(EntityRef(player), 3000, 40)
+				end
+			end
+        end
+		if flavor == "Icky" then
+			room = game:GetRoom()
+			Isaac.Spawn(EntityType.ENTITY_BRAIN, 0, 0, room:GetCenterPos(), Vector(0,0), nil)
+		end
+		if flavor == "Naeb" then
+			room = game:GetRoom()
+			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLACK_HOLE, 0, room:GetCenterPos(), Vector(0,0), entity)
+
+		end
+
+    else
+        Isaac.DebugString(filename)
+    end
+
+    if player:HasTrinket(Isaac.GetTrinketIdByName("Mystery Bean")) then
+        local pool = game:GetItemPool()
+        local color = pool:GetPill(p.InitSeed)
+        local effect = pool:GetPillEffect(color)
+        player:UsePill(effect, color)
+    end
+
+    player:AnimateHappy()
+end)
+
+
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, nil, EntityType.ENTITY_PICKUP, ev.MoreJellyBean, 8, 2)
+
 
 
 --!!!!!!!!!!!!!PILLS!!!!!!!!!!!!!!!!!

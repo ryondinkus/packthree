@@ -40,7 +40,7 @@
  - `devilprice` the number of red heart containers your item should cost in
    a devil room (`devilprice="1"` or `devilprice="2"`)
 -->
-<items gfxroot="gfx/" version="1">
+<items gfxroot="gfx/items/" version="1">
 	<active name="D Negative 1"
 		description="Item implosion"
 		gfx="d-1.png"
