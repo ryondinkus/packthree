@@ -1,4 +1,4 @@
-local mod = RegisterMod("More Dice", 1)
+local mod = RegisterMod("Unpentance", 1)
 local rng = RNG()
 
 local i = {
@@ -85,6 +85,11 @@ local d21Info = {
 	used = false
 }
 
+local RLWInfo = {
+	Range = 120.00,
+	ShotSpeed = 0.60
+}
+
 local enemyNumbers = { --entity numbers corresponding to enemies
 	10,11,12,13,14,15,16,
 	18,
@@ -97,7 +102,7 @@ local enemyNumbers = { --entity numbers corresponding to enemies
 	80,
 	85,86,87,88,89,90,91,92,93,94,
 	201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,
-	220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,
+	220,221,222,223,224,225,226,227,228,229,230,231,233,234,235,236,237,238,
 	239,240,241,242,243,244,
 	246,247,248,249,250,251,252,253,254,255,256,257,258,259,
 	276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,
@@ -114,13 +119,36 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	81,82,83,84,
 	97,98,99,100,101,102,
 	260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,
-	401,402,403,404,405,406,407,408,409,410,411,412,413
+	401,402,403,404,405,406,407,408,409,410,411,412,413,
+	Isaac.GetEntityTypeByName("Nerve Ending 3"), Isaac.GetEntityTypeByName("Mega Ultra Envy"),
+	Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityTypeByName("Santa"),
+	Isaac.GetEntityTypeByName("Ultra Envy"), Isaac.GetEntityTypeByName("Skinless Hush"),
+	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), LittlestHorn
 }
 
 local flyNumbers = {
 	13,14,18,25,61,80,91,
 	214,222,249,256,
-	281,296
+	281,296,
+	Isaac.GetEntityTypeByName("Green Attack Fly")
+}
+
+local familiarNumbers = {
+	8,10,57,67,73,88,94,95,96,98,99,100,112,113,117,131,144,155,163,167,170,172,
+	174,178,187,188,207,238,239,264,265,266,267,268,269,270,271,272,273,274,275,
+	276,277,278,279,280,281,318,319,320,321,322,360,361,362,363,364,365,372,375,
+	384,385,387,388,389,390,403,404,405,412,413,417,426,430,431,433,435,436,467,
+	468,469,470,471,472,473,474,491,492,500,508,509,511,518,519,526,528,537,539,
+	542,543,544,548,
+	Isaac.GetItemIdByName("Bean Bum"),Isaac.GetItemIdByName("Biggest Fan"),
+	Isaac.GetItemIdByName("Bob's Brain II"),Isaac.GetItemIdByName("Devil Bum"),
+	Isaac.GetItemIdByName("Guppy Bum"),Isaac.GetItemIdByName("Pack 2 Sack"),
+	Isaac.GetItemIdByName("Rocket Boy"),Isaac.GetItemIdByName("Sack of Beans"),
+	Isaac.GetItemIdByName("Sack of Charge"),Isaac.GetItemIdByName("Sack of Diamonds"),
+	Isaac.GetItemIdByName("Sack of Nothing"),Isaac.GetItemIdByName("Sack of Rockets"),
+	Isaac.GetItemIdByName("Sack of Sack of Sacks"),Isaac.GetItemIdByName("Sacrificial Bean"),
+	Isaac.GetItemIdByName("Skinless ???'s Body'"),Isaac.GetItemIdByName("Skinless Hushy"),
+	Isaac.GetItemIdByName("The Ghost")
 }
 
 local debugLog = {}
@@ -149,6 +177,8 @@ local player
 local game = Game()
 local invStuff = {}
 local api
+local sfx = SFXManager()
+local mus = MusicManager()
 
 local function convert(tbl, contentType)
     local ret = {}
@@ -164,8 +194,8 @@ local function convert(tbl, contentType)
         	id = Isaac.GetEntityVariantByName(v)
          -- elseif contentType == "S" then
          --     id = Isaac.GetSoundIdByName(v)
-        -- elseif contentType == "P" then
-        --     id = Isaac.GetPillEffectByName(v)
+        elseif contentType == "P" then
+             id = Isaac.GetPillEffectByName(v)
         end
 
         if id ~= -1 then
@@ -184,7 +214,13 @@ t = convert(t, "T")
 et = convert(et, "ET")
 ev = convert(ev, "EV")
 --s = convert(s, "S")
--- pi = convert(pi, "P")
+pi = convert(pi, "P")
+
+local function apiStart()
+    api = InfinityBossAPI
+    api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
+end
 
 local flagStuff = {
     MoveSpeed = CacheFlag.CACHE_SPEED,
@@ -250,6 +286,27 @@ local function onPassiveTick(id, fn)
     end)
 end
 
+local function onEntityTick(type, fn, variant, subtype)
+    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+        local found = Isaac.FindByType(type, variant or -1, subtype or -1, false, false)
+        for _, ent in ipairs(found) do
+            fn(ent)
+        end
+    end)
+end
+
+local function onTrinketTick(id, fn)
+    mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p, ...)
+        if p:HasTrinket(id) then
+            return fn(p, ...)
+        end
+    end)
+end
+
+local function onPillUse(id, fn)
+    mod:AddCallback(ModCallbacks.MC_USE_PILL, fn, id)
+end
+
 local itemsToCheck = {}
 
 local function onItemPickup(id, fn, remove)
@@ -279,7 +336,7 @@ local function TriggerRoomAmbush(...)
 	roomClosed = true
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function ()
     player = Isaac.GetPlayer(0)
 	room = game:GetRoom()
     for _, itemStuff in ipairs(itemsToCheck) do
@@ -410,8 +467,18 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
     invStuff = {}
 	d17Stats.Luck = 0
 	d21Info.used = false
+	f.deaf = false
+	f.DamageDownTimesUsed = 0
+	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+	if Isaac.GetItemIdByName("One True Bean") == -1 then
+		Isaac.RenderText("Hey, it looks like you aren't using Abortionbirth Pack 2,", 100, 40, 255, 255, 255, 1)
+		Isaac.RenderText("which this mod NEEDS. Please go download it :)", 100, 50, 255, 255, 255, 1)
+	end
 end)
 
 --dice activation code
@@ -630,18 +697,36 @@ onActiveUse(i.D19, function()
 	return true
 end)
 
+local function FlagToStat(flag)
+	if flag == CacheFlag.CACHE_DAMAGE then
+		return "Damage"
+	end
+	if flag == CacheFlag.CACHE_FIREDELAY then
+		return "MaxFireDelay"
+	end
+	if flag == CacheFlag.CACHE_LUCK then
+		return "Luck"
+	end
+	if flag == CacheFlag.CACHE_SPEED then
+		return "MoveSpeed"
+	end
+	if flag == CacheFlag.CACHE_SHOTSPEED then
+		return "ShotSpeed"
+	end
+	return nil
+end
+
 onActiveUse(i.D21, function()
-	d21Stats.Damage = rng:RandomInt(2)+9
-	d21Stats.MaxFireDelay = rng:RandomInt(2)+9
-	d21Stats.ShotSpeed = rng:RandomInt(2)+9
-	d21Stats.Luck = rng:RandomInt(2)+9
-	d21Stats.MoveSpeed = rng:RandomInt(2)+9
 	d21Info.used = true
 	local flag1 = d21Flags[rng:RandomInt(4)+1]
 	local flag2 = d21Flags[rng:RandomInt(4)+1]
 	while flag1 == flag2 do
 		flag2 = d21Flags[rng:RandomInt(4)+1]
 	end
+	local stat1 = FlagToStat(flag1)
+	local stat2 = FlagToStat(flag2)
+	d21Stats[stat1] = 9
+	d21Stats[stat2] = 10
 	player:AddCacheFlags(flag1 | flag2)
 	player:EvaluateItems()
 
