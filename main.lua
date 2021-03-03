@@ -157,6 +157,29 @@ local familiarNumbers = {
 	Isaac.GetItemIdByName("The Ghost")
 }
 
+local flagStuff = {
+    MoveSpeed = CacheFlag.CACHE_SPEED,
+    Damage = CacheFlag.CACHE_DAMAGE,
+    MaxFireDelay = CacheFlag.CACHE_FIREDELAY,
+    ShotSpeed = CacheFlag.CACHE_SHOTSPEED,
+    TearFlags = CacheFlag.CACHE_TEARFLAG,
+    TearFallingSpeed = CacheFlag.CACHE_RANGE,
+    TearFallingAcceleration = CacheFlag.CACHE_RANGE,
+    TearHeight = CacheFlag.CACHE_RANGE,
+    LaserColor = CacheFlag.CACHE_TEARCOLOR,
+    TearColor = CacheFlag.CACHE_TEARCOLOR,
+	Luck = CacheFlag.CACHE_LUCK
+}
+
+local d21Flags = {
+	CacheFlag.CACHE_SPEED,
+	CacheFlag.CACHE_DAMAGE,
+	CacheFlag.CACHE_FIREDELAY,
+	CacheFlag.CACHE_LUCK,
+	CacheFlag.CACHE_SHOTSPEED
+}
+
+
 local debugLog = {}
 
 local function addLog(text, index)
@@ -227,28 +250,6 @@ local function apiStart()
     api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
 	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
 end
-
-local flagStuff = {
-    MoveSpeed = CacheFlag.CACHE_SPEED,
-    Damage = CacheFlag.CACHE_DAMAGE,
-    MaxFireDelay = CacheFlag.CACHE_FIREDELAY,
-    ShotSpeed = CacheFlag.CACHE_SHOTSPEED,
-    TearFlags = CacheFlag.CACHE_TEARFLAG,
-    TearFallingSpeed = CacheFlag.CACHE_RANGE,
-    TearFallingAcceleration = CacheFlag.CACHE_RANGE,
-    TearHeight = CacheFlag.CACHE_RANGE,
-    LaserColor = CacheFlag.CACHE_TEARCOLOR,
-    TearColor = CacheFlag.CACHE_TEARCOLOR,
-	Luck = CacheFlag.CACHE_LUCK
-}
-
-local d21Flags = {
-	CacheFlag.CACHE_SPEED,
-	CacheFlag.CACHE_DAMAGE,
-	CacheFlag.CACHE_FIREDELAY,
-	CacheFlag.CACHE_LUCK,
-	CacheFlag.CACHE_SHOTSPEED
-}
 
 local function applyStupidStats(p, flag, stupidStats)
     for key, val in pairs(stupidStats) do
@@ -348,6 +349,20 @@ local function TriggerRoomAmbush(...)
 	    end
 	end
 	roomClosed = true
+end
+
+local function getNearestEnemy(pos)
+    local dist
+    local near
+    for _, ent in ipairs(enemies) do
+        local distance = ent.Position:Distance(pos or player.Position)
+        if not dist or distance < dist then
+            dist = distance
+            near = ent
+        end
+    end
+
+    return near
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function ()
@@ -959,7 +974,6 @@ onActiveUse(i.FlatD6, function()
 end)
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-	print("ran")
 	player = Isaac.GetPlayer(0)
 	if player:HasCollectible(i.PassiveD6) then
 		local entities = Isaac.GetRoomEntities()
@@ -968,6 +982,62 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 			and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
 				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, entity.Position, Vector(0,0), nil)
 				entity:Remove()
+			end
+		end
+	end
+end)
+
+--!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
+
+mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt, dmgFlag, sourceEnt, dmgFrames)
+	if player:GetName() == "The Bean" then
+		if sourceEnt.Entity ~= nil then
+			if sourceEnt.Entity.Type == EntityType.ENTITY_TEAR then
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_BEAN) or player:HasCollectible(Isaac.GetItemIdByName("Mean Bean")) then
+					game:Fart(thisEnt.Position, 10, nil, 1, 0)
+				end
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_BUTTER_BEAN) then
+					game:ButterBeanFart(thisEnt.Position, 10, nil, true)
+				end
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_MEGA_BEAN) then
+					game:Fart(thisEnt.Position, 100, nil, 2, 0)
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ROCK_EXPLOSION, 1, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_KIDNEY_BEAN) then
+					game:CharmFart(thisEnt.Position, 10, nil)
+				end
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_WAIT_WHAT) then
+					game:ButterBeanFart(thisEnt.Position, 10, nil, true)
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ROCK_EXPLOSION, 1, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("King Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.KING_BABY, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Suicide Bean")) then
+					entities = Isaac.GetRoomEntities()
+					for i, entity in pairs(entities) do
+						entity:Kill()
+					end
+					player:UseCard(Card.CARD_SUICIDE_KING)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("One True Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Batter Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_SNACK, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Clean Bean")) then
+					player:UseActiveItem(Isaac.GetItemIdByName("Clean Bean"), false, true, false, nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Fiend Bean")) then
+					Isaac.Spawn(Isaac.GetEntityTypeByName("Attack Heart"), Isaac.GetEntityVariantByName("Attack Heart"), 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Beam Bean")) then
+					local near = getNearestEnemy(thisEnt.Position)
+					if near then
+						thisEnt:FireTechLaser(thisEnt.Position, 0, near.Position - thisEnt.Position, false, true)
+					end
+				end
 			end
 		end
 	end
@@ -1079,6 +1149,7 @@ onPickupPickup(ev.MoreJellyBean, function(p, player)
     local filename = p:GetSprite():GetFilename()
     local flavor = jellyBeanFlavors[filename]
     if flavor then
+		print("It worked")
         Isaac.DebugString(flavor)
         PlayTextStreak(flavor)
         if flavor == "Toasted Marshmallow" then
@@ -1099,6 +1170,10 @@ onPickupPickup(ev.MoreJellyBean, function(p, player)
 
 		end
 
+		if player.Type == Isaac.GetPlayerTypeByName("The Bean") then
+				AddBeanStats(flavor)
+		end
+
     else
         Isaac.DebugString(filename)
     end
@@ -1112,7 +1187,6 @@ onPickupPickup(ev.MoreJellyBean, function(p, player)
 
     player:AnimateHappy()
 end)
-
 
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, nil, EntityType.ENTITY_PICKUP, ev.MoreJellyBean, 8, 2)
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, nil, EntityType.ENTITY_PICKUP, ev.RustedPenny, nil, 50)
