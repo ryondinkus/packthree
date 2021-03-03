@@ -52,7 +52,13 @@ local et = {
 local ev = {
 	Muro = "Muro",
 	LittlestHorn = "Littlest Horn",
-	MoreJellyBean = "Jelly Bean Inverted"
+
+	MoreJellyBean = "Jelly Bean Inverted",
+	RustedPenny = "Rusted Penny",
+	RustedKey = "Rusted Key",
+	RustedBomb = "Rusted Bomb",
+	RustedHeart = "Rusted Heart",
+	RustedBattery = "Rusted Battery"
 }
 
 local es = {
@@ -286,6 +292,14 @@ local function onPassiveTick(id, fn)
     end)
 end
 
+local function whenVar(name, fn, is)
+    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+        if f[name] and (not is or f[name] == is) then
+            fn()
+        end
+    end)
+end
+
 local function onEntityTick(type, fn, variant, subtype)
     mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
         local found = Isaac.FindByType(type, variant or -1, subtype or -1, false, false)
@@ -461,6 +475,28 @@ end
 local TextStreakQueue = {
 
 }
+
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
+    level = game:GetLevel()
+    room = game:GetRoom()
+    player = Isaac.GetPlayer(0)
+    if f.RustedPenny then
+        f.RustedPenny = false
+    end
+	if f.RustedKey then
+		f.RustedKey = false
+	end
+	if f.RustedBomb then
+		f.RustedBomb = false
+	end
+	if f.RustedHeart then
+		f.RustedHeart = false
+	end
+	if f.RustedBattery then
+		f.RustedBattery = false
+	end
+end)
+
 
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	player = Isaac.GetPlayer(0)
@@ -1079,6 +1115,49 @@ end)
 
 
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, nil, EntityType.ENTITY_PICKUP, ev.MoreJellyBean, 8, 2)
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, nil, EntityType.ENTITY_PICKUP, ev.RustedPenny, nil, 50)
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, nil, EntityType.ENTITY_PICKUP, ev.RustedKey, nil, 50)
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, nil, EntityType.ENTITY_PICKUP, ev.RustedBomb, nil, 50)
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, nil, EntityType.ENTITY_PICKUP, ev.RustedHeart, nil, 50)
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, nil, EntityType.ENTITY_PICKUP, ev.RustedBattery, nil, 50)
+
+
+onPickupPickup(ev.RustedPenny, function(p)
+    f.RustedPenny = true
+end)
+
+onPickupPickup(ev.RustedKey, function(p)
+    f.RustedKey = true
+end)
+
+onPickupPickup(ev.RustedBomb, function(p)
+    f.RustedBomb = true
+end)
+
+onPickupPickup(ev.RustedHeart, function(p)
+    player:AddHearts(-2)
+end)
+
+onPickupPickup(ev.RustedBattery, function(p)
+    f.RustedBattery = true
+end)
+
+whenVar("RustedPenny", function()
+    player:AddCoins(-99)
+end)
+
+whenVar("RustedKey", function()
+    player:AddKeys(-99)
+end)
+
+whenVar("RustedBomb", function()
+    player:AddBombs(-99)
+end)
+
+whenVar("RustedBattery", function()
+    player:SetActiveCharge(0)
+end)
+
 
 
 

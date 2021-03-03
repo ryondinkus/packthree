@@ -110,4 +110,21 @@
   <entity anm2path="items/pick ups/jellybeaninverted.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Inverted" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="7">
       <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
   </entity>
+
+<!--Pickups-->
+<entity anm2path="items/pick ups/rusted_penny.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Rusted Penny" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5970">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="items/pick ups/rusted_key.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Rusted Key" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5971">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="items/pick ups/rusted_bomb.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Rusted Bomb" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5972">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="items/pick ups/rusted_heart.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Rusted Heart" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5973">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="items/pick ups/rusted_battery.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Rusted Battery" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5974">
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
 </entities>
