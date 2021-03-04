@@ -51,6 +51,7 @@ local et = {
 
 local ev = {
 	Muro = "Muro",
+	Nostro = "Nostro",
 	LittlestHorn = "Littlest Horn",
 
 	MoreJellyBean = "Jelly Bean Inverted",
@@ -1436,8 +1437,19 @@ onEntityTick(et.Muro, function(entity)
 	end
 end, ev.Muro)
 
+local boogerParams = ProjectileParams()
+boogerParams.BulletFlags = ProjectileFlags.ACID_GREEN
+
+onEntityTick(EntityType.ENTITY_MAW, function(entity)
+	entity = entity:ToNPC()
+	if entity.ProjectileDelay == 0 then
+		tear = entity:FireProjectiles(entity.Position, (player.Position - entity.Position):Normalized() * 7, 0, boogerParams)
+	end
+end, ev.Nostro)
+
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, nil, 8)
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, es.Logo, 8)
+replaceEntity(EntityType.ENTITY_MAW, nil, nil, EntityType.ENTITY_MAW, ev.Nostro, nil, 8)
 
 --!!!!!!!!!!!!!!BOSSES!!!!!!!!!!!!!!!!
 onEntityTick(et.LittlestHorn, function(entity)

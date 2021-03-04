@@ -61,6 +61,11 @@
     <preload-snd id="69"/> <!--SOUND_MEAT_IMPACTS-->
   </entity>
 
+  <entity anm2path="monsters/nostro.anm2" reroll="true" baseHP="20" boss="0" champion="1" collisionDamage="1" collisionMass="7" collisionRadius="13" friction="1" id="26" name="Nostro" numGridCollisionPoints="0" shadowSize="16" stageHP="0" variant="0" portrait="21" bestiary="true" bestiaryTransform="0,5,1" bestiaryAnim="Idle" variant="3552">
+        <gibs amount="6" blood="1" bone="0" eye="0" gut="1" large="0" worm="1" />
+        <preload-snd id="146" /> <!-- SOUND_SHAKEY_KID_ROAR -->
+  </entity>
+
   <!--BOSSES-->
   <entity name="Littlest Horn"
       anm2path="bosses\littlesthorn.anm2"
