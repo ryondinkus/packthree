@@ -996,7 +996,7 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt,
 				if player:HasCollectible(CollectibleType.COLLECTIBLE_BEAN) or player:HasCollectible(Isaac.GetItemIdByName("Mean Bean")) then
 					game:Fart(thisEnt.Position, 10, nil, 1, 0)
 				end
-				if player:HasCollectible(CollectibleType.COLLECTIBLE_BUTTER_BEAN) then
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_BUTTER_BEAN) or player:HasCollectible(Isaac.GetItemIdByName("Butter Bean V2")) then
 					game:ButterBeanFart(thisEnt.Position, 10, nil, true)
 				end
 				if player:HasCollectible(CollectibleType.COLLECTIBLE_MEGA_BEAN) then
@@ -1033,10 +1033,56 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt,
 					Isaac.Spawn(Isaac.GetEntityTypeByName("Attack Heart"), Isaac.GetEntityVariantByName("Attack Heart"), 0, thisEnt.Position, Vector(0,0), nil)
 				end
 				if player:HasCollectible(Isaac.GetItemIdByName("Beam Bean")) then
-					local near = getNearestEnemy(thisEnt.Position)
-					if near then
-						thisEnt:FireTechLaser(thisEnt.Position, 0, near.Position - thisEnt.Position, false, true)
+					player:UseActiveItem(Isaac.GetItemIdByName("Beam Bean"), false, true, false, nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Meme Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_TROLL, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Beaned Bean")) then
+					local num = api.Random(1,3)
+					if num == 1 then
+						game:Fart(thisEnt.Position, 10, nil, 1, 0)
 					end
+					if num == 2 then
+						game:ButterBeanFart(thisEnt.Position, 10, nil, true)
+					end
+					if num == 3 then
+						game:CharmFart(thisEnt.Position, 10, nil)
+					end
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Hot Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HOT_BOMB_FIRE, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Boil Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_BOIL, 0, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("The DBean")) then
+					Isaac.Spawn(enemyNumbers[rng:RandomInt(#enemyNumbers + 1)], 0, 0, thisEnt.Position, Vector(0,0), nil)
+					thisEnt:Remove()
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Bean Soup")) then
+					player:UseActiveItem(Isaac.GetItemIdByName("Bean Soup"), false, true, false, nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Better Bean")) then
+					game:Fart(player.Position, 300, player, 4, 0)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Broken Bean")) then
+					player:UsePill(pi.ThreeExclamations, 0)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Bad Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Theme Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.HUSHY, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("El Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_PORTAL, 0, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Boom Bean")) then
+					Isaac.Explode(thisEnt.Position, nil, 60)
+				end
+				if player:HasCollectible(Isaac.GetItemIdByName("Final Bean")) then
+					Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, thisEnt.Position, Vector(0,0), nil)
 				end
 			end
 		end
@@ -1191,7 +1237,7 @@ end)
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, nil, EntityType.ENTITY_PICKUP, ev.MoreJellyBean, 8, 2)
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, nil, EntityType.ENTITY_PICKUP, ev.RustedPenny, nil, 50)
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, nil, EntityType.ENTITY_PICKUP, ev.RustedKey, nil, 50)
-replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, nil, EntityType.ENTITY_PICKUP, ev.RustedBomb, nil, 50)
+replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, 1, EntityType.ENTITY_PICKUP, ev.RustedBomb, nil, 50)
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, nil, EntityType.ENTITY_PICKUP, ev.RustedHeart, nil, 50)
 replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, nil, EntityType.ENTITY_PICKUP, ev.RustedBattery, nil, 50)
 
@@ -1321,7 +1367,7 @@ onPillUse(pi.ThreeExclamations, function()
 	player = Isaac.GetPlayer(0)
 	room = game:GetRoom()
 	local inv = getInventory()
-	local allHeld = {}
+	allHeld = {}
 	local items = 0
 	for id, numOwned in pairs (inv) do
 		if numOwned > 0 then
