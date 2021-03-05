@@ -53,6 +53,7 @@ local ev = {
 	Muro = "Muro",
 	Nostro = "Nostro",
 	Tomato = "Tomato",
+	Sickstro = "Sickstro",
 	LittlestHorn = "Littlest Horn",
 
 	MoreJellyBean = "Jelly Bean Inverted",
@@ -1457,10 +1458,27 @@ onEntityTick(EntityType.ENTITY_HORF, function(entity)
 	end
 end, ev.Tomato)
 
+local monstroParams = ProjectileParams()
+monstroParams.ChangeVelocity = 0
+monstroParams.ChangeTimeout = 15
+
+onEntityTick(EntityType.ENTITY_MINISTRO, function(entity)
+	entity = entity:ToNPC()
+	local sprite = entity:GetSprite()
+
+	if sprite:IsEventTriggered("Attack") then
+		for i = 1, api.Random(32, 64) do
+			monstroParams.VelocityMulti = api.Random(0, 3000) * 0.001
+			entity:FireBossProjectiles(1, player.Position, 0, monstroParams)
+		end
+	end
+end, ev.Sickstro)
+
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, nil, 8)
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, es.Logo, 8)
 replaceEntity(EntityType.ENTITY_MAW, nil, nil, EntityType.ENTITY_MAW, ev.Nostro, nil, 4)
 replaceEntity(EntityType.ENTITY_HORF, nil, nil, EntityType.ENTITY_HORF, ev.Tomato, nil, 4)
+replaceEntity(EntityType.ENTITY_MINISTRO, nil, nil, EntityType.ENTITY_MINISTRO, ev.Sickstro, nil, 4)
 
 
 --!!!!!!!!!!!!!!BOSSES!!!!!!!!!!!!!!!!
