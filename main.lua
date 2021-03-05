@@ -52,6 +52,7 @@ local et = {
 local ev = {
 	Muro = "Muro",
 	Nostro = "Nostro",
+	Tomato = "Tomato",
 	LittlestHorn = "Littlest Horn",
 
 	MoreJellyBean = "Jelly Bean Inverted",
@@ -1447,9 +1448,20 @@ onEntityTick(EntityType.ENTITY_MAW, function(entity)
 	end
 end, ev.Nostro)
 
+onEntityTick(EntityType.ENTITY_HORF, function(entity)
+	entity = entity:ToNPC()
+	local sprite = entity:GetSprite()
+
+	if sprite:IsFinished("Appear") then
+		Isaac.Explode(entity.Position, nil, 60)
+	end
+end, ev.Tomato)
+
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, nil, 8)
 replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, es.Logo, 8)
-replaceEntity(EntityType.ENTITY_MAW, nil, nil, EntityType.ENTITY_MAW, ev.Nostro, nil, 8)
+replaceEntity(EntityType.ENTITY_MAW, nil, nil, EntityType.ENTITY_MAW, ev.Nostro, nil, 4)
+replaceEntity(EntityType.ENTITY_HORF, nil, nil, EntityType.ENTITY_HORF, ev.Tomato, nil, 4)
+
 
 --!!!!!!!!!!!!!!BOSSES!!!!!!!!!!!!!!!!
 onEntityTick(et.LittlestHorn, function(entity)

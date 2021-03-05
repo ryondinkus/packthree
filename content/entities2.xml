@@ -66,6 +66,12 @@
         <preload-snd id="146" /> <!-- SOUND_SHAKEY_KID_ROAR -->
   </entity>
 
+  <entity anm2path="monsters/tomato.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="1" collisionMass="3" collisionRadius="13" friction="1" id="12" name="Tomato" numGridCollisionPoints="12" shadowSize="13" stageHP="0" variant="3552" portrait="4" bestiary="true"
+bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
+      <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
+      <preload-snd id="146" /> <!-- SOUND_SHAKEY_KID_ROAR -->
+  </entity>
+
   <!--BOSSES-->
   <entity name="Littlest Horn"
       anm2path="bosses\littlesthorn.anm2"
