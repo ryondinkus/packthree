@@ -76,6 +76,11 @@ local t = {
 	reallylazyworm = "REALLY Lazy Worm"
 }
 
+local s = {
+	TwentyOne = "Twenty One",
+	Yahoo = "Yahoo"
+}
+
 local d17Stats = {
 	Luck = 0
 }
@@ -224,10 +229,10 @@ local function convert(tbl, contentType)
         	id = Isaac.GetEntityTypeByName(v)
         elseif contentType == "EV" then
         	id = Isaac.GetEntityVariantByName(v)
-         -- elseif contentType == "S" then
-         --     id = Isaac.GetSoundIdByName(v)
+        elseif contentType == "S" then
+     	    id = Isaac.GetSoundIdByName(v)
         elseif contentType == "P" then
-             id = Isaac.GetPillEffectByName(v)
+         	id = Isaac.GetPillEffectByName(v)
         end
 
         if id ~= -1 then
@@ -245,7 +250,7 @@ i = convert(i, "I")
 t = convert(t, "T")
 et = convert(et, "ET")
 ev = convert(ev, "EV")
---s = convert(s, "S")
+s = convert(s, "S")
 pi = convert(pi, "P")
 
 local function apiStart()
@@ -785,7 +790,7 @@ onActiveUse(i.D21, function()
 	player:EvaluateItems()
 
 	player:RemoveCollectible(i.D21)
-
+	sfx:Play(s.TwentyOne, 1, 0, false, 1)
 	return true
 end)
 
@@ -1411,6 +1416,7 @@ onEntityTick(et.Muro, function(entity)
 		entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_NOPITS
 		data.hopping = false
 		data.cooldown = 0
+		data.yahoo = true
 	else
 		if not sprite:IsPlaying("Appear") then
             if data.cooldown > 0 then
@@ -1419,6 +1425,14 @@ onEntityTick(et.Muro, function(entity)
 
             if data.cooldown == 0 and data.hopping == false then
                 sprite:Play("Hop", true)
+				if data.yahoo then
+					if entity.SubType == es.Logo then
+						sfx:Play(s.Yahoo, 1, 0, false, 1.1)
+					else
+						sfx:Play(s.Yahoo, 1, 0, false, 1)
+					end
+					data.yahoo = false
+				end
                 data.hopping = true
                 data.targetPos = entity:GetPlayerTarget().Position
                 data.targetVel = entity:GetPlayerTarget().Velocity
@@ -1433,6 +1447,7 @@ onEntityTick(et.Muro, function(entity)
 			if sprite:IsFinished("Hop") then
 				sprite:Play("Idle", true)
 				data.hopping = false
+				data.yahoo = true
 				entity.Velocity = Vector(0,0):Normalized()
 			end
 		end

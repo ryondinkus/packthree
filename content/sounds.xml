@@ -1,0 +1,8 @@
+<sounds root="sfx/">
+	<sound name="Twenty One">
+		<sample weight="1" path="twentyone.wav"/>
+	</sound>
+	<sound name="Yahoo">
+		<sample weight="1" path="yahoo.wav"/>
+	</sound>
+</sounds>
