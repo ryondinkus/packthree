@@ -32,7 +32,10 @@ local i = {
 	PassiveD6 = "PassiveD6",
 	BigD6 = "The Big D6",
 
-	SlapBean = "Slap Bean"
+	SlapBean = "Slap Bean",
+	DoubleBean = "Double Bean",
+	Tomato = "Tomato",
+	NewDLC = "New DLC"
 }
 
 local pi = {
@@ -985,6 +988,21 @@ onActiveUse(i.FlatD6, function()
 	return true
 end)
 
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+	player = Isaac.GetPlayer(0)
+	if player:HasCollectible(i.PassiveD6) then
+		local entities = Isaac.GetRoomEntities()
+		for i, entity in pairs(entities) do
+			if entity.Type == EntityType.ENTITY_PICKUP
+			and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
+				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, entity.Position, Vector(0,0), nil)
+				entity:Remove()
+			end
+		end
+	end
+end)
+
+
 onActiveUse(i.SlapBean, function()
 	sfx:Play(s.Slap, 1, 0, false, 1)
 	local num = api.Random(1,10)
@@ -999,18 +1017,12 @@ onActiveUse(i.BigD6, function()
 	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DICE_FLOOR, api.Random(1,6), room:GetCenterPos(), Vector(0,0), nil)
 end)
 
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-	player = Isaac.GetPlayer(0)
-	if player:HasCollectible(i.PassiveD6) then
-		local entities = Isaac.GetRoomEntities()
-		for i, entity in pairs(entities) do
-			if entity.Type == EntityType.ENTITY_PICKUP
-			and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
-				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, entity.Position, Vector(0,0), nil)
-				entity:Remove()
-			end
-		end
-	end
+onItemPickup(i.Tomato, function()
+	Isaac.Explode(player.Position, nil, 60)
+end)
+
+onItemPickup(i.NewDLC, function()
+	player:AddPill(Isaac.AddPillEffectToPool(PillEffect.PILLEFFECT_HEALTH_UP))
 end)
 
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
@@ -1220,6 +1232,20 @@ onEntityTick(EntityType.ENTITY_PICKUP, function(p)
     p:Morph(p.Type, p.Variant, api.Random(0, 7), true)
 end, ev.MoreJellyBean, 8)
 
+local function SpawnRandomBean()
+	local bean = api.Random(1,2)
+	local variant
+	local subtype
+	if bean == 1 then
+		variant = ev.MoreJellyBean
+		subtype = api.Random(7)
+	elseif bean == 2 then
+		variant = Isaac.GetEntityVariantByName("Jelly Bean Red")
+		subtype = api.Random(12)
+	end
+	Isaac.Spawn(EntityType.ENTITY_PICKUP, variant, subtype,  room:FindFreePickupSpawnPosition(player.Position, 0, true), Vector(0,0), entity)
+end
+
 onPickupPickup(ev.MoreJellyBean, function(p, player)
     local filename = p:GetSprite():GetFilename()
     local flavor = jellyBeanFlavors[filename]
@@ -1252,6 +1278,11 @@ onPickupPickup(ev.MoreJellyBean, function(p, player)
     else
         Isaac.DebugString(filename)
     end
+
+	if player:HasCollectible(i.DoubleBean) then
+		SpawnRandomBean()
+		SpawnRandomBean()
+	end
 
     if player:HasTrinket(Isaac.GetTrinketIdByName("Mystery Bean")) then
         local pool = game:GetItemPool()

@@ -190,6 +190,22 @@
 		gfx="bigd6.png"
 		maxcharges="6"
 	/>
+	<passive name="Double Bean"
+		description= "Unending beanitude"
+		gfx="doublebean.png"
+	/>
+	<passive name="Tomato"
+		description= "Boom!"
+		gfx="tomato.png"
+	/>
+	<passive name="New DLC"
+		description= "Character balance"
+		gfx="newdlc.png"
+	/>
+	<passive name="Among Us Shirt"
+		description= "A nice shirt"
+		gfx="amongusshirt.png"
+	/>
 
 	<trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"
