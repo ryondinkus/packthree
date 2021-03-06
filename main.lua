@@ -29,7 +29,10 @@ local i = {
 	D2K = "D2K",
 	DF = "DF",
 	FlatD6 = "Flat D6",
-	PassiveD6 = "PassiveD6"
+	PassiveD6 = "PassiveD6",
+	BigD6 = "The Big D6",
+
+	SlapBean = "Slap Bean"
 }
 
 local pi = {
@@ -78,7 +81,8 @@ local t = {
 
 local s = {
 	TwentyOne = "Twenty One",
-	Yahoo = "Yahoo"
+	Yahoo = "Yahoo",
+	Slap = "Slap"
 }
 
 local d17Stats = {
@@ -981,6 +985,20 @@ onActiveUse(i.FlatD6, function()
 	return true
 end)
 
+onActiveUse(i.SlapBean, function()
+	sfx:Play(s.Slap, 1, 0, false, 1)
+	local num = api.Random(1,10)
+	if num == 10 then
+		player:TakeDamage(1, 0, EntityRef(player), 0)
+	end
+
+	return true
+end)
+
+onActiveUse(i.BigD6, function()
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DICE_FLOOR, api.Random(1,6), room:GetCenterPos(), Vector(0,0), nil)
+end)
+
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 	player = Isaac.GetPlayer(0)
 	if player:HasCollectible(i.PassiveD6) then
@@ -1091,6 +1109,9 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt,
 				end
 				if player:HasCollectible(Isaac.GetItemIdByName("Final Bean")) then
 					Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, thisEnt.Position, Vector(0,0), nil)
+				end
+				if player:HasCollectible(i.SlapBean) then
+					sfx:Play(s.Slap, 1, 0, false, 1)
 				end
 			end
 		end

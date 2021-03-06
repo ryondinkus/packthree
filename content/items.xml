@@ -180,9 +180,19 @@
 		description="Fully automatic!"
 		gfx="passived6.png"
 	/>
+	<active name="Slap Bean"
+		description="This slaps!"
+		gfx="slapbean.png"
+		maxcharges="1"
+	/>
+	<active name="The Big D6"
+		description= "Huge rerolls"
+		gfx="bigd6.png"
+		maxcharges="6"
+	/>
 
-	<trinket name="REALLY Lazy Worm" 
-		description="PFFFFFFTTTTTTTTT" 
+	<trinket name="REALLY Lazy Worm"
+		description="PFFFFFFTTTTTTTTT"
 		gfx="passived6.png"
 	/>
 </items>

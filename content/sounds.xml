@@ -5,4 +5,7 @@
 	<sound name="Yahoo">
 		<sample weight="1" path="yahoo.wav"/>
 	</sound>
+	<sound name="Slap">
+		<sample weight="1" path="slap.wav"/>
+	</sound>
 </sounds>
