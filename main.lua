@@ -35,7 +35,11 @@ local i = {
 	SlapBean = "Slap Bean",
 	DoubleBean = "Double Bean",
 	Tomato = "Tomato",
-	NewDLC = "New DLC"
+	NewDLC = "New DLC",
+	AmongUsShirt = "Among Us Shirt",
+	LilBosses = "Lil Bosses",
+	LilUltraHard = "Lil Ultra Hard",
+	MrMeaty = "Mr. Meaty"
 }
 
 local pi = {
@@ -1015,6 +1019,8 @@ end)
 
 onActiveUse(i.BigD6, function()
 	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DICE_FLOOR, api.Random(1,6), room:GetCenterPos(), Vector(0,0), nil)
+
+	return true
 end)
 
 onItemPickup(i.Tomato, function()
@@ -1023,6 +1029,46 @@ end)
 
 onItemPickup(i.NewDLC, function()
 	player:AddPill(Isaac.AddPillEffectToPool(PillEffect.PILLEFFECT_HEALTH_UP))
+end)
+
+onActiveUse(i.LilBosses, function()
+	Isaac.Spawn(bossNumbers[api.Random(#bossNumbers+1)], 0, 0, room:GetCenterPos() + Vector(200,0), Vector(0,0), nil)
+	Isaac.Spawn(bossNumbers[api.Random(#bossNumbers+1)], 0, 0, room:GetCenterPos() - Vector(200,0), Vector(0,0), nil)
+
+	return true
+end)
+
+onPassiveTick(i.LilUltraHard, function()
+	local entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP
+		and entity.Variant == PickupVariant.PICKUP_HEART or entity.Variant == ev.RustedHeart then
+			entity:Remove()
+		end
+	end
+end)
+
+onItemPickup(i.MrMeaty, function()
+	room = game:GetRoom()
+	local inv = getInventory()
+	local allHeld = {}
+	local bozos = 0
+	for id, numOwned in pairs (inv) do
+		if numOwned > 0 then
+			for i = 1, numOwned do
+				allHeld[#allHeld + 1] = id
+			end
+		end
+	end
+
+	for i, v in pairs (allHeld) do
+		player:RemoveCollectible(v)
+		bozos = bozos + 1
+	end
+
+	for i=1, bozos do
+		player:AddCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT, 0, false)
+	end
 end)
 
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!

@@ -206,6 +206,19 @@
 		description= "A nice shirt"
 		gfx="amongusshirt.png"
 	/>
+	<active name="Lil Bosses"
+		description= "Portable boss rush"
+		gfx="lilbosses.png"
+		maxcharges="6"
+	/>
+	<passive name="Lil Ultra Hard"
+		description= "Good practice"
+		gfx="ultrahard.png"
+	/>
+	<passive name="Mr. Meaty"
+		description= "Meat Protection"
+		gfx="mrmeaty.png"
+	/>
 
 	<trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"
