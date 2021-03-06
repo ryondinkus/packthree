@@ -1486,6 +1486,7 @@ onEntityTick(EntityType.ENTITY_MINISTRO, function(entity)
 			monstroParams.VelocityMulti = api.Random(0, 3000) * 0.001
 			entity:FireBossProjectiles(1, player.Position, 0, monstroParams)
 		end
+		sfx:Play(SoundEffect.SOUND_BOSS_SPIT_BLOB_BARF, 1, 0, false, 1.1)
 	end
 end, ev.Sickstro)
 
@@ -1528,6 +1529,7 @@ onEntityTick(et.LittlestHorn, function(entity)
 			sprite:Play("Bomb")
 			entity.Velocity = Vector(0,0)
 			if sprite:IsEventTriggered("Bomb") then
+				sfx:Play(SoundEffect.SOUND_LITTLE_HORN_GRUNT_1, 1, 0, false, 1.2)
 				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_TROLL, entity.Position, Vector(0,0), nil)
 			end
 			if sprite:IsFinished("Bomb") then
