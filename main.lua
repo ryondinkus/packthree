@@ -39,7 +39,15 @@ local i = {
 	AmongUsShirt = "Among Us Shirt",
 	LilBosses = "Lil Bosses",
 	LilUltraHard = "Lil Ultra Hard",
-	MrMeaty = "Mr. Meaty"
+	MrMeaty = "Mr. Meaty",
+	Tech0001 = "Tech 0.001",
+	DoubleVision = "Double Vision",
+	KeepersKey = "Keeper's Key",
+	GreedsKidney = "Greed's Kidney",
+	ToggleWings = "Toggle Wings",
+	LogosHat = "Logo's Hat",
+	Tax = "Tax",
+	ExtraSalt = "ExtraSalt"
 }
 
 local c = {
@@ -386,12 +394,15 @@ end
 local function getNearestEnemy(pos)
     local dist
     local near
+	local enemies = Isaac.GetRoomEntities()
     for _, ent in ipairs(enemies) do
-        local distance = ent.Position:Distance(pos or player.Position)
-        if not dist or distance < dist then
-            dist = distance
-            near = ent
-        end
+		if ent:IsVulnerableEnemy() and ent:IsActiveEnemy() and not ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
+	        local distance = ent.Position:Distance(pos or player.Position)
+	        if not dist or distance < dist then
+	            dist = distance
+	            near = ent
+	        end
+		end
     end
 
     return near
@@ -1099,6 +1110,13 @@ onItemPickup(i.MrMeaty, function()
 
 	for i=1, bozos do
 		player:AddCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT, 0, false)
+	end
+end)
+
+onPassiveTick(i.Tech0001, function()
+	local near = getNearestEnemy()
+	if near ~= nil then
+		player:FireTear(player.Position, (near.Position - player.Position):Normalized() * 10, false, true, false)
 	end
 end)
 

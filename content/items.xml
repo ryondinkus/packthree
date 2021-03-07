@@ -219,6 +219,40 @@
 		description= "Meat Protection"
 		gfx="mrmeaty.png"
 	/>
+	<passive name="Tech 0.001"
+		description= "Scrapped prototype"
+		gfx="tech0001.png"
+	/>
+	<passive name="Double Vision"
+		description= "Your eyes are playing tricks"
+		gfx="doublevision.png"
+	/>
+	<active name="Keeper's Key"
+		description= "Access his home"
+		gfx="keeperskey.png"
+		maxcharges = "6"
+	/>
+	<passive name="Greed's Kidney"
+		description= "He is you"
+		gfx="greedskidney.png"
+	/>
+	<passive name="Toggle Wings"
+		description= "flight = !flight"
+		gfx="togglewings.png"
+	/>
+	<passive name="Logo's Hat"
+		description= "For his head"
+		gfx="logoshat.png"
+	/>
+	<passive name="Tax"
+		description= "6.7%"
+		gfx="tax.png"
+	/>
+	<passive name="Extra Salt"
+		description= "Tears up"
+		gfx="extrasalt.png"
+	/>
+
 
 	<trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"
