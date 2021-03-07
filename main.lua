@@ -29,7 +29,7 @@ local i = {
 	D2K = "D2K",
 	DF = "DF",
 	FlatD6 = "Flat D6",
-	PassiveD6 = "PassiveD6",
+	PassiveD6 = "Passive D6",
 	BigD6 = "The Big D6",
 
 	SlapBean = "Slap Bean",
@@ -40,6 +40,16 @@ local i = {
 	LilBosses = "Lil Bosses",
 	LilUltraHard = "Lil Ultra Hard",
 	MrMeaty = "Mr. Meaty"
+}
+
+local c = {
+	PassiveD6 = "passived6",
+	DoubleBean = "doublebean",
+	Tomato = "tomato",
+	NewDLC = "newdlc",
+	AmongUsShirt = "amongusshirt",
+	LilUltraHard = "lilultrahard",
+	MrMeaty = "mrmeaty"
 }
 
 local pi = {
@@ -244,7 +254,9 @@ local function convert(tbl, contentType)
      	    id = Isaac.GetSoundIdByName(v)
         elseif contentType == "P" then
          	id = Isaac.GetPillEffectByName(v)
-        end
+		elseif contentType == "C" then
+			id = Isaac.GetCostumeIdByPath("gfx/characters/costumes/".. v ..".anm2")
+		end
 
         if id ~= -1 then
             ret[k] = id
@@ -263,6 +275,7 @@ et = convert(et, "ET")
 ev = convert(ev, "EV")
 s = convert(s, "S")
 pi = convert(pi, "P")
+c = convert(c, "C")
 
 local function apiStart()
     api = InfinityBossAPI
@@ -1006,6 +1019,9 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 	end
 end)
 
+onItemPickup(i.PassiveD6, function()
+	player:AddNullCostume(c.PassiveD6)
+end)
 
 onActiveUse(i.SlapBean, function()
 	sfx:Play(s.Slap, 1, 0, false, 1)
@@ -1023,12 +1039,22 @@ onActiveUse(i.BigD6, function()
 	return true
 end)
 
+onItemPickup(i.DoubleBean, function()
+	player:AddNullCostume(c.DoubleBean)
+end)
+
 onItemPickup(i.Tomato, function()
+	player:AddNullCostume(c.Tomato)
 	Isaac.Explode(player.Position, nil, 60)
 end)
 
 onItemPickup(i.NewDLC, function()
+	player:AddNullCostume(c.NewDLC)
 	player:AddPill(Isaac.AddPillEffectToPool(PillEffect.PILLEFFECT_HEALTH_UP))
+end)
+
+onItemPickup(i.AmongUsShirt, function()
+	player:AddNullCostume(c.AmongUsShirt)
 end)
 
 onActiveUse(i.LilBosses, function()
@@ -1036,6 +1062,10 @@ onActiveUse(i.LilBosses, function()
 	Isaac.Spawn(bossNumbers[api.Random(#bossNumbers+1)], 0, 0, room:GetCenterPos() - Vector(200,0), Vector(0,0), nil)
 
 	return true
+end)
+
+onItemPickup(i.LilUltraHard, function()
+	player:AddNullCostume(c.LilUltraHard)
 end)
 
 onPassiveTick(i.LilUltraHard, function()
@@ -1049,6 +1079,7 @@ onPassiveTick(i.LilUltraHard, function()
 end)
 
 onItemPickup(i.MrMeaty, function()
+	player:AddNullCostume(c.MrMeaty)
 	room = game:GetRoom()
 	local inv = getInventory()
 	local allHeld = {}
