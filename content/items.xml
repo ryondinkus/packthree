@@ -245,7 +245,7 @@
 		gfx="logoshat.png"
 	/>
 	<passive name="Tax"
-		description= "6.7%"
+		description= "6.7% with interest"
 		gfx="tax.png"
 	/>
 	<passive name="Extra Salt"

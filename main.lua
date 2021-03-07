@@ -553,6 +553,9 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
 	if f.RustedBattery then
 		f.RustedBattery = false
 	end
+	if f.taxAdded then
+		f.taxAdded = false
+	end
 end)
 
 
@@ -563,6 +566,7 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	d21Info.used = false
 	f.deaf = false
 	f.DamageDownTimesUsed = 0
+	f.taxAdded = false
 	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
@@ -1138,6 +1142,21 @@ onPassiveTick(i.Tech0001, function()
 		player:FireTear(player.Position, (near.Position - player.Position):Normalized() * 10, false, true, false)
 	end
 end)
+
+onEntityTick(EntityType.ENTITY_PICKUP, function(ent)
+	if player:HasCollectible(i.Tax) then
+		ent = ent:ToPickup()
+		data = ent:GetData()
+		if data.taxAdded == nil then
+			data.taxAdded = false
+		    if ent:IsShopItem() and not data.taxAdded then
+		        ent.Price = ent.Price + 1
+		        ent.AutoUpdatePrice = false
+				data.taxAdded = true
+		    end
+		end
+	end
+end, nil, nil)
 
 -- DOESN'T WORK: crossing between normal and greed mode isnt as easy as it seems, maybe someday :O
 -- onActiveUse(i.KeepersKey, function()
