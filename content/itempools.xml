@@ -132,6 +132,36 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Slap Bean"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="The Big D6"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Double Bean"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Tomato"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="New DLC"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Mr. Meaty"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="shop">
@@ -175,6 +205,26 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Double Bean"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Among Us Shirt"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Bosses"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Mr. Meaty"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="curse">
@@ -189,6 +239,16 @@ token from the item pool and puts the item on the pedestal.
 				DecreaseBy="1"
 	/>
 	<Item Name="D666"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Bosses"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Ultra Hard"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
@@ -211,6 +271,11 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Tomato"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="devil">
@@ -225,6 +290,16 @@ token from the item pool and puts the item on the pedestal.
 				DecreaseBy="1"
 	/>
 	<Item Name="D666"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Bosses"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Ultra Hard"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
@@ -247,10 +322,20 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="New DLC"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="redChest">
 	<Item Name="D666"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Bosses"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
@@ -278,6 +363,16 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Double Bean"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Among Us Shirt"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="demonBeggar">
@@ -292,6 +387,11 @@ token from the item pool and puts the item on the pedestal.
 				DecreaseBy="1"
 	/>
 	<Item Name="D666"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Bosses"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
