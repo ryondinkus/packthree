@@ -1036,6 +1036,17 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 			end
 		end
 	end
+	if player:HasCollectible(i.LogosHat) then
+		if room:IsLShapedRoom() then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity:IsActiveEnemy() then
+					Isaac.Spawn(et.Muro, ev.Muro, es.Logo, entity.Position, entity.Velocity, nil)
+					entity:Remove()
+				end
+			end
+		end
+	end
 end)
 
 onItemPickup(i.PassiveD6, function()
