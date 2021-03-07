@@ -47,7 +47,7 @@ local i = {
 	ToggleWings = "Toggle Wings",
 	LogosHat = "Logo's Hat",
 	Tax = "Tax",
-	ExtraSalt = "ExtraSalt"
+	ExtraSalt = "Extra Salt"
 }
 
 local c = {
@@ -126,6 +126,10 @@ local d21Info = {
 	flag1 = "",
 	flag2 = "",
 	used = false
+}
+
+local saltStats = {
+	MaxFireDelay = -2,
 }
 
 local RLWInfo = {
@@ -1186,11 +1190,25 @@ end)
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
     if flag == CacheFlag.CACHE_FLYING then
         if f.toggleWings then
-			print("poggy")
 			player.CanFly = not player.CanFly
 			f.toggleWings = false
 		end
     end
+end)
+
+onItemPickup(i.ExtraSalt, function()
+	f.SaltApplied = false
+	player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+	player:EvaluateItems()
+end)
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
+	if flag == CacheFlag.CACHE_FIREDELAY then
+		if not f.SaltApplied then
+			player.MaxFireDelay = player.MaxFireDelay - 1
+			f.SaltApplied = true
+		end
+	end
 end)
 
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
