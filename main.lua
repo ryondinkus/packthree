@@ -1018,13 +1018,21 @@ end)
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 	player = Isaac.GetPlayer(0)
+	local entities = Isaac.GetRoomEntities()
 	if player:HasCollectible(i.PassiveD6) then
-		local entities = Isaac.GetRoomEntities()
 		for i, entity in pairs(entities) do
 			if entity.Type == EntityType.ENTITY_PICKUP
 			and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
 				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, entity.Position, Vector(0,0), nil)
 				entity:Remove()
+			end
+		end
+	end
+	if player:HasCollectible(i.DoubleVision) then
+		for i, entity in pairs(entities) do
+			if entity.Type == EntityType.ENTITY_PICKUP
+			or entity:IsActiveEnemy() then
+				Isaac.Spawn(entity.Type, entity.Variant or 0, entity.SubType or 0, room:FindFreePickupSpawnPosition(entity.Position, 0, true) or Vector(0,0), entity.Vector or Vector(0,0), nil)
 			end
 		end
 	end
