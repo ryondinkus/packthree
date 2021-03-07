@@ -1128,6 +1128,7 @@ onPassiveTick(i.Tech0001, function()
 	end
 end)
 
+-- DOESN'T WORK: crossing between normal and greed mode isnt as easy as it seems, maybe someday :O
 -- onActiveUse(i.KeepersKey, function()
 -- 	level = game:GetLevel()
 -- 	if level:GetStageType() ==  StageType.STAGETYPE_GREEDMODE then
@@ -1144,6 +1145,22 @@ onItemPickup(i.GreedsKidney, function()
 		player:AddCollectible(1, 0, false) --prevents Clicker from removing a Passive
 		player:UseActiveItem(CollectibleType.COLLECTIBLE_CLICKER, false, false, false, false) --changes the character randomly
 	end
+end)
+
+onItemPickup(i.ToggleWings, function()
+	f.toggleWings = true
+	player:AddCacheFlags(CacheFlag.CACHE_FLYING)
+	player:EvaluateItems()
+end)
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
+    if flag == CacheFlag.CACHE_FLYING then
+        if f.toggleWings then
+			print("poggy")
+			player.CanFly = not player.CanFly
+			f.toggleWings = false
+		end
+    end
 end)
 
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
