@@ -1128,6 +1128,24 @@ onPassiveTick(i.Tech0001, function()
 	end
 end)
 
+-- onActiveUse(i.KeepersKey, function()
+-- 	level = game:GetLevel()
+-- 	if level:GetStageType() ==  StageType.STAGETYPE_GREEDMODE then
+-- 		level:SetStage(level:GetStage(), api.Random(2))
+-- 	else
+-- 		level:SetStage(level:GetStage(), StageType.STAGETYPE_GREEDMODE)
+-- 	end
+-- 	game:StartStageTransition(true, 1)
+-- end)
+
+onItemPickup(i.GreedsKidney, function()
+	player = Isaac.GetPlayer(0)
+	while player:GetPlayerType() ~= PlayerType.PLAYER_KEEPER do
+		player:AddCollectible(1, 0, false) --prevents Clicker from removing a Passive
+		player:UseActiveItem(CollectibleType.COLLECTIBLE_CLICKER, false, false, false, false) --changes the character randomly
+	end
+end)
+
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
 
 mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt, dmgFlag, sourceEnt, dmgFrames)
