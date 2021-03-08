@@ -143,4 +143,27 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
 <entity anm2path="items/pick ups/rusted_battery.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Rusted Battery" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5974">
     <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 </entity>
+
+<!--Familiars-->
+<entity anm2path="familiars/enviousBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Envious Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6900">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="familiars/pridefulBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Prideful Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6901">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="familiars/slothlyBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Slothly Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6902">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="familiars/wrathfulBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Wrathful Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6903">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="familiars/lustfulBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Lustful Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6904">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="familiars/gluttonousBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Gluttonous Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6905">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+<entity anm2path="familiars/greedyBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Greedy Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6906">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
 </entities>

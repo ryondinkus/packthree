@@ -252,6 +252,34 @@
 		description= "Tears up"
 		gfx="extrasalt.png"
 	/>
+	<familiar name="Envious Bum"
+		description= "The grass is always greener"
+		gfx="extrasalt.png"
+	/>
+	<familiar name="Prideful Bum"
+		description= "The only item you need"
+		gfx="extrasalt.png"
+	/>
+	<familiar name="Slothly Bum"
+		description= "Lazy"
+		gfx="extrasalt.png"
+	/>
+	<familiar name="Wrathful Bum"
+		description= "Furious friend"
+		gfx="extrasalt.png"
+	/>
+	<familiar name="Lustful Bum"
+		description= "Bummy lust"
+		gfx="extrasalt.png"
+	/>
+	<familiar name="Gluttonous Bum"
+		description= "Full"
+		gfx="extrasalt.png"
+	/>
+	<familiar name="Greedy Bum"
+		description= "All mine!"
+		gfx="extrasalt.png"
+	/>
 
 
 	<trinket name="REALLY Lazy Worm"

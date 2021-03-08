@@ -47,7 +47,15 @@ local i = {
 	ToggleWings = "Toggle Wings",
 	LogosHat = "Logo's Hat",
 	Tax = "Tax",
-	ExtraSalt = "Extra Salt"
+	ExtraSalt = "Extra Salt",
+
+	EnviousBum = "Envious Bum",
+	PridefulBum = "Prideful Bum",
+	SlothlyBum = "Slothly Bum",
+	WrathfulBum = "Wrathful Bum",
+	LustfulBum = "Lustful Bum",
+	GluttonousBum = "Gluttonous Bum",
+	GreedyBum = "Greedy Bum"
 }
 
 local c = {
@@ -89,7 +97,15 @@ local ev = {
 	RustedKey = "Rusted Key",
 	RustedBomb = "Rusted Bomb",
 	RustedHeart = "Rusted Heart",
-	RustedBattery = "Rusted Battery"
+	RustedBattery = "Rusted Battery",
+
+	EnviousBum = "Envious Bum",
+	PridefulBum = "Prideful Bum",
+	SlothlyBum = "Slothly Bum",
+	WrathfulBum = "Wrathful Bum",
+	LustfulBum = "Lustful Bum",
+	GluttonousBum = "Gluttonous Bum",
+	GreedyBum = "Greedy Bum"
 }
 
 local es = {
@@ -295,6 +311,59 @@ local function apiStart()
 	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
 end
 
+local stupidSimpleFamiliars = {
+    [i.EnviousBum] = {
+        1,
+        ev.EnviousBum
+    },
+	[i.PridefulBum] = {
+        1,
+        ev.PridefulBum
+    },
+	[i.SlothlyBum] = {
+        1,
+        ev.SlothlyBum
+    },
+	[i.WrathfulBum] = {
+        1,
+        ev.WrathfulBum
+    },
+	[i.LustfulBum] = {
+        1,
+        ev.LustfulBum
+    },
+	[i.GluttonousBum] = {
+        1,
+        ev.GluttonousBum
+    },
+	[i.GreedyBum] = {
+        1,
+        ev.GreedyBum
+    },
+
+}
+
+local function fancyNewCheckFamiliar(variant, subtype, count, p)
+    local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, variant or -1, subtype or -1, false, false)
+    if #familiars < count then
+        for i = 1, count - #familiars do
+            Isaac.Spawn(EntityType.ENTITY_FAMILIAR, variant or 0, subtype or 0, player.Position, zeroVector, player)
+        end
+    elseif #familiars > count then
+        local numRemoved = #familiars - count
+        for _, fam in ipairs(familiars) do
+            fam:Remove()
+            numRemoved = numRemoved - 1
+
+            if numRemoved <= 0 then
+                break
+            end
+        end
+    end
+end
+
+local familiarRNG = RNG()
+
 local function applyStupidStats(p, flag, stupidStats)
     for key, val in pairs(stupidStats) do
         local keyLen = string.len(key)
@@ -322,6 +391,17 @@ local function applyStupidStats(p, flag, stupidStats)
         end
     end
 end
+
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, p, flag)
+    if flag == CacheFlag.CACHE_FAMILIARS then
+        local boxOfFriendsTimesUsed = p:GetEffects():GetCollectibleEffectNum(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) + 1
+        for id, familiarData in pairs(stupidSimpleFamiliars) do
+            local count = (familiarData[1] * p:GetCollectibleNum(id)) * boxOfFriendsTimesUsed
+            fancyNewCheckFamiliar(familiarData[2], familiarData[3], count, p)
+            --p:CheckFamiliar(familiarData[2], count, familiarRNG)
+        end
+    end
+end)
 
 local function onActiveUse(id, fn)
     mod:AddCallback(ModCallbacks.MC_USE_ITEM, function(_, ...)
@@ -366,6 +446,14 @@ local function onPillUse(id, fn)
     mod:AddCallback(ModCallbacks.MC_USE_PILL, fn, id)
 end
 
+local function onFamiliarTick(variant, fn, subtype)
+    mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function(_, fam)
+        if not subtype or fam.SubType == subtype then
+            fn(fam)
+        end
+    end, variant)
+end
+
 local itemsToCheck = {}
 
 local function onItemPickup(id, fn, remove)
@@ -393,6 +481,14 @@ local function TriggerRoomAmbush(...)
 	    end
 	end
 	roomClosed = true
+end
+
+local function isin(tbl, thing, fn)
+    for _, obj in (fn or ipairs)(tbl) do
+        if obj == thing then
+            return true
+        end
+    end
 end
 
 local function getNearestEnemy(pos)
@@ -487,6 +583,150 @@ local function onPickupPickup(variant, fn)
             if sprite:IsFinished("Collect") then
                 p:Remove()
             end
+        end
+    end)
+end
+
+local function GetAllEntries(tbl) -- WEIRDO TABLE SYSTEM
+    local ret = {}
+
+    for _, entityType in ipairs(tbl) do -- LAYER ONE, NUMBER INDEXES ARE TYPES
+        ret[#ret + 1] = {entityType}
+    end
+
+    for entityTypeKey, entityVariantList in pairs(tbl) do
+        if type(entityTypeKey) == "string" then
+            local entityType = tonumber(entityTypeKey)
+            for _, entityVariant in ipairs(entityVariantList) do
+                ret[#ret + 1] = {entityType, entityVariant}
+            end
+
+            for entityVariantKey, entitySubtypeList in pairs(entityVariantList) do
+                if type(entityVariantKey) == "string" then
+                    local entityVariant = tonumber(entityVariantKey)
+                    for _, entitySubtype in ipairs(entitySubtypeList) do
+                        ret[#ret + 1] = {entityType, entityVariant, entitySubtype}
+                    end
+                end
+            end
+        end
+    end
+
+    return ret
+end
+
+local function mergeTable(tbl, tbl2, ip)
+    local ret = {}
+
+    if not ip then
+        for k, v in pairs(tbl) do
+            ret[k] = v
+        end
+
+        for k, v in pairs(tbl2) do
+            ret[k] = v
+        end
+    else
+        for _, v in ipairs(tbl) do
+            ret[#ret + 1] = v
+        end
+
+        for _, v in ipairs(tbl2) do
+            ret[#ret + 1] = v
+        end
+    end
+
+    return ret
+end
+
+local function GetEntityList(tbl)
+    local ret = {}
+
+    local allEntries = GetAllEntries(tbl)
+    for _, entityConfig in ipairs(allEntries) do
+        local entList = Isaac.FindByType(entityConfig[1] or -1, entityConfig[2] or -1, entityConfig[3] or -1, false, false)
+        ret = mergeTable(ret, entList, true)
+    end
+
+    return ret
+end
+
+local function Nearest(pos, entlist)
+    local nearestDist
+    local nearestEnt
+    for _, ent in ipairs(entlist) do
+        local dist = pos:DistanceSquared(ent.Position)
+        if not nearestDist or dist < nearestDist then
+            nearestDist = dist
+            nearestEnt = ent
+        end
+    end
+
+    return nearestEnt
+end
+
+
+local function bumAI(variant, thingsToCollect, rewards, numNeededPerReward, thingCheck)
+    onFamiliarTick(variant, function(fam)
+        local data = fam:GetData()
+        local collect = GetEntityList(thingsToCollect)
+        local validEnts = {}
+
+        if #collect > 0 then
+            for _, ent in ipairs(collect) do
+                if not ent:GetSprite():IsPlaying("Collect") then
+                    if not thingCheck then
+                        validEnts[#validEnts + 1] = ent
+                    elseif thingCheck(ent) then
+                        validEnts[#validEnts + 1] = ent
+                    end
+                end
+            end
+        end
+
+        if not fam:GetSprite():IsPlaying("Spawn") and not fam:GetSprite():IsFinished("Spawn") and not fam:GetSprite():IsPlaying("PreSpawn") and not fam:GetSprite():IsFinished("PreSpawn") then
+            fam:GetSprite():Play("FloatDown", true)
+        end
+
+        if #validEnts > 0 and not fam:GetSprite():IsPlaying("Spawn") and not fam:GetSprite():IsFinished("Spawn") and not fam:GetSprite():IsPlaying("PreSpawn") and not fam:GetSprite():IsFinished("PreSpawn") then
+            local nearest = Nearest(fam.Position, validEnts)
+            local dir = (nearest.Position - fam.Position):Normalized()
+            fam.Velocity = dir * 2
+            if nearest:GetData().Collected and not nearest:GetSprite():IsPlaying("Collect") then
+                nearest:Remove()
+            end
+
+            if not nearest:GetSprite():IsPlaying("Collect") and not nearest:GetData().Collected and entsCollide(fam, nearest) then
+                if not data.Collect then
+                    data.Collect = 1
+                else
+                    data.Collect = data.Collect + 1
+                end
+
+                if data.Collect > numNeededPerReward then
+                    fam:GetSprite():Play("PreSpawn", true)
+                end
+
+                nearest:GetSprite():Play("Collect", true)
+                nearest:GetData().Collected = true
+            end
+        else
+            if fam:GetSprite():IsFinished("PreSpawn") then
+                fam:GetSprite():Play("Spawn", true)
+            end
+
+            if fam:GetSprite():IsFinished("Spawn") then
+                while data.Collect > numNeededPerReward do
+                    data.Collect = data.Collect - numNeededPerReward
+                    local possibleRewards = GetAllEntries(rewards)
+                    local reward = possibleRewards[api.Random(1, #possibleRewards)]
+                    Isaac.Spawn(reward[1], reward[2] or 0, reward[3] or 0, room:FindFreePickupSpawnPosition(fam.Position, 0, true), RandomVector() * 4, fam)
+                end
+
+                fam:GetSprite():Play("FloatDown", true)
+            end
+
+            fam:FollowParent()
         end
     end)
 end
@@ -1209,6 +1449,66 @@ mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
 			f.SaltApplied = true
 		end
 	end
+end)
+
+local enviousBumCollects = {
+    [tostring(EntityType.ENTITY_PICKUP)] = {
+        PickupVariant.PICKUP_COLLECTIBLE
+    }
+}
+
+local enviousBumRewards = {
+    [tostring(EntityType.ENTITY_PICKUP)] = {
+        PickupVariant.PICKUP_COLLECTIBLE
+    }
+}
+
+bumAI(ev.EnviousBum, enviousBumCollects, enviousBumRewards, 1)
+
+local pridefulBumCollects = {
+    [tostring(EntityType.ENTITY_PICKUP)] = {
+        PickupVariant.PICKUP_COLLECTIBLE
+    }
+}
+
+local pridefulBumRewards = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+        [tostring(PickupVariant.PICKUP_COLLECTIBLE)] = {
+            i.PridefulBum
+        }
+    }
+}
+
+bumAI(ev.PridefulBum, pridefulBumCollects, pridefulBumRewards, 1)
+
+local slothlyBumCollects = {
+
+}
+
+local slothlyBumRewards = {
+
+}
+
+bumAI(ev.SlothlyBum, slothlyBumCollects, slothlyBumRewards, 1)
+
+onFamiliarTick(ev.SlothlyBum, function(fam)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_GREEN, 0, fam.Position, Vector(0,0), nil)
+end)
+
+local customFamiliars = {
+    ev.EnviousBum,
+	ev.PridefulBum,
+	ev.SlothlyBum,
+	ev.WrathfulBum,
+	ev.LustfulBum,
+	ev.GluttonousBum,
+	ev.GreedyBum
+}
+
+mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function(_, fam)
+    if isin(customFamiliars, fam.Variant) then
+        fam:AddToFollowers()
+    end
 end)
 
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
