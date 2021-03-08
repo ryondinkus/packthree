@@ -254,31 +254,31 @@
 	/>
 	<familiar name="Envious Bum"
 		description= "The grass is always greener"
-		gfx="extrasalt.png"
+		gfx="enviousbum.png"
 	/>
 	<familiar name="Prideful Bum"
 		description= "The only item you need"
-		gfx="extrasalt.png"
+		gfx="pridefulbum.png"
 	/>
 	<familiar name="Slothly Bum"
 		description= "Lazy"
-		gfx="extrasalt.png"
+		gfx="slothlybum.png"
 	/>
 	<familiar name="Wrathful Bum"
 		description= "Furious friend"
-		gfx="extrasalt.png"
+		gfx="wrathfulbum.png"
 	/>
 	<familiar name="Lustful Bum"
 		description= "Bummy lust"
-		gfx="extrasalt.png"
+		gfx="lustfulbum.png"
 	/>
 	<familiar name="Gluttonous Bum"
 		description= "Full"
-		gfx="extrasalt.png"
+		gfx="gluttonousbum.png"
 	/>
 	<familiar name="Greedy Bum"
 		description= "All mine!"
-		gfx="extrasalt.png"
+		gfx="greedybum.png"
 	/>
 
 
