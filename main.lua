@@ -1495,6 +1495,96 @@ onFamiliarTick(ev.SlothlyBum, function(fam)
 	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_GREEN, 0, fam.Position, Vector(0,0), nil)
 end)
 
+local wrathfulBumCollects = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+		[tostring(PickupVariant.PICKUP_BOMB)] = {
+			BombSubType.BOMB_NORMAL,
+			BombSubType.BOMB_DOUBLEPACK,
+			BombSubType.BOMB_GOLDEN,
+			ev.RustedBomb
+		}
+	}
+}
+
+local wrathfulBumRewards = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+		[tostring(PickupVariant.PICKUP_BOMB)] = {
+			BombSubType.BOMB_TROLL,
+			BombSubType.BOMB_SUPERTROLL,
+		}
+	}
+}
+
+bumAI(ev.WrathfulBum, wrathfulBumCollects, wrathfulBumRewards, 1)
+
+local lustfulBumCollects = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+		[tostring(PickupVariant.PICKUP_HEART)] = {
+			HeartSubType.HEART_FULL
+		}
+	}
+}
+
+local lustfulBumRewards = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+		[tostring(PickupVariant.PICKUP_HEART)] = {
+			HeartSubType.HEART_DOUBLEPACK
+		}
+	}
+}
+
+bumAI(ev.LustfulBum, lustfulBumCollects, lustfulBumRewards, 1)
+
+local gluttonousBumCollects = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+		[tostring(PickupVariant.PICKUP_COLLECTIBLE)] = {
+			CollectibleType.COLLECTIBLE_LUNCH,
+		    CollectibleType.COLLECTIBLE_BREAKFAST,
+		    CollectibleType.COLLECTIBLE_MOLDY_BREAD,
+		    CollectibleType.COLLECTIBLE_DINNER,
+		    CollectibleType.COLLECTIBLE_DESSERT,
+		    CollectibleType.COLLECTIBLE_SNACK,
+		    CollectibleType.COLLECTIBLE_FRUIT_CAKE,
+		    CollectibleType.COLLECTIBLE_RAW_LIVER,
+		    CollectibleType.COLLECTIBLE_ROTTEN_MEAT,
+		    CollectibleType.COLLECTIBLE_BLACK_LOTUS,
+			Isaac.GetItemIdByName("Oatmeal"),
+			Isaac.GetItemIdByName("Desert 2"),
+			Isaac.GetItemIdByName("Chicken n' Chips"),
+
+		}
+	}
+}
+
+local gluttonousBumRewards = {
+	[tostring(EntityType.ENTITY_EFFECT)] = {
+		EffectVariant.PLAYER_CREEP_RED
+	}
+}
+
+bumAI(ev.GluttonousBum, gluttonousBumCollects, gluttonousBumRewards, 1)
+
+local greedyBumCollects = {
+	[tostring(EntityType.ENTITY_PICKUP)] = {
+		[tostring(PickupVariant.PICKUP_COIN)] = {
+			CoinSubType.COIN_PENNY,
+			CoinSubType.COIN_NICKEL,
+			CoinSubType.COIN_DIME,
+			CoinSubType.COIN_DOUBLEPACK,
+			CoinSubType.COIN_LUCKYPENNY,
+			CoinSubType.COIN_STICKYNICKEL,
+			Isaac.GetEntityVariantByName("Gold Penny"),
+			ev.RustedPenny
+		}
+	}
+}
+
+local greedyBumRewards = {
+
+}
+
+bumAI(ev.GreedyBum, greedyBumCollects, greedyBumRewards, 1)
+
 local customFamiliars = {
     ev.EnviousBum,
 	ev.PridefulBum,
