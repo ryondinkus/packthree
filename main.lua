@@ -118,7 +118,8 @@ local es = {
 }
 
 local f = {
-	deaf = false
+	deaf = false,
+	lost = false
 }
 
 local t = {
@@ -217,6 +218,70 @@ local familiarNumbers = {
 	Isaac.GetItemIdByName("Sack of Sack of Sacks"),Isaac.GetItemIdByName("Sacrificial Bean"),
 	Isaac.GetItemIdByName("Skinless ???'s Body'"),Isaac.GetItemIdByName("Skinless Hushy"),
 	Isaac.GetItemIdByName("The Ghost")
+}
+
+local bugs = {
+    EntityType.ENTITY_FLY,
+    EntityType.ENTITY_FLY_L2,
+    EntityType.ENTITY_BIGSPIDER,
+    EntityType.ENTITY_SPIDER,
+    EntityType.ENTITY_SPIDER_L2,
+    EntityType.ENTITY_TICKING_SPIDER,
+    EntityType.ENTITY_RING_OF_FLIES,
+    EntityType.ENTITY_POOTER,
+    EntityType.ENTITY_DART_FLY,
+    EntityType.ENTITY_DADDYLONGLEGS,
+    EntityType.ENTITY_SWARM,
+    EntityType.ENTITY_DUKE,
+    EntityType.ENTITY_DUKIE,
+    EntityType.ENTITY_BABY_LONG_LEGS,
+    EntityType.ENTITY_WALL_CREEP,
+    EntityType.ENTITY_BLIND_CREEP,
+    EntityType.ENTITY_RAGE_CREEP,
+    EntityType.ENTITY_THE_THING,
+    EntityType.ENTITY_ETERNALFLY,
+    EntityType.ENTITY_ATTACKFLY,
+    EntityType.ENTITY_BLISTER,
+    EntityType.ENTITY_BOOMFLY,
+    EntityType.ENTITY_NEST,
+    EntityType.ENTITY_CRAZY_LONG_LEGS,
+    EntityType.ENTITY_FULL_FLY,
+    EntityType.ENTITY_HUSH_FLY,
+    EntityType.ENTITY_MOTER,
+    EntityType.ENTITY_WIDOW,
+    [tostring(EntityType.ENTITY_BOIL)] = {2},
+    [tostring(EntityType.ENTITY_PICKUP)] = {
+        [tostring(PickupVariant.PICKUP_COLLECTIBLE)] = {
+            CollectibleType.COLLECTIBLE_LOST_FLY,
+            CollectibleType.COLLECTIBLE_PAPA_FLY,
+            CollectibleType.COLLECTIBLE_SMART_FLY,
+            CollectibleType.COLLECTIBLE_ANGRY_FLY,
+            CollectibleType.COLLECTIBLE_JUICY_SACK,
+            CollectibleType.COLLECTIBLE_FRIEND_ZONE,
+            CollectibleType.COLLECTIBLE_SPIDER_MOD,
+            CollectibleType.COLLECTIBLE_SPIDER_BITE,
+            CollectibleType.COLLECTIBLE_SPIDER_BUTT,
+            CollectibleType.COLLECTIBLE_SPIDERBABY,
+            CollectibleType.COLLECTIBLE_BBF,
+            CollectibleType.COLLECTIBLE_BIG_FAN,
+            CollectibleType.COLLECTIBLE_SKATOLE,
+            CollectibleType.COLLECTIBLE_HALO_OF_FLIES,
+            CollectibleType.COLLECTIBLE_FOREVER_ALONE,
+            CollectibleType.COLLECTIBLE_BLUEBABYS_ONLY_FRIEND,
+            CollectibleType.COLLECTIBLE_SISSY_LONGLEGS,
+            CollectibleType.COLLECTIBLE_HIVE_MIND,
+            CollectibleType.COLLECTIBLE_DADDY_LONGLEGS,
+            CollectibleType.COLLECTIBLE_MUTANT_SPIDER,
+            CollectibleType.COLLECTIBLE_INFESTATION_2,
+            CollectibleType.COLLECTIBLE_MULLIGAN,
+            CollectibleType.COLLECTIBLE_DISTANT_ADMIRATION,
+            CollectibleType.COLLECTIBLE_PARASITOID
+        }
+    },
+    [tostring(EntityType.ENTITY_FAMILIAR)] = {
+        FamiliarVariant.BLUE_FLY,
+        FamiliarVariant.BLUE_SPIDER
+    }
 }
 
 local flagStuff = {
@@ -816,6 +881,7 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	f.deaf = false
 	f.DamageDownTimesUsed = 0
 	f.taxAdded = false
+	f.lost = false
 	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
@@ -1626,6 +1692,22 @@ onPassiveTick(i.TimeBomb, function()
 		if game.TimeCounter % 150 == 0 then
 			Isaac.Explode(player.Position, nil, 40)
 		end
+	end
+end)
+
+onPassiveTick(i.Cyberpunk, function()
+	if game.TimeCounter % 150 == 0 then
+		Isaac.Spawn(bugs[api.Random(#bugs)+1], 0, 0, room:GetCenterPos(), Vector(0,0), nil)
+	end
+end)
+
+onPassiveTick(i.PaxDemo, function()
+	if game.TimeCounter % 18000 == 0 and not lost then
+		while player:GetPlayerType() ~= PlayerType.PLAYER_THELOST do
+			player:AddCollectible(1, 0, false) --prevents Clicker from removing a Passive
+			player:UseActiveItem(CollectibleType.COLLECTIBLE_CLICKER, false, false, false, false) --changes the character randomly
+		end
+		lost = true
 	end
 end)
 
