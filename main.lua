@@ -1606,6 +1606,29 @@ mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function(_, fam)
     end
 end)
 
+onActiveUse(i.LeakyBean, function()
+	local interval = 39
+	sfx:Play(SoundEffect.SOUND_SMB_LARGE_CHEWS_4, 1, 0, false, 1)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(interval,0), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(interval,interval), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(0,interval), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(-interval,interval), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(-interval,0), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(-interval,-interval), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(0,-interval), Vector(0,0), nil)
+	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position + Vector(interval,-interval), Vector(0,0), nil)
+
+	return true
+end)
+
+onPassiveTick(i.TimeBomb, function()
+	if game.TimeCounter >= game.BlueWombParTime then
+		if game.TimeCounter % 150 == 0 then
+			Isaac.Explode(player.Position, nil, 40)
+		end
+	end
+end)
+
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
 
 mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt, dmgFlag, sourceEnt, dmgFrames)

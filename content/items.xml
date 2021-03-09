@@ -289,7 +289,7 @@
 	<active name="Leaky Bean"
 		description= "Oozing"
 		gfx="leakybean.png"
-		maxcharges = "1"
+		maxcharges = "0"
 	/>
 	<passive name="Ticking Time Bomb"
 		description= "30 minutes to live"
