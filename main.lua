@@ -1854,6 +1854,9 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt,
 				if player:HasCollectible(i.SlapBean) then
 					sfx:Play(s.Slap, 1, 0, false, 1)
 				end
+				if player:HasCollectible(i.LeakyBean) then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, thisEnt.Position, Vector(0,0), nil)
+				end
 			end
 		end
 	end
