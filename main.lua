@@ -48,6 +48,11 @@ local i = {
 	LogosHat = "Logo's Hat",
 	Tax = "Tax",
 	ExtraSalt = "Extra Salt",
+	LeakyBean = "Leaky Bean",
+	TimeBomb = "Ticking Time Bomb",
+	Cyberpunk = "Cyberpunk 2077",
+	PaxDemo = "PAX Demo",
+	Chaos2 = "Chaos 2",
 
 	EnviousBum = "Envious Bum",
 	PridefulBum = "Prideful Bum",

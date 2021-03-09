@@ -280,7 +280,33 @@
 		description= "All mine!"
 		gfx="greedybum.png"
 	/>
-
+	<passive name="Burger With No Honey Mustard"
+		description= "Oh my goodness"
+		gfx="extrasalt.png"
+		maxhearts="2"
+		hearts="2"
+	/>
+	<active name="Leaky Bean"
+		description= "Oozing"
+		gfx="leakybean.png"
+		maxcharges = "1"
+	/>
+	<passive name="Ticking Time Bomb"
+		description= "30 minutes to live"
+		gfx="timebomb.png"
+	/>
+	<passive name="Cyberpunk 2077"
+		description= "Buggy release"
+		gfx="cyberpunk.png"
+	/>
+	<passive name="PAX Demo"
+		description= "A line is forming behind you"
+		gfx="paxdemo.png"
+	/>
+	<passive name="Chaos 2"
+		description= "!!!!!!"
+		gfx="chaos2.png"
+	/>
 
 	<trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"
