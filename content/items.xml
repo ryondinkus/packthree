@@ -304,8 +304,12 @@
 		gfx="paxdemo.png"
 	/>
 	<passive name="Chaos 2"
-		description= "!!!!!!"
+		description= "No more breakfasting!"
 		gfx="chaos2.png"
+	/>
+	<passive name="Magnifying Glass"
+		description= "Enlarged to show detail"
+		gfx="magnifyingglass.png"
 	/>
 
 	<trinket name="REALLY Lazy Worm"

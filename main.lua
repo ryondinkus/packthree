@@ -53,6 +53,7 @@ local i = {
 	Cyberpunk = "Cyberpunk 2077",
 	PaxDemo = "PAX Demo",
 	Chaos2 = "Chaos 2",
+	MagnifyingGlass = "Magnifying Glass",
 
 	EnviousBum = "Envious Bum",
 	PridefulBum = "Prideful Bum",
@@ -218,6 +219,21 @@ local familiarNumbers = {
 	Isaac.GetItemIdByName("Sack of Sack of Sacks"),Isaac.GetItemIdByName("Sacrificial Bean"),
 	Isaac.GetItemIdByName("Skinless ???'s Body'"),Isaac.GetItemIdByName("Skinless Hushy"),
 	Isaac.GetItemIdByName("The Ghost")
+}
+
+local championable = {
+	10,11,12,14,15,16,
+	21,22,23,24,25,26,27,
+	29,30,31,32,
+	34,
+	38,39,40,41,
+	53,54,55,56,57,58,59,60,61,
+	86,87,88,91,
+	204,205,206,207,208,209,210,
+	220,237,
+	246,247,248,252,254,259,
+	278,279,280,282,283,284,290,
+	298,299,300,301,303,304,305,307,308,309,310
 }
 
 local bugs = {
@@ -1688,7 +1704,7 @@ onActiveUse(i.LeakyBean, function()
 end)
 
 onPassiveTick(i.TimeBomb, function()
-	if game.TimeCounter >= game.BlueWombParTime then
+	if game.TimeCounter >= 54000 then
 		if game.TimeCounter % 150 == 0 then
 			Isaac.Explode(player.Position, nil, 40)
 		end
@@ -1708,6 +1724,33 @@ onPassiveTick(i.PaxDemo, function()
 			player:UseActiveItem(CollectibleType.COLLECTIBLE_CLICKER, false, false, false, false) --changes the character randomly
 		end
 		lost = true
+	end
+end)
+
+onItemPickup(i.Chaos2, function()
+	player:AddCollectible(CollectibleType.COLLECTIBLE_CHAOS, 0, false)
+end)
+
+onPassiveTick(i.Chaos2, function()
+	entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP
+		and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE
+		and entity.SubType == CollectibleType.COLLECTIBLE_BREAKFAST then
+			Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_BRIMSTONE, entity.Position, Vector(0,0), nil)
+			entity:Remove()
+		end
+	end
+end)
+
+onPassiveTick(i.MagnifyingGlass, function()
+	entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		for i, champion in pairs(championable) do
+			if entity.Type == champion then
+				entity:ToNPC():Morph(entity.Type, entity.Variant or 0, entity.SubType or 0, 19)
+			end
+		end
 	end
 end)
 
