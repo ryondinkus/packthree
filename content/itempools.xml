@@ -162,6 +162,86 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Tech 0.001"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Double Vision"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Logo's Hat"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Envious Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Prideful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Slothly Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Wrathful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lustful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Gluttonous Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Greedy Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Leaky Bean"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Cyberpunk 2077"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Magnifying Glass"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Kamikaze"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Forgotten"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil D10"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="shop">
@@ -225,6 +305,36 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Double Vision"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Greed's Kidney"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Tax"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Cyberpunk 2077"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Chaos 2"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil D10"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="curse">
@@ -253,6 +363,34 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Tax"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Ticking Time Bomb"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="PAX Demo"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+</Pool>
+
+<Pool Name="boss">
+	<Item Name="Extra Salt"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Burger With No Honey Mustard"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="secret">
@@ -272,6 +410,26 @@ token from the item pool and puts the item on the pedestal.
 				DecreaseBy="1"
 	/>
 	<Item Name="Tomato"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Greed's Kidney"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Toggle Wings"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Ticking Time Bomb"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="PAX Demo"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
@@ -304,6 +462,71 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Greed's Kidney"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Tax"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Envious Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Prideful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Slothly Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Wrathful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lustful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Gluttonous Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Greedy Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Ticking Time Bomb"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="PAX Demo"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Chaos 2"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Forgotten"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="angel">
@@ -327,6 +550,11 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Toggle Wings"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="redChest">
@@ -336,6 +564,11 @@ token from the item pool and puts the item on the pedestal.
 				DecreaseBy="1"
 	/>
 	<Item Name="Lil Bosses"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Chaos 2"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
@@ -373,6 +606,21 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Burger With No Honey Mustard"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Chaos 2"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil D10"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="demonBeggar">
@@ -395,6 +643,51 @@ token from the item pool and puts the item on the pedestal.
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
+	/>
+	<Item Name="Tax"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Envious Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Prideful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Slothly Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Wrathful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lustful Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Gluttonous Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Greedy Bum"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Forgotten"
+		Weight="1"
+		RemoveOn="0.1"
+		DecreaseBy="1"
 	/>
 </Pool>
 
@@ -419,10 +712,30 @@ token from the item pool and puts the item on the pedestal.
 				RemoveOn="0.1"
 				DecreaseBy="1"
 	/>
+	<Item Name="Greed's Kidney"
+		Weight="1"
+		RemoveOn="0.1"
+		DecreaseBy="1"
+	/>
+	<Item Name="Cyberpunk 2077"
+		Weight="1"
+		RemoveOn="0.1"
+		DecreaseBy="1"
+	/>
 </Pool>
 
 <Pool Name="bombBum">
 	<Item Name="D2K"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Ticking Time Bomb"
+				Weight="1"
+				RemoveOn="0.1"
+				DecreaseBy="1"
+	/>
+	<Item Name="Lil Kamikaze"
 				Weight="1"
 				RemoveOn="0.1"
 				DecreaseBy="1"
