@@ -311,6 +311,18 @@
 		description= "Enlarged to show detail"
 		gfx="magnifyingglass.png"
 	/>
+	<familiar name="Lil Kamikazee"
+		description= "Self-destructive friend"
+		gfx="lilkamikazee.png"
+	/>
+	<familiar name="Lil Forgotten"
+		description= "Buried friend"
+		gfx="lilforgotten.png"
+	/>
+	<familiar name="Lil D10"
+		description= "Quirky friend"
+		gfx="lild10.png"
+	/>
 
 	<trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"

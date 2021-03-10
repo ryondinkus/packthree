@@ -61,7 +61,10 @@ local i = {
 	WrathfulBum = "Wrathful Bum",
 	LustfulBum = "Lustful Bum",
 	GluttonousBum = "Gluttonous Bum",
-	GreedyBum = "Greedy Bum"
+	GreedyBum = "Greedy Bum",
+	LilKamikazee = "Lil Kamikazee",
+	LilForgotten = "Lil Forgotten",
+	LilD10 = "Lil D10"
 }
 
 local c = {
@@ -111,7 +114,10 @@ local ev = {
 	WrathfulBum = "Wrathful Bum",
 	LustfulBum = "Lustful Bum",
 	GluttonousBum = "Gluttonous Bum",
-	GreedyBum = "Greedy Bum"
+	GreedyBum = "Greedy Bum",
+	LilKamikazee = "Lil Kamikazee",
+	LilForgotten = "Lil Forgotten",
+	LilD10 = "Lil D10"
 }
 
 local es = {
