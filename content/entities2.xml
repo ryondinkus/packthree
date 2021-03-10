@@ -166,7 +166,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
 <entity anm2path="familiars/greedyBum.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Greedy Bum" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6906">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 </entity>
-<entity anm2path="familiars/lilkamikazee.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Lil Kamikazee" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6907">
+<entity anm2path="familiars/lilkamikaze.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Lil Kamikaze" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6907">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 </entity>
 <entity anm2path="familiars/lilforgotten.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Lil Forgotten" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="6908">

@@ -62,7 +62,7 @@ local i = {
 	LustfulBum = "Lustful Bum",
 	GluttonousBum = "Gluttonous Bum",
 	GreedyBum = "Greedy Bum",
-	LilKamikazee = "Lil Kamikazee",
+	LilKamikaze = "Lil Kamikaze",
 	LilForgotten = "Lil Forgotten",
 	LilD10 = "Lil D10"
 }
@@ -115,7 +115,7 @@ local ev = {
 	LustfulBum = "Lustful Bum",
 	GluttonousBum = "Gluttonous Bum",
 	GreedyBum = "Greedy Bum",
-	LilKamikazee = "Lil Kamikazee",
+	LilKamikaze = "Lil Kamikaze",
 	LilForgotten = "Lil Forgotten",
 	LilD10 = "Lil D10"
 }
@@ -431,6 +431,18 @@ local stupidSimpleFamiliars = {
 	[i.GreedyBum] = {
         1,
         ev.GreedyBum
+    },
+	[i.LilKamikaze] = {
+        1,
+        ev.LilKamikaze
+    },
+	[i.LilForgotten] = {
+        1,
+        ev.LilForgotten
+    },
+	[i.LilD10] = {
+        1,
+        ev.LilD10
     },
 
 }
@@ -1678,6 +1690,75 @@ local greedyBumRewards = {
 
 bumAI(ev.GreedyBum, greedyBumCollects, greedyBumRewards, 1)
 
+onFamiliarTick(ev.LilKamikaze, function(fam)
+    local data = fam:GetData()
+    local sprite = fam:GetSprite()
+
+    if not sprite:IsPlaying("Spawn") and not sprite:IsPlaying("FloatDown") then
+        sprite:Play("FloatDown", true)
+    end
+
+    if room:IsFirstVisit() and room:GetFrameCount() == 1 then
+        if not data.Rooms then
+            data.Rooms = 0
+        end
+        data.Rooms = data.Rooms + 1
+        if data.Rooms >= 4 then
+            Isaac.Explode(fam.Position, nil, 60)
+            sprite:Play("Spawn", true)
+            data.Rooms = 0
+        end
+    end
+
+    fam:FollowParent()
+end)
+
+onFamiliarTick(ev.LilForgotten, function(fam)
+    local data = fam:GetData()
+    local sprite = fam:GetSprite()
+
+    if not sprite:IsPlaying("Spawn") and not sprite:IsPlaying("FloatDown") then
+        sprite:Play("FloatDown", true)
+    end
+
+    if room:IsFirstVisit() and room:GetFrameCount() == 1 then
+        if not data.Rooms then
+            data.Rooms = 0
+        end
+        data.Rooms = data.Rooms + 1
+        if data.Rooms >= 6 then
+            Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MOM_FOOT_STOMP, 0, fam.Position, Vector(0,0), nil)
+            sprite:Play("Spawn", true)
+            data.Rooms = 0
+        end
+    end
+
+    fam:FollowParent()
+end)
+
+onFamiliarTick(ev.LilD10, function(fam)
+    local data = fam:GetData()
+    local sprite = fam:GetSprite()
+
+    if not sprite:IsPlaying("Spawn") and not sprite:IsPlaying("FloatDown") then
+        sprite:Play("FloatDown", true)
+    end
+
+    if room:IsFirstVisit() and room:GetFrameCount() == 1 then
+        if not data.Rooms then
+            data.Rooms = 0
+        end
+        data.Rooms = data.Rooms + 1
+        if data.Rooms >= 4 then
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_D10, false, false, false, false)
+			sprite:Play("Spawn", true)
+            data.Rooms = 0
+        end
+    end
+
+    fam:FollowParent()
+end)
+
 local customFamiliars = {
     ev.EnviousBum,
 	ev.PridefulBum,
@@ -1685,7 +1766,10 @@ local customFamiliars = {
 	ev.WrathfulBum,
 	ev.LustfulBum,
 	ev.GluttonousBum,
-	ev.GreedyBum
+	ev.GreedyBum,
+	ev.LilKamikaze,
+	ev.LilForgotten,
+	ev.LilD10
 }
 
 mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function(_, fam)
