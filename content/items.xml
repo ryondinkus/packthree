@@ -282,7 +282,7 @@
 	/>
 	<passive name="Burger With No Honey Mustard"
 		description= "Oh my goodness"
-		gfx="extrasalt.png"
+		gfx="burger.png"
 		maxhearts="2"
 		hearts="2"
 	/>

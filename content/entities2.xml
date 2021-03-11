@@ -77,6 +77,29 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
   <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
 </entity>
 
+<entity name="Amogus"
+    anm2path="monsters\amogus.anm2"
+    reroll="true"
+    baseHP="12"
+    boss="0"
+    champion="0"
+    collisionDamage="1"
+    collisionMass="100"
+    collisionRadius="13"
+    friction="1"
+    numGridCollisionPoints="12"
+    shadowSize="0"
+    stageHP="0"
+    portrait="97"
+    bestiary="true"
+    bestiaryTransform="0,0,1"
+    bestiartAnim="Idle"
+    id="615"
+    variant="0"
+>
+  <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
+</entity>
+
   <!--BOSSES-->
   <entity name="Littlest Horn"
       anm2path="bosses\littlesthorn.anm2"
