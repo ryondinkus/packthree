@@ -140,7 +140,8 @@ local t = {
 local s = {
 	TwentyOne = "Twenty One",
 	Yahoo = "Yahoo",
-	Slap = "Slap"
+	Slap = "Slap",
+	Vent = "Vent"
 }
 
 local d17Stats = {
@@ -165,7 +166,7 @@ local saltStats = {
 	MaxFireDelay = -2,
 }
 
-local currentAmogus = {
+local amogusList = {
 
 }
 
@@ -2378,18 +2379,18 @@ replaceEntity(EntityType.ENTITY_MAW, nil, nil, EntityType.ENTITY_MAW, ev.Nostro,
 replaceEntity(EntityType.ENTITY_HORF, nil, nil, EntityType.ENTITY_HORF, ev.Tomato, nil, 4)
 replaceEntity(EntityType.ENTITY_MINISTRO, nil, nil, EntityType.ENTITY_MINISTRO, ev.Sickstro, nil, 4)
 
-local function amogusManager(list)
-	list[1].Position = room:GetCenterPos() + Vector(26, -26)
-	if #list >= 2 then
-		list[2].Position = room:GetCenterPos() + Vector(-26, -26)
+local function amogusManager()
+	amogusList[1].Position = room:GetCenterPos() + Vector(26, -26)
+	if #amogusList >= 2 then
+		amogusList[2].Position = room:GetCenterPos() + Vector(-26, -26)
 	end
-	if #list >= 3 then
-		list[3].Position = room:GetCenterPos() + Vector(26, 26)
+	if #amogusList >= 3 then
+		amogusList[3].Position = room:GetCenterPos() + Vector(26, 26)
 	end
-	if #list >= 4 then
-		list[4].Position = room:GetCenterPos() + Vector(-26, 26)
+	if #amogusList >= 4 then
+		amogusList[4].Position = room:GetCenterPos() + Vector(-26, 26)
 	end
-	list[1]:ToNPC().State = NpcState.STATE_MOVE
+	amogusList[api.Random(1, #amogusList)]:ToNPC().State = NpcState.STATE_ATTACK2
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
@@ -2399,7 +2400,7 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 		local entities = Isaac.GetRoomEntities()
 		local amogusAmount = 4
 		local amogusIndex = 1
-		local amogusList = {}
+		amogusList = {}
 		local newAmogus
 		for i, entity in pairs(entities) do
 			if entity:IsEnemy() and not entity:IsBoss() then
@@ -2412,7 +2413,7 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 				end
 			end
 		end
-		amogusManager(amogusList)
+		amogusManager()
 	end
 end)
 
@@ -2421,36 +2422,52 @@ onEntityTick(et.Amogus, function(entity)
 	local data = entity:GetData()
 	local sprite = entity:GetSprite()
 
-	if entity.FrameCount <= 1 then
-		entity.GridCollisionClass = EntityGridCollisionClass.ENTCOLL_NONE
+	if entity.State == NpcState.STATE_INIT then
+		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+		entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
+		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
 		data.countdown = 0
-		sprite:Play("Vent", false)
 		entity.State = NpcState.STATE_ATTACK
 	else
-		if entity.State == NpcState.STATE_MOVE  then
+		if entity.State == NpcState.STATE_ATTACK2  then
+			entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
 			sprite:Play("VentOut", false)
-			entity.GridCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+			if sprite:IsEventTriggered("Vulnerable") then
+				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+				sfx:Play(s.Vent, 1, 0, false, 1)
+			end
 			if sprite:IsFinished("VentOut") then
-				entity.State = NpcState.STATE_IDLE
 				data.countdown = 60
+				entity.State = NpcState.STATE_ATTACK4
 			end
 		end
-		if entity.State == NpcState.STATE_IDLE then
-			sprite:Play("Idle", false)
+		if entity.State == NpcState.STATE_ATTACK4 then
+			sprite:Play("Idle", true)
 			data.countdown = data.countdown - 1
 			if data.countdown <= 0 then
-				entity.State = NpcState.STATE_JUMP
+				entity.State = NpcState.STATE_ATTACK3
 			end
 		end
-		if entity.State == NpcState.STATE_JUMP then
+		if entity.State == NpcState.STATE_ATTACK3 then
 			sprite:Play("VentIn", false)
+			if sprite:IsEventTriggered("Invulnerable") then
+				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+				amogusManager()
+			end
 			if sprite:IsFinished("VentIn") then
 				entity.State = NpcState.STATE_ATTACK
 			end
 		end
 		if entity.State == NpcState.STATE_ATTACK then
 			sprite:Play("Vent", false)
-			entity.GridCollisionClass = EntityGridCollisionClass.ENTCOLL_NONE
+		end
+	end
+	if entity:IsDead() then
+		entities = Isaac.GetRoomEntities()
+		for i, entity in pairs(entities) do
+			if entity.Type == et.Amogus and entity.Variant == ev.Amogus then
+				entity:Kill()
+			end
 		end
 	end
 end, ev.Amogus)

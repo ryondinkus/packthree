@@ -8,4 +8,7 @@
 	<sound name="Slap">
 		<sample weight="1" path="slap.wav"/>
 	</sound>
+	<sound name="Vent">
+		<sample weight="1" path="vent.wav"/>
+	</sound>
 </sounds>
