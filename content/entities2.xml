@@ -78,7 +78,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
 </entity>
 
 <entity name="Amogus"
-    anm2path="monsters\amogus.anm2"
+    anm2path="monsters/amogus.anm2"
     reroll="true"
     baseHP="12"
     boss="0"

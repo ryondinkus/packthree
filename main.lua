@@ -91,6 +91,8 @@ local pi = {
 
 local et = {
 	Muro = "Muro",
+	Amogus = "Amogus",
+
 	LittlestHorn = "Littlest Horn"
 }
 
@@ -99,6 +101,8 @@ local ev = {
 	Nostro = "Nostro",
 	Tomato = "Tomato",
 	Sickstro = "Sickstro",
+	Amogus = "Amogus",
+
 	LittlestHorn = "Littlest Horn",
 
 	MoreJellyBean = "Jelly Bean Inverted",
@@ -126,7 +130,7 @@ local es = {
 
 local f = {
 	deaf = false,
-	lost = false
+	lost = false,
 }
 
 local t = {
@@ -159,6 +163,10 @@ local d21Info = {
 
 local saltStats = {
 	MaxFireDelay = -2,
+}
+
+local currentAmogus = {
+
 }
 
 local RLWInfo = {
@@ -2369,6 +2377,83 @@ replaceEntity(EntityType.ENTITY_HOPPER, nil, nil, et.Muro, ev.Muro, es.Logo, 8)
 replaceEntity(EntityType.ENTITY_MAW, nil, nil, EntityType.ENTITY_MAW, ev.Nostro, nil, 4)
 replaceEntity(EntityType.ENTITY_HORF, nil, nil, EntityType.ENTITY_HORF, ev.Tomato, nil, 4)
 replaceEntity(EntityType.ENTITY_MINISTRO, nil, nil, EntityType.ENTITY_MINISTRO, ev.Sickstro, nil, 4)
+
+local function amogusManager(list)
+	list[1].Position = room:GetCenterPos() + Vector(26, -26)
+	if #list >= 2 then
+		list[2].Position = room:GetCenterPos() + Vector(-26, -26)
+	end
+	if #list >= 3 then
+		list[3].Position = room:GetCenterPos() + Vector(26, 26)
+	end
+	if #list >= 4 then
+		list[4].Position = room:GetCenterPos() + Vector(-26, 26)
+	end
+	list[1]:ToNPC().State = NpcState.STATE_MOVE
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+	local amogus = api.Random(0)
+	room = game:GetRoom()
+	if amogus == 0 and not room:IsClear() then
+		local entities = Isaac.GetRoomEntities()
+		local amogusAmount = 4
+		local amogusIndex = 1
+		local amogusList = {}
+		local newAmogus
+		for i, entity in pairs(entities) do
+			if entity:IsEnemy() and not entity:IsBoss() then
+				if amogusAmount > 0 then
+					newAmogus = Isaac.Spawn(et.Amogus, ev.Amogus, 0, entity.Position, Vector(0,0), nil)
+					entity:Remove()
+					amogusAmount = amogusAmount - 1
+					amogusList[amogusIndex] = newAmogus
+					amogusIndex = amogusIndex + 1
+				end
+			end
+		end
+		amogusManager(amogusList)
+	end
+end)
+
+onEntityTick(et.Amogus, function(entity)
+	entity = entity:ToNPC()
+	local data = entity:GetData()
+	local sprite = entity:GetSprite()
+
+	if entity.FrameCount <= 1 then
+		entity.GridCollisionClass = EntityGridCollisionClass.ENTCOLL_NONE
+		data.countdown = 0
+		sprite:Play("Vent", false)
+		entity.State = NpcState.STATE_ATTACK
+	else
+		if entity.State == NpcState.STATE_MOVE  then
+			sprite:Play("VentOut", false)
+			entity.GridCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+			if sprite:IsFinished("VentOut") then
+				entity.State = NpcState.STATE_IDLE
+				data.countdown = 60
+			end
+		end
+		if entity.State == NpcState.STATE_IDLE then
+			sprite:Play("Idle", false)
+			data.countdown = data.countdown - 1
+			if data.countdown <= 0 then
+				entity.State = NpcState.STATE_JUMP
+			end
+		end
+		if entity.State == NpcState.STATE_JUMP then
+			sprite:Play("VentIn", false)
+			if sprite:IsFinished("VentIn") then
+				entity.State = NpcState.STATE_ATTACK
+			end
+		end
+		if entity.State == NpcState.STATE_ATTACK then
+			sprite:Play("Vent", false)
+			entity.GridCollisionClass = EntityGridCollisionClass.ENTCOLL_NONE
+		end
+	end
+end, ev.Amogus)
 
 
 --!!!!!!!!!!!!!!BOSSES!!!!!!!!!!!!!!!!
