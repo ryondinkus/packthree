@@ -93,7 +93,10 @@ local et = {
 	Muro = "Muro",
 	Amogus = "Amogus",
 
-	LittlestHorn = "Littlest Horn"
+	LittlestHorn = "Littlest Horn",
+	Imposter = "Imposter",
+	Vent = "Vent",
+	ImposterMissle = "Imposter Missle"
 }
 
 local ev = {
@@ -104,6 +107,9 @@ local ev = {
 	Amogus = "Amogus",
 
 	LittlestHorn = "Littlest Horn",
+	Imposter = "Imposter",
+	Vent = "Vent",
+	ImposterMissle = "Imposter Missle",
 
 	MoreJellyBean = "Jelly Bean Inverted",
 	RustedPenny = "Rusted Penny",
@@ -166,9 +172,8 @@ local saltStats = {
 	MaxFireDelay = -2,
 }
 
-local amogusList = {
-
-}
+local amogusList = {}
+local vents = {}
 
 local RLWInfo = {
 	Range = 120.00,
@@ -409,7 +414,9 @@ c = convert(c, "C")
 local function apiStart()
     api = InfinityBossAPI
     api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
-	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_2, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_1, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_2, nil, 50, nil, nil, nil)
 end
 
 local stupidSimpleFamiliars = {
@@ -2514,6 +2521,139 @@ onEntityTick(et.LittlestHorn, function(entity)
 		end
 	end
 end, ev.LittlestHorn)
+
+local imposterParams = ProjectileParams()
+imposterParams.BulletFlags = ProjectileFlags.RED_CREEP
+imposterParams.Scale = 3
+
+onEntityTick(et.Imposter, function(entity)
+	entity = entity:ToNPC()
+	local data = entity:GetData()
+	local sprite = entity:GetSprite()
+
+	if entity.State == NpcState.STATE_INIT then
+		vents = {}
+		local activeVent
+		local attack
+		vents[1] = Isaac.Spawn(et.Vent, ev.Vent, 0, room:GetTopLeftPos() + Vector(65, 26), Vector(0,0), nil)
+		vents[2] = Isaac.Spawn(et.Vent, ev.Vent, 0, Vector(room:GetTopLeftPos().X, room:GetBottomRightPos().Y) + Vector(65, -26), Vector(0,0), nil)
+		vents[3] = Isaac.Spawn(et.Vent, ev.Vent, 0, Vector(room:GetBottomRightPos().X, room:GetTopLeftPos().Y) + Vector(-65, 26), Vector(0,0), nil)
+		vents[4] = Isaac.Spawn(et.Vent, ev.Vent, 0, room:GetBottomRightPos() + Vector(-65, -26), Vector(0,0), nil)
+		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+		entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
+		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
+		data.moveCountdown = 0
+		data.rocketCountdown = 0
+		data.rocketAmount = 0
+		data.barfCooldown = 0
+		data.barfCoolup = 0
+		data.playerPos = Vector(0,0)
+
+		entity.State = NpcState.STATE_ATTACK
+	else
+		if entity.State == NpcState.STATE_ATTACK2  then
+			entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+			sprite:Play("VentOut", false)
+			activeVent:GetSprite():Play("VentOut", false)
+			if sprite:IsEventTriggered("Vulnerable") then
+				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+				sfx:Play(s.Vent, 1, 0, false, 1)
+			end
+			if sprite:IsFinished("VentOut") then
+				data.moveCountdown = 60
+				entity.State = NpcState.STATE_ATTACK4
+			end
+		end
+		if entity.State == NpcState.STATE_ATTACK4 then
+			sprite:Play("Idle", true)
+			activeVent:GetSprite():Play("Idle", false)
+			data.moveCountdown = data.moveCountdown - 1
+			if data.moveCountdown <= 0 then
+				attack = api.Random(1,2)
+				if attack == 1 then
+					data.rocketCountdown = 15
+					data.rocketAmount = 3
+					entity.State = NpcState.STATE_SUMMON
+				end
+				if attack == 2 then
+					data.barfCooldown = 60
+					data.barfCoolup = 30
+					entity.State = NpcState.STATE_SUMMON2
+				end
+			end
+		end
+		if entity.State == NpcState.STATE_SUMMON then
+			data.rocketCountdown = data.rocketCountdown - 1
+			if data.rocketCountdown <= 0 then
+				if data.rocketAmount <= 0 then
+					entity.State = NpcState.STATE_ATTACK3
+				else
+					Isaac.Spawn(et.ImposterMissle, ev.ImposterMissle, 0, player.Position, Vector(0,0), nil)
+					data.rocketCountdown = 15
+					data.rocketAmount = data.rocketAmount - 1
+				end
+			end
+		end
+		if entity.State == NpcState.STATE_SUMMON2 then
+			data.barfCooldown = data.barfCooldown - 1
+			if data.barfCooldown == 0 then
+				data.playerPos = player.Position
+			end
+			if data.barfCooldown <= 0 then
+				entity:FireBossProjectiles(1, data.playerPos, 0, imposterParams)
+				data.barfCoolup = data.barfCoolup - 1
+				if data.barfCoolup <= 0 then
+					entity.State = NpcState.STATE_ATTACK3
+				end
+			end
+		end
+		if entity.State == NpcState.STATE_ATTACK3 then
+			sprite:Play("VentIn", false)
+			activeVent:GetSprite():Play("VentIn", false)
+			if sprite:IsEventTriggered("Invulnerable") then
+				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+			end
+			if sprite:IsFinished("VentIn") then
+				entity.State = NpcState.STATE_ATTACK
+			end
+		end
+		if entity.State == NpcState.STATE_ATTACK then
+			activeVent = vents[api.Random(1,4)]
+			if activeVent == vents[3] or activeVent == vents[4] then
+				sprite.FlipX = true
+			else
+				sprite.FlipX = false
+			end
+			sprite:Play("Vent", false)
+			activeVent:GetSprite():Play("Idle", false)
+			entity.Position = activeVent.Position + Vector(0,5)
+			entity.State = NpcState.STATE_ATTACK2
+		end
+	end
+	if entity:IsDead() then
+		entities = Isaac.GetRoomEntities()
+		for i, entity in pairs(entities) do
+			if entity.Type == et.Vent and entity.Variant == ev.Vent then
+				entity:Kill()
+			end
+		end
+	end
+end, ev.Imposter)
+
+onEntityTick(et.ImposterMissle, function(entity)
+	local data = entity:GetData()
+	if entity.FrameCount <= 0 then
+		data.target = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.TARGET, 0, player.Position, Vector(0,0), nil)
+		data.cooldown = 60
+	else
+		data.cooldown = data.cooldown - 1
+		if data.cooldown <= 0 then
+			Isaac.Explode(data.target.Position, nil, 1)
+			data.target:Remove()
+			entity:Remove()
+		end
+	end
+end, ev.ImposterMissle)
 
 local START_FUNC = apiStart
 if InfinityBossAPI then START_FUNC()

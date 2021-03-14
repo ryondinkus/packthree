@@ -124,6 +124,70 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
     <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
   </entity>
 
+  <entity name="Imposter"
+      anm2path="bosses\imposter.anm2"
+      reroll="false"
+      baseHP="400"
+      boss="1"
+      champion="0"
+      collisionDamage="1"
+      collisionMass="50"
+      collisionRadius="40"
+      friction="1"
+      numGridCollisionPoints="12"
+      shadowSize="56"
+      stageHP="0"
+      portrait="97"
+      bestiary="true"
+      bestiaryTransform="0,0,1"
+      bestiartAnim="Idle"
+      id="616"
+      variant="0"
+  >
+  <gibs amount="18" blood="1" bone="1" eye="0" gut="1" large="1" />
+</entity>
+
+  <entity name="Vent"
+      anm2path="bosses\vent.anm2"
+      reroll="false"
+      baseHP="0"
+      boss="1"
+      champion="0"
+      collisionDamage="1"
+      collisionMass="15"
+      collisionRadius="13"
+      friction="1"
+      numGridCollisionPoints="12"
+      shadowSize="14"
+      stageHP="0"
+      portrait="97"
+      bestiary="false"
+      id="1615"
+      variant="0"
+  >
+    <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+  </entity>
+
+  <entity name="Imposter Missle"
+    reroll="false"
+    baseHP="0"
+    boss="1"
+    champion="0"
+    collisionDamage="1"
+    collisionMass="15"
+    collisionRadius="13"
+    friction="1"
+    numGridCollisionPoints="12"
+    shadowSize="14"
+    stageHP="0"
+    portrait="97"
+    bestiary="false"
+    id="1616"
+    variant="0"
+>
+  <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+</entity>
+
 <!--BEANS-->
   <entity anm2path="items/pick ups/jellybeancerulean.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Cerulean" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="0">
       <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
