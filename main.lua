@@ -137,9 +137,15 @@ local es = {
 local f = {
 	deaf = false,
 	lost = false,
+	sfxCountdown = 0,
+	noCountdown = 0
 }
 
 local t = {
+	Streamdeck = "Streamdeck",
+	Diarrhea = "Diarrhea",
+	BigNo = "Big NO!",
+	IceCube = "Ice Cube",
 	reallylazyworm = "REALLY Lazy Worm"
 }
 
@@ -936,6 +942,8 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	f.DamageDownTimesUsed = 0
 	f.taxAdded = false
 	f.lost = false
+	f.sfxCountdown = 0
+	f.noCountdown = 0
 	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
@@ -1864,6 +1872,56 @@ onPassiveTick(i.MagnifyingGlass, function()
 	end
 end)
 
+mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function()
+	if player:HasTrinket(t.Diarrhea) then
+		room = game:GetRoom()
+		local gridSize = room:GetGridSize()
+		for i=0,gridSize,1 do
+			local currentGrid = room:GetGridEntity(i)
+			if currentGrid ~= nil then
+				if currentGrid:GetType() == GridEntityType.GRID_POOP then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_SLIPPERY_BROWN, 0, currentGrid.Position, Vector(0,0), nil)
+					currentGrid:Destroy()
+				end
+			end
+		end
+	end
+	if player:HasTrinket(t.Streamdeck) then
+		local x2 = player.Velocity.X * player.Velocity.X
+		local y2 = player.Velocity.Y * player.Velocity.Y
+		local mag = math.floor(math.sqrt(x2 + y2))
+		f.sfxCountdown = f.sfxCountdown - 1
+		if f.sfxCountdown <= 0 and mag ~= 0 then
+			sfx:Play(api.Random(SoundEffect.NUM_SOUND_EFFECTS), 1, 0, false, 1)
+			f.sfxCountdown = 30/mag
+		end
+	end
+	if player:HasTrinket(t.BigNo) then
+		if player:GetActiveItem() ~= nil then
+			f.noCountdown = f.noCountdown - 1
+			if f.noCountdown <= 0 then
+				player:TakeDamage(1, 0, EntityRef(player), 0)
+				f.noCountdown = 150
+			end
+		end
+	end
+	if player:HasTrinket(t.IceCube) then
+		entities = Isaac.GetRoomEntities()
+		for i, entity in pairs(entities) do
+			if game:GetFrameCount() % 3 == 0 then
+				if entity:IsActiveEnemy() then
+					local effect = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_SLIPPERY_BROWN, 56, entity.Position, zeroVector, nil):ToEffect()
+					effect:SetTimeout(30)
+				end
+			end
+		end
+	end
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+
+end)
+
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
 
 mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt, dmgFlag, sourceEnt, dmgFrames)
@@ -2405,9 +2463,9 @@ local function amogusManager()
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-	local amogus = api.Random(0)
+	local amogus = api.Random(1,10)
 	room = game:GetRoom()
-	if amogus == 0 and not room:IsClear() then
+	if amogus == 10 and not room:IsClear() then
 		local entities = Isaac.GetRoomEntities()
 		local amogusAmount = 4
 		local amogusIndex = 1

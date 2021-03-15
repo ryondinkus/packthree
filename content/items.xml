@@ -324,8 +324,26 @@
 		gfx="lild10.png"
 	/>
 
+
+	<trinket name="Streamdeck"
+		description="Funny sounds"
+		gfx="streamdeck.png"
+	/>
+	<trinket name="Diarrhea"
+		description="Nasty"
+		gfx="diarrhea.png"
+	/>
+	<trinket name="Big NO!"
+		description="Never, ever again!"
+		gfx="bigno.png"
+	/>
+	<trinket name="Ice Cube"
+		description="Slippery foes"
+		gfx="icecube.png"
+	/>
 	<trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"
 		gfx="passived6.png"
+		cache="range shotspeed"
 	/>
 </items>
