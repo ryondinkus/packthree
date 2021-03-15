@@ -1,5 +1,5 @@
 <AnimatedActor>
-	<Info CreatedBy="Unknown" CreatedOn="3/12/2021 10:57:44 AM" Version="10" Fps="30"/>
+	<Info CreatedBy="Unknown" CreatedOn="3/14/2021 1:41:50 PM" Version="11" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="amogus.png" Id="0"/>
@@ -15,7 +15,7 @@
 		</Events>
 	</Content>
 	<Animations DefaultAnimation="Vent">
-		<Animation Name="Idle" FrameNum="7" Loop="false">
+		<Animation Name="Idle" FrameNum="7" Loop="true">
 			<RootAnimation>
 				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="7" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 			</RootAnimation>
@@ -59,7 +59,7 @@
 				<Trigger EventId="1" AtFrame="9"/>
 			</Triggers>
 		</Animation>
-		<Animation Name="Vent" FrameNum="7" Loop="false">
+		<Animation Name="Vent" FrameNum="7" Loop="true">
 			<RootAnimation>
 				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="7" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 			</RootAnimation>

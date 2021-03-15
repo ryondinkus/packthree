@@ -2449,7 +2449,7 @@ onEntityTick(et.Amogus, function(entity)
 			end
 		end
 		if entity.State == NpcState.STATE_ATTACK4 then
-			sprite:Play("Idle", true)
+			sprite:Play("Idle", false)
 			data.countdown = data.countdown - 1
 			if data.countdown <= 0 then
 				entity.State = NpcState.STATE_ATTACK3
@@ -2565,7 +2565,7 @@ onEntityTick(et.Imposter, function(entity)
 			end
 		end
 		if entity.State == NpcState.STATE_ATTACK4 then
-			sprite:Play("Idle", true)
+			sprite:Play("Idle", false)
 			activeVent:GetSprite():Play("Idle", false)
 			data.moveCountdown = data.moveCountdown - 1
 			if data.moveCountdown <= 0 then
@@ -2573,6 +2573,7 @@ onEntityTick(et.Imposter, function(entity)
 				if attack == 1 then
 					data.rocketCountdown = 15
 					data.rocketAmount = 3
+					sprite:Play("Unholster", false)
 					entity.State = NpcState.STATE_SUMMON
 				end
 				if attack == 2 then
@@ -2583,11 +2584,16 @@ onEntityTick(et.Imposter, function(entity)
 			end
 		end
 		if entity.State == NpcState.STATE_SUMMON then
+			if sprite:IsFinished("Unholster") || sprite:IsFinished("FireGun") then
+				sprite:Play("IdleGun", false)
+			end
 			data.rocketCountdown = data.rocketCountdown - 1
 			if data.rocketCountdown <= 0 then
 				if data.rocketAmount <= 0 then
+					sprite:Play("Holster", false)
 					entity.State = NpcState.STATE_ATTACK3
 				else
+					sprite:Play("FireGun", false)
 					Isaac.Spawn(et.ImposterMissle, ev.ImposterMissle, 0, player.Position, Vector(0,0), nil)
 					data.rocketCountdown = 15
 					data.rocketAmount = data.rocketAmount - 1
