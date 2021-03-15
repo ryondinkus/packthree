@@ -147,7 +147,11 @@ local s = {
 	TwentyOne = "Twenty One",
 	Yahoo = "Yahoo",
 	Slap = "Slap",
-	Vent = "Vent"
+	Vent = "Vent",
+	RoleReveal = "Role Reveal",
+	Gunshot = "Gunshot",
+	Death = "Death",
+	Victory = "Victory"
 }
 
 local d17Stats = {
@@ -2574,26 +2578,32 @@ onEntityTick(et.Imposter, function(entity)
 					data.rocketCountdown = 15
 					data.rocketAmount = 3
 					sprite:Play("Unholster", false)
+					sfx:Play(s.Death, 1, 0, false, 1)
 					entity.State = NpcState.STATE_SUMMON
 				end
 				if attack == 2 then
 					data.barfCooldown = 60
 					data.barfCoolup = 30
+					sprite:Play("Bend", false)
+					sfx:Play(s.RoleReveal, 1, 0, false, 1)
 					entity.State = NpcState.STATE_SUMMON2
 				end
 			end
 		end
 		if entity.State == NpcState.STATE_SUMMON then
-			if sprite:IsFinished("Unholster") || sprite:IsFinished("FireGun") then
+			if sprite:IsFinished("Unholster") or sprite:IsFinished("FireGun") then
 				sprite:Play("IdleGun", false)
 			end
 			data.rocketCountdown = data.rocketCountdown - 1
 			if data.rocketCountdown <= 0 then
 				if data.rocketAmount <= 0 then
 					sprite:Play("Holster", false)
-					entity.State = NpcState.STATE_ATTACK3
+					if sprite:IsFinished("Holster") then
+						entity.State = NpcState.STATE_ATTACK3
+					end
 				else
 					sprite:Play("FireGun", false)
+					sfx:Play(s.Gunshot, 1, 0, false, 1)
 					Isaac.Spawn(et.ImposterMissle, ev.ImposterMissle, 0, player.Position, Vector(0,0), nil)
 					data.rocketCountdown = 15
 					data.rocketAmount = data.rocketAmount - 1
@@ -2602,14 +2612,25 @@ onEntityTick(et.Imposter, function(entity)
 		end
 		if entity.State == NpcState.STATE_SUMMON2 then
 			data.barfCooldown = data.barfCooldown - 1
+			if sprite:IsFinished("Bend") then
+				sprite:Play("Charge", false)
+			end
 			if data.barfCooldown == 0 then
+				sprite:Play("OpenMouth", false)
 				data.playerPos = player.Position
+				sfx:Play(SoundEffect.SOUND_MEGA_PUKE, 1, 0, false, 1)
 			end
 			if data.barfCooldown <= 0 then
+				if sprite:IsFinished("OpenMouth") then
+					sprite:Play("Vomiting", false)
+				end
 				entity:FireBossProjectiles(1, data.playerPos, 0, imposterParams)
 				data.barfCoolup = data.barfCoolup - 1
 				if data.barfCoolup <= 0 then
-					entity.State = NpcState.STATE_ATTACK3
+					sprite:Play("CloseMouth", false)
+					if sprite:IsFinished("CloseMouth") then
+						entity.State = NpcState.STATE_ATTACK3
+					end
 				end
 			end
 		end
@@ -2643,6 +2664,7 @@ onEntityTick(et.Imposter, function(entity)
 				entity:Kill()
 			end
 		end
+		sfx:Play(s.Victory, 1, 0, false, 1)
 	end
 end, ev.Imposter)
 

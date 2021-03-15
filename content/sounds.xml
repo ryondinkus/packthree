@@ -11,4 +11,16 @@
 	<sound name="Vent">
 		<sample weight="1" path="vent.wav"/>
 	</sound>
+	<sound name="Role Reveal">
+		<sample weight="1" path="rolereveal.wav"/>
+	</sound>
+	<sound name="Gunshot">
+		<sample weight="1" path="gunshot.wav"/>
+	</sound>
+	<sound name="Death">
+		<sample weight="1" path="death.wav"/>
+	</sound>
+	<sound name="Victory">
+		<sample weight="1" path="victory.wav"/>
+	</sound>
 </sounds>
