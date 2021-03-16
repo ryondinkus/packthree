@@ -110,6 +110,7 @@ local ev = {
 	Imposter = "Imposter",
 	Vent = "Vent",
 	ImposterMissle = "Imposter Missle",
+	Monstro3 = "Monstro III",
 
 	MoreJellyBean = "Jelly Bean Inverted",
 	RustedPenny = "Rusted Penny",
