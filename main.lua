@@ -428,6 +428,8 @@ local function apiStart()
 	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_2, nil, 50, nil, nil, nil)
 	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_1, nil, 50, nil, nil, nil)
 	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_2, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", EntityType.ENTITY_MONSTRO, ev.Monstro3, 0, LevelStage.STAGE4_1, nil, 50, nil, nil, nil)
+
 end
 
 local stupidSimpleFamiliars = {
@@ -1874,6 +1876,7 @@ onPassiveTick(i.MagnifyingGlass, function()
 end)
 
 mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function()
+	player = Isaac.GetPlayer(0)
 	if player:HasTrinket(t.Diarrhea) then
 		room = game:GetRoom()
 		local gridSize = room:GetGridSize()
@@ -2741,6 +2744,30 @@ onEntityTick(et.ImposterMissle, function(entity)
 		end
 	end
 end, ev.ImposterMissle)
+
+onEntityTick(EntityType.ENTITY_MONSTRO, function(entity)
+	entity = entity:ToNPC()
+	local sprite = entity:GetSprite()
+
+	if sprite:IsEventTriggered("Barf") then
+		for i = 1, api.Random(32, 64) do
+			monstroParams.VelocityMulti = api.Random(0, 3000) * 0.0007
+			entity:FireBossProjectiles(1, player.Position, 0, monstroParams)
+		end
+		sfx:Play(SoundEffect.SOUND_BOSS_SPIT_BLOB_BARF, 1, 0, false, 1.1)
+	end
+	if sprite:IsEventTriggered("Land") then
+		for i = 1, 2 do
+			local laser = EntityLaser.ShootAngle(1, entity.Position, api.GetCircleDegreeOffset(i, 2), 180, zeroVector, entity)
+			laser:SetActiveRotation(60, 360 * 500, 1.5, false)
+		end
+	end
+	local rando = api.Random(1,100000)
+	if rando == 1 then
+		Isaac.Explode(entity.Position, nil, 0)
+		entity:Remove()
+	end
+end, ev.Monstro3)
 
 local START_FUNC = apiStart
 if InfinityBossAPI then START_FUNC()

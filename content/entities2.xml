@@ -188,7 +188,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
   <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 </entity>
 
-<entity anm2path="bosses/monstro3.anm2" baseHP="700" boss="1" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="40" friction="1" id="20" name="Monstro III" numGridCollisionPoints="12" shadowSize="56" stageHP="0" variant="648" portrait="2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Taunt">
+<entity anm2path="bosses/monstro3.anm2" baseHP="550" boss="1" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="40" friction="1" id="20" name="Monstro III" numGridCollisionPoints="12" shadowSize="56" stageHP="0" variant="648" portrait="2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Taunt">
     <gibs amount="18" blood="1" bone="0" eye="1" gut="1" large="1" />
     <preload-snd id="14" /> <!-- SOUND_BOSS_LITE_ROAR -->
     <preload-snd id="16" /> <!-- SOUND_BOSS_SPIT_BLOB_BARF -->
