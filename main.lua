@@ -2823,13 +2823,16 @@ end, ev.Monstro3)
 onEntityTick(et.SkinlessDelirium, function(entity)
 	entity = entity:ToNPC()
 	local data = entity:GetData()
+	local sprite = entity:GetSprite()
 
 	if entity.FrameCount <= 0 then
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		data.boss = nil
 		f.deliCoundtown = 60
 		f.attackCountdown = 30
+		sprite:Play("Idle", false)
 	else
+		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		f.deliCountdown = f.deliCountdown - 1
 		f.attackCountdown = f.attackCountdown - 1
 		if f.deliCountdown <= 0 then
@@ -2848,6 +2851,7 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 				entity.Visible = true
 				entity.MaxHitPoints = 10001
 				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+				sprite:Play("Blink", false)
 			else
 				entity.Visible = false
 				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
@@ -2869,7 +2873,12 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 				data.boss.HitPoints = entity.HitPoints
 			end
 			entity.Position = Vector(api.Random(0,room:GetBottomRightPos().X), api.Random(0,room:GetBottomRightPos().Y))
+			sfx:Play(SoundEffect.SOUND_HELL_PORTAL1, 1, 0, false, 1)
+			sfx:Play(SoundEffect.SOUND_HELL_PORTAL2, 1, 0, false, 1)
 			f.deliCountdown = api.Random(60,150)
+		end
+		if sprite:IsFinished("Blink") then
+			sprite:Play("Idle", false)
 		end
 		if f.attackCountdown == 0 then
 			local attack = api.Random(1,4)
