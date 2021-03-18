@@ -96,7 +96,8 @@ local et = {
 	LittlestHorn = "Littlest Horn",
 	Imposter = "Imposter",
 	Vent = "Vent",
-	ImposterMissle = "Imposter Missle"
+	ImposterMissle = "Imposter Missle",
+	SkinlessDelirium = "Skinless Delirium"
 }
 
 local ev = {
@@ -111,6 +112,7 @@ local ev = {
 	Vent = "Vent",
 	ImposterMissle = "Imposter Missle",
 	Monstro3 = "Monstro III",
+	SkinlessDelirium = "Skinless Delirium",
 
 	MoreJellyBean = "Jelly Bean Inverted",
 	RustedPenny = "Rusted Penny",
@@ -132,7 +134,10 @@ local ev = {
 }
 
 local es = {
-	Logo = 1
+	Logo = 1,
+	DeliriumImposter = 1,
+	DeliriumLittlestHorn = 1,
+	DeliriumMonstro3 = 3
 }
 
 local f = {
@@ -2768,6 +2773,44 @@ onEntityTick(EntityType.ENTITY_MONSTRO, function(entity)
 		entity:Remove()
 	end
 end, ev.Monstro3)
+
+onEntityTick(et.SkinlessDelirium, function(entity)
+	entity = entity:ToNPC()
+	local data = entity:GetData()
+
+	if entity.State == NpcState.STATE_INIT then
+		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
+		data.boss = nil
+		data.countdown = 0
+	else
+		data.countdown = data.countdown - 1
+		if data.countdown <= 0 then
+			local become = api.Random(1,4)
+			if become == 4 then
+				entity.Visible = true
+				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+			else
+				entity.Visible = false
+				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+				if data.boss ~= nil then
+					data.boss:Remove()
+				end
+				if become == 1 then
+					data.boss = Isaac.Spawn(et.Imposter, ev.Imposter, es.DeliriumImposter, entity.Position, Vector(0,0), nil)
+				end
+				if become == 2 then
+					data.boss = Isaac.Spawn(et.LittlestHorn, ev.LittlestHorn, es.DeliriumLittlestHorn, entity.Position, Vector(0,0), nil)
+				end
+				if become == 3 then
+					data.boss = Isaac.Spawn(et.Monstro3, ev.Monstro3, es.DeliriumMonstro3, entity.Position, Vector(0,0), nil)
+				end
+			end
+			entity.Position = Vector(api.Random(0,room:GetBottomRightPos().X), api.Random(0,room:GetBottomRightPos().Y))
+			data.countdown = api.Random(60,600)
+		end
+	end
+
+end, ev.SkinlessDelirium)
 
 local START_FUNC = apiStart
 if InfinityBossAPI then START_FUNC()

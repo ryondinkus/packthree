@@ -195,6 +195,65 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
     <preload-snd id="48" /> <!-- SOUND_FORESTBOSS_STOMPS -->
 </entity>
 
+<entity id="989" variant="238" name="Skinless Delirium" baseHP="10001" stageHP="0" boss="1" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="40" friction="1" numGridCollisionPoints="40" shadowSize="0" portrait="91" anm2path="bosses/skinlessdeliriumnew.anm2" bestiary="true" bestiaryTransform="0,0,.4" bestiaryAnim="Idle">
+  <gibs amount="24" blood="1" bone="0" eye="0" gut="1" large="1" />
+</entity>
+
+<entity anm2path="bosses\skinlessdeliriumforms\monstro3.anm2" baseHP="10001" boss="1" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="40" friction="1" id="20" name="Monstro III" numGridCollisionPoints="12" shadowSize="56" stageHP="0" variant="648" subtype="3" portrait="2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Taunt">
+    <gibs amount="18" blood="1" bone="0" eye="1" gut="1" large="1" />
+    <preload-snd id="14" /> <!-- SOUND_BOSS_LITE_ROAR -->
+    <preload-snd id="16" /> <!-- SOUND_BOSS_SPIT_BLOB_BARF -->
+    <preload-snd id="48" /> <!-- SOUND_FORESTBOSS_STOMPS -->
+</entity>
+
+<entity name="Imposter"
+    anm2path="bosses\skinlessdeliriumforms\imposter.anm2"
+    reroll="false"
+    baseHP="10001"
+    boss="1"
+    champion="0"
+    collisionDamage="1"
+    collisionMass="50"
+    collisionRadius="40"
+    friction="1"
+    numGridCollisionPoints="12"
+    shadowSize="56"
+    stageHP="0"
+    portrait="97"
+    bestiary="true"
+    bestiaryTransform="0,0,1"
+    bestiartAnim="Idle"
+    id="616"
+    variant="0"
+    subtype="1"
+>
+<gibs amount="18" blood="1" bone="1" eye="0" gut="1" large="1" />
+</entity>
+
+<entity name="Littlest Horn"
+    anm2path="bosses\skinlessdeliriumforms\littlesthorn.anm2"
+    reroll="false"
+    baseHP="10001"
+    boss="1"
+    champion="0"
+    collisionDamage="1"
+    collisionMass="15"
+    collisionRadius="13"
+    friction="1"
+    numGridCollisionPoints="12"
+    shadowSize="14"
+    stageHP="0"
+    portrait="81"
+    bestiary="true"
+    bestiaryTransform="0,0,1"
+    bestiartAnim="Idle"
+    id="653"
+    variant="0"
+    subtype="1"
+>
+  <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
+</entity>
+
 
 <!--BEANS-->
   <entity anm2path="items/pick ups/jellybeancerulean.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Cerulean" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="0">
