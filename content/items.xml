@@ -323,6 +323,11 @@
 		description= "Quirky friend"
 		gfx="lild10.png"
 	/>
+	<active name="Delirious Vegetable Peeler"
+		description="Reveal what lies beneath"
+		gfx="deliriousveggie.png"
+		maxcharge="0"
+	/>
 
 
 	<trinket name="Streamdeck"

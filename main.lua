@@ -31,6 +31,7 @@ local i = {
 	FlatD6 = "Flat D6",
 	PassiveD6 = "Passive D6",
 	BigD6 = "The Big D6",
+	DeliriousVeggie = "Delirious Vegetable Peeler",
 
 	SlapBean = "Slap Bean",
 	DoubleBean = "Double Bean",
@@ -137,7 +138,9 @@ local es = {
 	Logo = 1,
 	DeliriumImposter = 1,
 	DeliriumLittlestHorn = 1,
-	DeliriumMonstro3 = 3
+	DeliriumMonstro3 = 3,
+	DeliriumNerve3 = 1,
+	DeliriumMediumHorn = 2424
 }
 
 local f = {
@@ -952,7 +955,8 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	f.lost = false
 	f.sfxCountdown = 0
 	f.noCountdown = 0
-	f.deliCountdown = 0
+	f.deliCountdown = 60
+	f.attackCountdown = 30
 	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
@@ -1881,6 +1885,25 @@ onPassiveTick(i.MagnifyingGlass, function()
 	end
 end)
 
+onActiveUse(i.DeliriousVeggie, function()
+	entities = Isaac.GetRoomEntities()
+	for i, entity in pairs(entities) do
+		if entity.Type == EntityType.ENTITY_DELIRIUM then
+			Isaac.Spawn(et.SkinlessDelirium, ev.SkinlessDelirium, 0, entity.Position, Vector(0,0), nil)
+			entity:Remove()
+		end
+	end
+
+	player:RemoveCollectible(i.DeliriousVeggie)
+	return true
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function()
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, i.DeliriousVeggie, room:FindFreePickupSpawnPosition(room:GetCenterPos(), 0, false), zeroVector, nil)
+end, EntityType.ENTITY_HUSH)
+
+-- !!!!!TWINEKTS!!!!!!
+
 mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function()
 	player = Isaac.GetPlayer(0)
 	if player:HasTrinket(t.Diarrhea) then
@@ -1928,9 +1951,6 @@ mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function()
 	end
 end)
 
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-
-end)
 
 --!!!!!!!!!!!!NEW CHARACTER!!!!!!!!!
 
@@ -2807,15 +2827,22 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 	if entity.FrameCount <= 0 then
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		data.boss = nil
-		f.deliCoundtown = 0
+		f.deliCoundtown = 60
+		f.attackCountdown = 30
 	else
-		print(f.deliCountdown)
 		f.deliCountdown = f.deliCountdown - 1
+		f.attackCountdown = f.attackCountdown - 1
 		if f.deliCountdown <= 0 then
-			local become = api.Random(1,4)
+			local become = api.Random(1,6)
 			if data.boss ~= nil then
 				entity.HitPoints = data.boss.HitPoints
 				data.boss:Remove()
+			end
+			entities = Isaac.GetRoomEntities()
+			for i, j in pairs(entities) do
+				if j.Type == et.Vent and j.Variant == ev.Vent then
+					j:Remove()
+				end
 			end
 			if become == 4 then
 				entity.Visible = true
@@ -2833,10 +2860,33 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 				if become == 3 then
 					data.boss = Isaac.Spawn(EntityType.ENTITY_MONSTRO, ev.Monstro3, es.DeliriumMonstro3, entity.Position, Vector(0,0), nil)
 				end
+				if become == 5 then
+					data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Nerve Ending 3"), Isaac.GetEntityVariantByName("Nerve Ending 3"), es.DeliriumNerve3, entity.Position, Vector(0,0), nil)
+				end
+				if become == 6 then
+					data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityVariantByName("Medium Horn"), es.DeliriumMediumHorn, entity.Position, Vector(0,0), nil)
+				end
 				data.boss.HitPoints = entity.HitPoints
 			end
 			entity.Position = Vector(api.Random(0,room:GetBottomRightPos().X), api.Random(0,room:GetBottomRightPos().Y))
-			f.deliCountdown = api.Random(60,600)
+			f.deliCountdown = api.Random(60,150)
+		end
+		if f.attackCountdown == 0 then
+			local attack = api.Random(1,4)
+			if attack == 1 then
+				if entity.Visible then
+					for i = 1, 8 do
+		                local laser = EntityLaser.ShootAngle(1, entity.Position, api.GetCircleDegreeOffset(i, 8), 60, zeroVector, entity)
+		                laser:SetActiveRotation(60, 360 * 500, 1.5, false)
+		            end
+				else
+					for i = 1, 8 do
+						local laser = EntityLaser.ShootAngle(1, data.boss.Position, api.GetCircleDegreeOffset(i, 8), 60, zeroVector, data.boss)
+						laser:SetActiveRotation(60, 360 * 500, 1.5, false)
+					end
+				end
+			end
+			f.attackCountdown = api.Random(30,75)
 		end
 	end
 	if entity:IsDead() then
