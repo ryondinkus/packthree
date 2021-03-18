@@ -952,6 +952,7 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	f.lost = false
 	f.sfxCountdown = 0
 	f.noCountdown = 0
+	f.deliCountdown = 0
 	mus:Enable()
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
@@ -2591,6 +2592,16 @@ onEntityTick(et.LittlestHorn, function(entity)
 			end
 		end
 	end
+	if sprite:IsPlaying("Death") then
+		if entity.SubType == es.DeliriumLittlestHorn then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+					entity:Kill()
+				end
+			end
+		end
+	end
 end, ev.LittlestHorn)
 
 local imposterParams = ProjectileParams()
@@ -2726,9 +2737,14 @@ onEntityTick(et.Imposter, function(entity)
 	end
 	if entity:IsDead() then
 		entities = Isaac.GetRoomEntities()
-		for i, entity in pairs(entities) do
-			if entity.Type == et.Vent and entity.Variant == ev.Vent then
-				entity:Kill()
+		for i, j in pairs(entities) do
+			if j.Type == et.Vent and j.Variant == ev.Vent then
+				j:Kill()
+			end
+			if entity.SubType == es.DeliriumImposter then
+				if j.Type == et.SkinlessDelirium and j.Variant == ev.SkinlessDelirium then
+					j:Kill()
+				end
 			end
 		end
 		sfx:Play(s.Victory, 1, 0, false, 1)
@@ -2772,29 +2788,42 @@ onEntityTick(EntityType.ENTITY_MONSTRO, function(entity)
 		Isaac.Explode(entity.Position, nil, 0)
 		entity:Remove()
 	end
+	if sprite:IsPlaying("Death") then
+		if entity.SubType == es.DeliriumMonstro3 then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+					entity:Kill()
+				end
+			end
+		end
+	end
 end, ev.Monstro3)
 
 onEntityTick(et.SkinlessDelirium, function(entity)
 	entity = entity:ToNPC()
 	local data = entity:GetData()
 
-	if entity.State == NpcState.STATE_INIT then
+	if entity.FrameCount <= 0 then
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		data.boss = nil
-		data.countdown = 0
+		f.deliCoundtown = 0
 	else
-		data.countdown = data.countdown - 1
-		if data.countdown <= 0 then
+		print(f.deliCountdown)
+		f.deliCountdown = f.deliCountdown - 1
+		if f.deliCountdown <= 0 then
 			local become = api.Random(1,4)
+			if data.boss ~= nil then
+				entity.HitPoints = data.boss.HitPoints
+				data.boss:Remove()
+			end
 			if become == 4 then
 				entity.Visible = true
+				entity.MaxHitPoints = 10001
 				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
 			else
 				entity.Visible = false
 				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-				if data.boss ~= nil then
-					data.boss:Remove()
-				end
 				if become == 1 then
 					data.boss = Isaac.Spawn(et.Imposter, ev.Imposter, es.DeliriumImposter, entity.Position, Vector(0,0), nil)
 				end
@@ -2802,11 +2831,20 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 					data.boss = Isaac.Spawn(et.LittlestHorn, ev.LittlestHorn, es.DeliriumLittlestHorn, entity.Position, Vector(0,0), nil)
 				end
 				if become == 3 then
-					data.boss = Isaac.Spawn(et.Monstro3, ev.Monstro3, es.DeliriumMonstro3, entity.Position, Vector(0,0), nil)
+					data.boss = Isaac.Spawn(EntityType.ENTITY_MONSTRO, ev.Monstro3, es.DeliriumMonstro3, entity.Position, Vector(0,0), nil)
 				end
+				data.boss.HitPoints = entity.HitPoints
 			end
 			entity.Position = Vector(api.Random(0,room:GetBottomRightPos().X), api.Random(0,room:GetBottomRightPos().Y))
-			data.countdown = api.Random(60,600)
+			f.deliCountdown = api.Random(60,600)
+		end
+	end
+	if entity:IsDead() then
+		entities = Isaac.GetRoomEntities()
+		for i, entity in pairs(entities) do
+			if entity.Type == et.Vent and entity.Variant == ev.Vent then
+				entity:Kill()
+			end
 		end
 	end
 
