@@ -199,7 +199,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
   <gibs amount="24" blood="1" bone="0" eye="0" gut="1" large="1" />
 </entity>
 
-<entity anm2path="bosses\skinlessdeliriumforms\monstro3.anm2" baseHP="10001" boss="1" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="40" friction="1" id="20" name="Monstro III" numGridCollisionPoints="12" shadowSize="56" stageHP="0" variant="648" subtype="3" portrait="2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Taunt">
+<entity anm2path="bosses\skinlessdeliriumforms\monstro3.anm2" baseHP="10001" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="40" friction="1" id="20" name="Monstro III" numGridCollisionPoints="12" shadowSize="56" stageHP="0" variant="648" subtype="3" portrait="2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Taunt">
     <gibs amount="18" blood="1" bone="0" eye="1" gut="1" large="1" />
     <preload-snd id="14" /> <!-- SOUND_BOSS_LITE_ROAR -->
     <preload-snd id="16" /> <!-- SOUND_BOSS_SPIT_BLOB_BARF -->
@@ -210,7 +210,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
     anm2path="bosses\skinlessdeliriumforms\imposter.anm2"
     reroll="false"
     baseHP="10001"
-    boss="1"
+    boss="0"
     champion="0"
     collisionDamage="1"
     collisionMass="50"
@@ -234,7 +234,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
     anm2path="bosses\skinlessdeliriumforms\littlesthorn.anm2"
     reroll="false"
     baseHP="10001"
-    boss="1"
+    boss="0"
     champion="0"
     collisionDamage="1"
     collisionMass="15"
@@ -254,14 +254,54 @@ bestiaryTransform="0,0,1" bestiaryAnim="Shake" bestiaryOverlay="Head">
   <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="0" />
 </entity>
 
-<entity id="231" variant="542" subtype="1" name="Nerve Ending 3" reroll="true" baseHP="600" stageHP="0" boss="1" champion="0" collisionDamage="1" collisionMass="999" collisionRadius="26" friction="1" numGridCollisionPoints="12" shadowSize="22" anm2path="bosses/skinlessdeliriumforms/nerveending3.anm2">
+<entity id="231" variant="542" subtype="1" name="Nerve Ending 3" reroll="true" baseHP="10001" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="999" collisionRadius="26" friction="1" numGridCollisionPoints="12" shadowSize="22" anm2path="bosses/skinlessdeliriumforms/nerveending3.anm2">
     <gibs amount="4" blood="1" bone="0" eye="0" gut="0" large="0" />
 </entity>
 
-<entity id="411" variant="0" name="Medium Horn" baseHP="480" stageHP="0" boss="1" subtype="2424" champion="0" collisionDamage="1" collisionMass="1000" collisionRadius="90" friction="1" numGridCollisionPoints="40" shadowSize="0" anm2path="bosses/skinlessdeliriumforms/mediumhorn.anm2">
+<entity id="411" variant="0" name="Medium Horn" baseHP="10001" stageHP="0" boss="0" subtype="2424" champion="0" collisionDamage="1" collisionMass="1000" collisionRadius="90" friction="1" numGridCollisionPoints="40" shadowSize="0" anm2path="bosses/skinlessdeliriumforms/mediumhorn.anm2">
     <gibs amount="24" blood="1" bone="0" eye="0" gut="1" large="1" />
 </entity>
 
+<entity id="407" variant="635" name="Abortionbirth SECRET BOSS" baseHP="10001" stageHP="0" boss="0" subtype="1" champion="0" collisionDamage="1" collisionMass="1000" collisionRadius="100" friction="1" numGridCollisionPoints="40" shadowSize="0" anm2path="bosses/skinlessdeliriumforms/abortionbirthsecretboss.anm2">
+    <gibs amount="24" blood="1" bone="0" eye="0" gut="1" large="1" />
+</entity>
+
+<entity anm2path="bosses/skinlessdeliriumforms/secretbossprecursor.anm2" baseHP="10001" boss="0" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="25" friction="1" id="102" name="??? but Red" numGridCollisionPoints="12" shadowSize="15" stageHP="0" variant="2" subtype="874">
+    <gibs amount="10" blood="1" bone="1" eye="1" gut="1" large="1" />
+    <preload-snd id="143" /> <!-- SOUND_SCARED_WHIMPER -->
+    <preload-snd id="129" /> <!-- SOUND_POWERUP2 -->
+    <preload-snd id="267" /> <!-- SOUND_THUMBS_DOWN -->
+    <preload-snd id="268" /> <!-- SOUND_THUMBSUP -->
+    <preload-snd id="215" /> <!-- SOUND_HELL_PORTAL2 -->
+    <preload-snd id="214" /> <!-- SOUND_HELL_PORTAL1 -->
+    <preload-snd id="54" /> <!-- SOUND_HOLY -->
+    <preload-snd id="266" /> <!-- SOUND_SUPERHOLY -->
+</entity>
+
+<entity anm2path="bosses/skinlessdeliriumforms/ultraenvy.anm2" baseHP="10001" boss="0" collisionDamage="1" collisionMass="30" collisionRadius="13" friction="1" id="51" name="Ultra Envy" numGridCollisionPoints="12" shadowSize="16" stageHP="10" variant="2512" gridCollision="walls" subtype="1">
+    <gibs amount="8" blood="1" bone="1" eye="1" gut="1" large="1" />
+</entity>
+
+<entity anm2path="bosses/skinlessdeliriumforms/santa.anm2" baseHP="10001" boss="0" champion="0" collisionDamage="2" collisionMass="100" collisionRadius="30" friction="1" id="84" name="Santa" numGridCollisionPoints="0" shadowSize="33" stageHP="0" variant="5" subtype="1">
+    <gibs amount="18" blood="1" bone="1" eye="0" gut="1" large="1" />
+    <preload id="84" variant="10" />
+    <preload-snd id="246" /> <!-- SOUND_SATAN_STOMP -->
+    <preload-snd id="238" /> <!-- SOUND_SATAN_APPEAR -->
+    <preload-snd id="239" /> <!-- SOUND_SATAN_BLAST -->
+    <preload-snd id="265" /> <!-- SOUND_SUMMONSOUND -->
+    <preload-snd id="243" /> <!-- SOUND_SATAN_RISE_UP -->
+    <preload-snd id="240" /> <!-- SOUND_SATAN_CHARGE_UP -->
+    <preload-snd id="245" /> <!-- SOUND_SATAN_SPIT -->
+    <preload-snd id="242" /> <!-- SOUND_SATAN_HURT -->
+    <preload-snd id="241" /> <!-- SOUND_SATAN_GROW -->
+<preload id="7" variant="1" />
+<preload id="1000" variant="50" subtype="1" />
+<preload-snd id="211" /> <!-- SOUND_HAND_LASERS -->
+</entity>
+
+<entity id="406" variant="0" subtype="2424" name="Mega Ultra Envy" baseHP="10001" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="25" friction="1" numGridCollisionPoints="40" shadowSize="60" anm2path="bosses/skinlessdeliriumforms/megaultraenvy.anm2">
+    <gibs amount="6" blood="1" bone="1" eye="0" gut="1" large="1" />
+</entity>
 
 <!--BEANS-->
   <entity anm2path="items/pick ups/jellybeancerulean.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Jelly Bean Cerulean" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="5426" subtype="0">

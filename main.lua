@@ -140,7 +140,12 @@ local es = {
 	DeliriumLittlestHorn = 1,
 	DeliriumMonstro3 = 3,
 	DeliriumNerve3 = 1,
-	DeliriumMediumHorn = 2424
+	DeliriumMediumHorn = 2424,
+	DeliriumSecretBoss = 1,
+	DeliriumPrecursor = 874,
+	DeliriumUltraEnvy = 1,
+	DeliriumSanta = 1,
+	DeliriumMegaUltraEnvy = 2424
 }
 
 local f = {
@@ -2835,10 +2840,13 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		f.deliCountdown = f.deliCountdown - 1
 		f.attackCountdown = f.attackCountdown - 1
+		if data.boss ~= nil then
+			entity.HitPoints = data.boss.HitPoints
+		end
 		if f.deliCountdown <= 0 then
-			local become = api.Random(1,6)
+			local become = api.Random(1,8)
 			if data.boss ~= nil then
-				entity.HitPoints = data.boss.HitPoints
+				--entity.HitPoints = data.boss.HitPoints
 				data.boss:Remove()
 			end
 			entities = Isaac.GetRoomEntities()
@@ -2870,6 +2878,21 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 				if become == 6 then
 					data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityVariantByName("Medium Horn"), es.DeliriumMediumHorn, entity.Position, Vector(0,0), nil)
 				end
+				if become == 7 then
+					data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), Isaac.GetEntityVariantByName("Abortionbirth SECRET BOSS"), es.DeliriumSecretBoss, entity.Position, Vector(0,0), nil)
+				end
+				if become == 8 then
+					data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("??? but Red"), Isaac.GetEntityVariantByName("??? but Red"), es.DeliriumPrecursor, entity.Position, Vector(0,0), nil)
+				end
+				-- if become == 9 then
+				-- 	data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Ultra Envy"), Isaac.GetEntityVariantByName("Ultra Envy"), es.DeliriumUltraEnvy, entity.Position, Vector(0,0), nil)
+				-- end
+				-- if become == 10 then
+				-- 	data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Santa"), Isaac.GetEntityVariantByName("Santa"), es.DeliriumSanta, entity.Position, Vector(0,0), nil)
+				-- end
+				-- if become == 9 then
+				-- 	data.boss = Isaac.Spawn(Isaac.GetEntityTypeByName("Mega Ultra Envy"), Isaac.GetEntityVariantByName("Mega Ultra Envy"), es.DeliriumMegaUltraEnvy, entity.Position, Vector(0,0), nil)
+				-- end
 				data.boss.HitPoints = entity.HitPoints
 			end
 			entity.Position = Vector(api.Random(0,room:GetBottomRightPos().X), api.Random(0,room:GetBottomRightPos().Y))
@@ -2905,9 +2928,106 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 				entity:Kill()
 			end
 		end
+		data.boss:Kill()
 	end
 
 end, ev.SkinlessDelirium)
+
+onEntityTick(Isaac.GetEntityTypeByName("Nerve Ending 3"), function(entity)
+	if entity.HitPoints <= 0 then
+		if entity.SubType == es.DeliriumNerve3 then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+					entity:Kill()
+				end
+			end
+		end
+	end
+end, Isaac.GetEntityVariantByName("Nerve Ending 3"))
+
+onEntityTick(Isaac.GetEntityTypeByName("Medium Horn"), function(entity)
+	local sprite = entity:GetSprite()
+	if sprite:IsPlaying("Death") then
+		if entity.SubType == es.DeliriumMediumHorn then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+					entity:Kill()
+				end
+			end
+		end
+	end
+end, Isaac.GetEntityVariantByName("Medium Horn"))
+
+onEntityTick(Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), function(entity)
+	local sprite = entity:GetSprite()
+	if sprite:IsPlaying("Death") then
+		if entity.SubType == es.DeliriumSecretBoss then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+					entity:Kill()
+				end
+			end
+		end
+	end
+end, Isaac.GetEntityVariantByName("Abortionbirth SECRET BOSS"))
+
+onEntityTick(Isaac.GetEntityTypeByName("??? but Red"), function(entity)
+	local sprite = entity:GetSprite()
+	if sprite:IsPlaying("Death") then
+		if entity.SubType == es.DeliriumPrecursor then
+			entities = Isaac.GetRoomEntities()
+			for i, entity in pairs(entities) do
+				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+					entity:Kill()
+				end
+			end
+		end
+	end
+end, Isaac.GetEntityVariantByName("??? but Red"))
+
+-- onEntityTick(Isaac.GetEntityTypeByName("Ultra Envy"), function(entity)
+-- 	if entity:IsDead() then
+-- 		if entity.SubType == es.DeliriumUltraEnvy then
+-- 			entities = Isaac.GetRoomEntities()
+-- 			for i, entity in pairs(entities) do
+-- 				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+-- 					entity:Kill()
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- end, Isaac.GetEntityVariantByName("Ultra Envy"))
+
+-- onEntityTick(Isaac.GetEntityTypeByName("Santa"), function(entity)
+-- 	local sprite = entity:GetSprite()
+-- 	if sprite:IsPlaying("Death") then
+-- 		if entity.SubType == es.DeliriumSanta then
+-- 			entities = Isaac.GetRoomEntities()
+-- 			for i, entity in pairs(entities) do
+-- 				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+-- 					entity:Kill()
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- -- end, Isaac.GetEntityVariantByName("Santa"))
+--
+-- onEntityTick(Isaac.GetEntityTypeByName("Mega Ultra Envy"), function(entity)
+-- 	local sprite = entity:GetSprite()
+-- 	if sprite:IsPlaying("Death") then
+-- 		if entity.SubType == es.DeliriumMegaUltraEnvy then
+-- 			entities = Isaac.GetRoomEntities()
+-- 			for i, entity in pairs(entities) do
+-- 				if entity.Type == et.SkinlessDelirium and entity.Variant == ev.SkinlessDelirium then
+-- 					entity:Kill()
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- end, Isaac.GetEntityVariantByName("Mega Ultra Envy"))
 
 local START_FUNC = apiStart
 if InfinityBossAPI then START_FUNC()
