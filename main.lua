@@ -1,3 +1,4 @@
+-- https://www.google.com/
 local mod = RegisterMod("Unpentance", 1)
 local rng = RNG()
 
@@ -49,6 +50,7 @@ local i = {
 	LogosHat = "Logo's Hat",
 	Tax = "Tax",
 	ExtraSalt = "Extra Salt",
+	Burger = "Burger With No Honey Mustard",
 	LeakyBean = "Leaky Bean",
 	TimeBomb = "Ticking Time Bomb",
 	Cyberpunk = "Cyberpunk 2077",
@@ -75,7 +77,17 @@ local c = {
 	NewDLC = "newdlc",
 	AmongUsShirt = "amongusshirt",
 	LilUltraHard = "lilultrahard",
-	MrMeaty = "mrmeaty"
+	MrMeaty = "mrmeaty",
+	Tech0001 = "tech0001",
+	DoubleVision = "doublevision",
+	LogosHat = "logoshat",
+	Tax = "tax",
+	ExtraSalt = "extrasalt",
+	Burger = "burger",
+	TimeBomb = "timebomb",
+	Cyberpunk = "cyberpunk",
+	Chaos2 = "chaos2",
+	MagnifyingGlass = "magnifyingglass"
 }
 
 local pi = {
@@ -1452,6 +1464,14 @@ onItemPickup(i.PassiveD6, function()
 	player:AddNullCostume(c.PassiveD6)
 end)
 
+onItemPickup(i.LogosHat, function()
+	player:AddNullCostume(c.LogosHat)
+end)
+
+onItemPickup(i.DoubleVision, function()
+	player:AddNullCostume(c.DoubleVision)
+end)
+
 onActiveUse(i.SlapBean, function()
 	sfx:Play(s.Slap, 1, 0, false, 1)
 	local num = api.Random(1,10)
@@ -1531,11 +1551,19 @@ onItemPickup(i.MrMeaty, function()
 	end
 end)
 
+onItemPickup(i.Tech0001, function()
+	player:AddNullCostume(c.Tech0001)
+end)
+
 onPassiveTick(i.Tech0001, function()
 	local near = getNearestEnemy()
 	if near ~= nil then
 		player:FireTear(player.Position, (near.Position - player.Position):Normalized() * 10, false, true, false)
 	end
+end)
+
+onItemPickup(i.Tax, function()
+	player:AddNullCostume(c.Tax)
 end)
 
 onEntityTick(EntityType.ENTITY_PICKUP, function(ent)
@@ -1588,6 +1616,7 @@ mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
 end)
 
 onItemPickup(i.ExtraSalt, function()
+	player:AddNullCostume(c.ExtraSalt)
 	f.SaltApplied = false
 	player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
 	player:EvaluateItems()
@@ -1600,6 +1629,10 @@ mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, flag)
 			f.SaltApplied = true
 		end
 	end
+end)
+
+onItemPickup(i.Burger, function()
+	player:AddNullCostume(c.Burger)
 end)
 
 local enviousBumCollects = {
@@ -1839,12 +1872,20 @@ onActiveUse(i.LeakyBean, function()
 	return true
 end)
 
+onItemPickup(i.TimeBomb, function()
+	player:AddNullCostume(c.TimeBomb)
+end)
+
 onPassiveTick(i.TimeBomb, function()
 	if game.TimeCounter >= 54000 then
 		if game.TimeCounter % 150 == 0 then
 			Isaac.Explode(player.Position, nil, 40)
 		end
 	end
+end)
+
+onItemPickup(i.Cyberpunk, function()
+	player:AddNullCostume(c.Cyberpunk)
 end)
 
 onPassiveTick(i.Cyberpunk, function()
@@ -1864,6 +1905,7 @@ onPassiveTick(i.PaxDemo, function()
 end)
 
 onItemPickup(i.Chaos2, function()
+	player:AddNullCostume(c.Chaos2)
 	player:AddCollectible(CollectibleType.COLLECTIBLE_CHAOS, 0, false)
 end)
 
@@ -1877,6 +1919,10 @@ onPassiveTick(i.Chaos2, function()
 			entity:Remove()
 		end
 	end
+end)
+
+onItemPickup(i.MagnifyingGlass, function()
+	player:AddNullCostume(c.MagnifyingGlass)
 end)
 
 onPassiveTick(i.MagnifyingGlass, function()
