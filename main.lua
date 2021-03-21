@@ -451,9 +451,9 @@ local function apiStart()
     api = InfinityBossAPI
     api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_1, nil, 50, nil, nil, nil)
 	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.LittlestHorn, ev.LittlestHorn, 0, LevelStage.STAGE1_2, nil, 50, nil, nil, nil)
-	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_1, nil, 50, nil, nil, nil)
-	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_2, nil, 50, nil, nil, nil)
-	api.AddBossToPool("gfx/bossui/portrait_littlesthorn.png", "gfx/bossui/bossname_littlesthorn.png", EntityType.ENTITY_MONSTRO, ev.Monstro3, 0, LevelStage.STAGE4_1, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_imposter.png", "gfx/bossui/bossname_imposter.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_1, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_imposter.png", "gfx/bossui/bossname_imposter.png", et.Imposter, ev.Imposter, 0, LevelStage.STAGE2_2, nil, 50, nil, nil, nil)
+	api.AddBossToPool("gfx/bossui/portrait_monstro3.png", "gfx/bossui/bossname_monstro3.png", EntityType.ENTITY_MONSTRO, ev.Monstro3, 0, LevelStage.STAGE4_1, nil, 50, nil, nil, nil)
 
 end
 
