@@ -915,7 +915,7 @@ local function BossOrMonster(entityInt, bossTrue)
 end
 
 local function GenerateRandomEnemy()
-	local monster = rng:RandomInt(404) + 10
+	local monster = api.Random(403) + 10
 	if BossOrMonster(monster, false) then
 		return monster
 	else
@@ -924,7 +924,7 @@ local function GenerateRandomEnemy()
 end
 
 local function GenerateRandomBoss()
-	local boss = rng:RandomInt(404) + 10
+	local boss = api.Random(403) + 10
 	if BossOrMonster(boss, true) then
 		return boss
 	else
@@ -1039,7 +1039,7 @@ onActiveUse(i.DOtherHalf, function()
 end)
 
 onActiveUse(i.D2, function()
-	local flip = rng:RandomInt(2)
+	local flip = api.Random(1)
 	if flip == 0 then
 		game:End(2)
 	elseif flip == 1 then
@@ -1078,8 +1078,8 @@ onActiveUse(i.D5, function()
 end)
 
 onActiveUse(i.D9, function()
-	local floor = rng:RandomInt(12) + 1
-	local sub = rng:RandomInt(3)
+	local floor = api.Random(11) + 1
+	local sub = api.Random(2)
 	local level = game:GetLevel()
 	level:SetStage(floor, sub)
 	game:StartStageTransition(true, 1)
@@ -1146,7 +1146,7 @@ onActiveUse(i.D16, function()
 	for i, entity in pairs(entities) do
 		for i, fly in pairs(flyNumbers) do
 			if entity.Type == fly then
-				Isaac.Spawn(flyNumbers[rng:RandomInt(#flyNumbers)+1], 0, 0, entity.Position, Vector(0,0), nil)
+				Isaac.Spawn(flyNumbers[api.Random(#flyNumbers)+1], 0, 0, entity.Position, Vector(0,0), nil)
 				entity:Remove()
 			end
 		end
@@ -1223,10 +1223,10 @@ end
 
 onActiveUse(i.D21, function()
 	d21Info.used = true
-	local flag1 = d21Flags[rng:RandomInt(4)+1]
-	local flag2 = d21Flags[rng:RandomInt(4)+1]
+	local flag1 = d21Flags[api.Random(3)+1]
+	local flag2 = d21Flags[api.Random(3)+1]
 	while flag1 == flag2 do
-		flag2 = d21Flags[rng:RandomInt(4)+1]
+		flag2 = d21Flags[api.Random(3)+1]
 	end
 	local stat1 = FlagToStat(flag1)
 	local stat2 = FlagToStat(flag2)
@@ -1348,7 +1348,7 @@ onActiveUse(i.D120, function()
 	for i, v in pairs (allHeld) do
 		for j, w in pairs(familiarNumbers) do
 			if v == w then
-				newFamiliar = familiarNumbers[rng:RandomInt(#familiarNumbers)+1]
+				newFamiliar = familiarNumbers[api.Random(#familiarNumbers)+1]
 				table.insert(itemsToGive, newFamiliar)
 				player:RemoveCollectible(v)
 			end
@@ -1367,7 +1367,7 @@ onActiveUse(i.D666, function()
 	for i, entity in pairs(entities) do
 		if entity.Type == EntityType.ENTITY_PICKUP
 		and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
-			newEnemy = enemyNumbers[rng:RandomInt(#enemyNumbers)+1]
+			newEnemy = enemyNumbers[api.Random(#enemyNumbers)+1]
 			Isaac.Spawn(newEnemy, 0, 0, entity.Position, Vector(0,0), nil)
 			entity:Remove()
 		end
@@ -1499,7 +1499,7 @@ end)
 
 onItemPickup(i.NewDLC, function()
 	player:AddNullCostume(c.NewDLC)
-	player:AddPill(Isaac.AddPillEffectToPool(PillEffect.PILLEFFECT_HEALTH_UP))
+	player:AddPill(Isaac.AddPillEffectToPool(PillEffect.PILLEFFECT_FULL_HEALTH))
 end)
 
 onItemPickup(i.AmongUsShirt, function()
@@ -2073,7 +2073,7 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, thisEnt, damageAmt,
 					Isaac.Spawn(EntityType.ENTITY_BOIL, 0, 0, thisEnt.Position, Vector(0,0), nil)
 				end
 				if player:HasCollectible(Isaac.GetItemIdByName("The DBean")) then
-					Isaac.Spawn(enemyNumbers[rng:RandomInt(#enemyNumbers + 1)], 0, 0, thisEnt.Position, Vector(0,0), nil)
+					Isaac.Spawn(enemyNumbers[api.Random(#enemyNumbers + 1)], 0, 0, thisEnt.Position, Vector(0,0), nil)
 					thisEnt:Remove()
 				end
 				if player:HasCollectible(Isaac.GetItemIdByName("Bean Soup")) then
@@ -2231,7 +2231,6 @@ onPickupPickup(ev.MoreJellyBean, function(p, player)
     local filename = p:GetSprite():GetFilename()
     local flavor = jellyBeanFlavors[filename]
     if flavor then
-		print("It worked")
         Isaac.DebugString(flavor)
         PlayTextStreak(flavor)
         if flavor == "Toasted Marshmallow" then
@@ -2401,7 +2400,7 @@ onPillUse(pi.SleepParalysis, function()
 	player = Isaac.GetPlayer(0)
 	room = game:GetRoom()
 	player:UsePill(PillEffect.PILLEFFECT_PARALYSIS, 0)
-	Isaac.Spawn(enemyNumbers[rng:RandomInt(#enemyNumbers) + 1], 0, 0, room:GetCenterPos(), Vector(0,0), nil)
+	Isaac.Spawn(enemyNumbers[api.Random(#enemyNumbers) + 1], 0, 0, room:GetCenterPos(), Vector(0,0), nil)
 end)
 
 onPillUse(pi.ThreeExclamations, function()
@@ -2424,12 +2423,12 @@ onPillUse(pi.ThreeExclamations, function()
 	end
 
 	for i=1, items do
-		player:AddCollectible(rng:RandomInt(numCollectibles) + 1, 0, false)
+		player:AddCollectible(api.Random(numCollectibles) + 1, 0, false)
 	end
 end)
 
 onPillUse(pi.ThreeDots, function()
-	local sub = rng:RandomInt(3)
+	local sub = api.Random(2)
 	local level = game:GetLevel()
 	level:SetStage(1, sub)
 	game:StartStageTransition(true, 1)
