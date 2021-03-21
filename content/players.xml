@@ -3,17 +3,17 @@
  ** http://steamcommunity.com/sharedfiles/filedetails/?id=838994644
 -->
 <players root="gfx/characters/costumes/"
-         portraitroot="gfx/ui/boss/"
-         nameimageroot="gfx/ui/boss/"
-         bigportraitroot="gfx/ui/stage/">
+         portraitroot="gfx/bossui/"
+         nameimageroot="gfx/bossui/"
+         bigportraitroot="gfx/stageui/">
 	<player name="The Bean"
         id="0"
         skin="character_bean.png"
         hp="6"
         items="294"
-        nameimage="PlayerName_01_Isaac.png"
-        portrait="PlayerPortrait_01_Isaac.png"
-        bigportrait="PlayerPortraitBig_01_Isaac.png"
+        nameimage="playername_thebean.png"
+        portrait="playerportrait_thebean.png"
+        bigportrait="playerportraitbig_thebean.png"
         skinColor="-1"
     />
 </players>
