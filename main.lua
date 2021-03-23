@@ -1,76 +1,86 @@
 -- https://www.google.com/
+-- ^leaving this heere cus i keep needing to google lua stuff and i dont
+-- remember the url
 local mod = RegisterMod("Unpentance", 1)
 local rng = RNG()
 
+-- BIG UPS to original abortionbirth programmer for a lot of the base functions here
+-- i wanted to mimic the layout of the original borty code as much as possible,
+-- so i borrowed some of the borty base functions
+-- big shoutouts to you genius programmer, im sorry i couldnt find your name
+
 local i = {
-	DNeg1 = "D Negative 1",
-	D0 = "D0",
-	DHalf = "D0.5",
-	DOtherHalf = "D Other 0.5",
-	D2 = "D2",
-	D3 = "D3",
-	D5 = "D5",
-	D9 = "D9",
-	D11 = "D11",
-	D13 = "D13",
-	D14 = "D14",
-	D15 = "D15",
-	D16 = "D16",
-	D17 = "D17",
-	D18 = "D18",
-	D19 = "D19",
-	D21 = "D21",
-	D22 = "D22",
-	D23 = "D23",
-	D69 = "D69",
-	D99 = "D99",
-	D120 = "D120",
-	D666 = "D666",
-	D1337 = "D1337",
-	D2K = "D2K",
-	DF = "DF",
-	FlatD6 = "Flat D6",
-	PassiveD6 = "Passive D6",
-	BigD6 = "The Big D6",
-	DeliriousVeggie = "Delirious Vegetable Peeler",
+	-- items
+	-- the dice
+	DNeg1 = "D Negative 1", -- rerolls items into black holes
+	D0 = "D0", -- deletes itself from your inventory immediately
+	DHalf = "D0.5", -- destroys top half of room rocks
+	DOtherHalf = "D Other 0.5", --destroys bottom half of room rocks
+	D2 = "D2", -- 50/50 to either win game or die
+	D3 = "D3", -- rerolls items into a coin, key, and bomb
+	D5 = "D5", -- rerolls bosses into enemies
+	D9 = "D9", --rerolls floors
+	D11 = "D11", --rerolls all items into two keys each
+	D13 = "D13", -- rerolls enemies into bosses
+	D14 = "D14", -- restarts room with one black fly
+	D15 = "D15", -- rerolls tears into pickups
+	D16 = "D16", -- rerolls fly enemies into other fly enemies
+	D17 = "D17", -- rerolls enemy tears into luck upgrades
+	D18 = "D18", -- rerolls pills into hush (wild woody :O)
+	D19 = "D19", -- rerolls items into nothing
+	D21 = "D21", -- adds +9 to one stat, adds +10 to another
+	D22 = "D22", -- rerolls room doors into item pedestals
+	D23 = "D23", -- rerolls enemies into ground worms
+	D69 = "D69", -- rerolls entire build into bozo only
+	D99 = "D99", -- rerolls pickups into golden variants
+	D120 = "D120", -- rerolls familiars
+	D666 = "D666", -- rerolls item pedestals into enemies
+	D1337 = "D1337", -- crashes game
+	D2K = "D2K", -- rerolls enemies into explosions
+	DF = "DF", -- duplicates items, pickups, and monsters 5 times
+	FlatD6 = "Flat D6", -- rerolls items into trinkets
+	PassiveD6 = "Passive D6", -- rerolls items on room entry
+	BigD6 = "The Big D6", -- spawns dice room buttons
 
-	SlapBean = "Slap Bean",
-	DoubleBean = "Double Bean",
-	Tomato = "Tomato",
-	NewDLC = "New DLC",
-	AmongUsShirt = "Among Us Shirt",
-	LilBosses = "Lil Bosses",
-	LilUltraHard = "Lil Ultra Hard",
-	MrMeaty = "Mr. Meaty",
-	Tech0001 = "Tech 0.001",
-	DoubleVision = "Double Vision",
-	KeepersKey = "Keeper's Key",
-	GreedsKidney = "Greed's Kidney",
-	ToggleWings = "Toggle Wings",
-	LogosHat = "Logo's Hat",
-	Tax = "Tax",
-	ExtraSalt = "Extra Salt",
-	Burger = "Burger With No Honey Mustard",
-	LeakyBean = "Leaky Bean",
-	TimeBomb = "Ticking Time Bomb",
-	Cyberpunk = "Cyberpunk 2077",
-	PaxDemo = "PAX Demo",
-	Chaos2 = "Chaos 2",
-	MagnifyingGlass = "Magnifying Glass",
+	SlapBean = "Slap Bean", -- plays slap sfx, 1/10 chance of self-damaging
+	DoubleBean = "Double Bean", -- picking up jelly beans spawns two jelly beans (doesn't work with base borty beans)
+	Tomato = "Tomato", -- explodes on pickup
+	NewDLC = "New DLC", -- gives full health pill
+	AmongUsShirt = "Among Us Shirt", -- gives cool amogus shirt
+	LilBosses = "Lil Bosses", -- spawns two bosses
+	LilUltraHard = "Lil Ultra Hard", -- heart pickups no longer spawn
+	MrMeaty = "Mr. Meaty", -- rerolls entire build into meat cubes only
+	Tech0001 = "Tech 0.001", -- fire a tear at the closest enemy every frame
+	DoubleVision = "Double Vision", -- entering a room duplicates items, pickups, and monsters
+	KeepersKey = "Keeper's Key", -- does not work :(
+	GreedsKidney = "Greed's Kidney", -- turns you into keeper
+	ToggleWings = "Toggle Wings", -- gives you flight, takes away flight if you can already fly
+	LogosHat = "Logo's Hat", -- all enemies in L shaped rooms would be replaced with logos
+	Tax = "Tax", -- all shop items cost an extra penny (price increases on shop entry oops)
+	ExtraSalt = "Extra Salt", -- tears up
+	Burger = "Burger With No Honey Mustard", -- hp up
+	LeakyBean = "Leaky Bean", -- spawns creep ring around player
+	TimeBomb = "Ticking Time Bomb", -- when game timer hits 30 minutes, player explodes every 5 seconds
+	Cyberpunk = "Cyberpunk 2077", -- spawns bug enemy every 5 seconds
+	PaxDemo = "PAX Demo", -- when game timer hits 10 minutes, player becomes the lost
+	Chaos2 = "Chaos 2", -- gives chaos, breakfast rerolls into brimstone
+	MagnifyingGlass = "Magnifying Glass", -- all enemies are giant champions
+	DeliriousVeggie = "Delirious Vegetable Peeler", -- use on delirium = ???
 
-	EnviousBum = "Envious Bum",
-	PridefulBum = "Prideful Bum",
-	SlothlyBum = "Slothly Bum",
-	WrathfulBum = "Wrathful Bum",
-	LustfulBum = "Lustful Bum",
-	GluttonousBum = "Gluttonous Bum",
-	GreedyBum = "Greedy Bum",
-	LilKamikaze = "Lil Kamikaze",
-	LilForgotten = "Lil Forgotten",
-	LilD10 = "Lil D10"
+	EnviousBum = "Envious Bum", -- picks up items, drops other items
+	PridefulBum = "Prideful Bum", -- picks up items, drops prideful bum
+	SlothlyBum = "Slothly Bum", -- spreads green creep
+	WrathfulBum = "Wrathful Bum", -- picks up bombs, drops troll bombs
+	LustfulBum = "Lustful Bum", -- picks up hearts, drop hearts
+	GluttonousBum = "Gluttonous Bum", -- picks up food items, drops red creep
+	GreedyBum = "Greedy Bum", -- picks up pennies, drops nothing
+	LilKamikaze = "Lil Kamikaze", -- explodes every 4 rooms
+	LilForgotten = "Lil Forgotten", -- drops moms foot every 6 rooms
+	LilD10 = "Lil D10" -- rerolls enemies every 4 rooms
 }
 
 local c = {
+	-- costumes
 	PassiveD6 = "passived6",
 	DoubleBean = "doublebean",
 	Tomato = "tomato",
@@ -91,21 +101,23 @@ local c = {
 }
 
 local pi = {
-	MaggyUp = "Maggy Up",
-	Deafness = "Deafness",
-	HorfHorf = "Horf...Horf!",
-	Megacraft = "Megacraft",
-	HourEnergy = "1 Hour Energy!",
-	DamageDown = "Damage Down",
-	SleepParalysis = "Sleep Paralysis",
-	ThreeExclamations = "!!!",
-	ThreeDots = "..."
+	-- pills
+	MaggyUp = "Maggy Up", -- turns player into maggy
+	Deafness = "Deafness", -- mutes music
+	HorfHorf = "Horf...Horf!", -- uses horf twice
+	Megacraft = "Megacraft", -- spawns ring of rocks around player
+	HourEnergy = "1 Hour Energy!", -- adds 1 charge to active item
+	DamageDown = "Damage Down", -- damage downgrade
+	SleepParalysis = "Sleep Paralysis", -- paralysis, spawns enemy
+	ThreeExclamations = "!!!", -- rerolls run
+	ThreeDots = "..." -- sends you back to basement 1
 }
 
 local et = {
+	-- enemies
 	Muro = "Muro",
 	Amogus = "Amogus",
-
+	-- bosses
 	LittlestHorn = "Littlest Horn",
 	Imposter = "Imposter",
 	Vent = "Vent",
@@ -114,26 +126,27 @@ local et = {
 }
 
 local ev = {
+	-- enemies
 	Muro = "Muro",
 	Nostro = "Nostro",
 	Tomato = "Tomato",
 	Sickstro = "Sickstro",
 	Amogus = "Amogus",
-
+	-- bosses
 	LittlestHorn = "Littlest Horn",
 	Imposter = "Imposter",
 	Vent = "Vent",
 	ImposterMissle = "Imposter Missle",
 	Monstro3 = "Monstro III",
 	SkinlessDelirium = "Skinless Delirium",
-
+	-- pickups
 	MoreJellyBean = "Jelly Bean Inverted",
 	RustedPenny = "Rusted Penny",
 	RustedKey = "Rusted Key",
 	RustedBomb = "Rusted Bomb",
 	RustedHeart = "Rusted Heart",
 	RustedBattery = "Rusted Battery",
-
+	-- familiars
 	EnviousBum = "Envious Bum",
 	PridefulBum = "Prideful Bum",
 	SlothlyBum = "Slothly Bum",
@@ -168,14 +181,16 @@ local f = {
 }
 
 local t = {
-	Streamdeck = "Streamdeck",
-	Diarrhea = "Diarrhea",
-	BigNo = "Big NO!",
-	IceCube = "Ice Cube",
-	reallylazyworm = "REALLY Lazy Worm"
+	-- twinkets
+	Streamdeck = "Streamdeck", -- plays random sfx depending on player velocity
+	Diarrhea = "Diarrhea", -- turns poops into brown creep
+	BigNo = "Big NO!", -- if player is holding an active item, take damage every 5 seconds
+	IceCube = "Ice Cube", -- adds slippery creep to all enemies
+	reallylazyworm = "REALLY Lazy Worm" -- not implemented...secret.....
 }
 
 local s = {
+	-- sounds
 	TwentyOne = "Twenty One",
 	Yahoo = "Yahoo",
 	Slap = "Slap",
@@ -1168,8 +1183,6 @@ onActiveUse(i.D16, function()
 	return true
 end)
 
---TODO: reformat this function and all cache evaluation functions to be more
---in line with abortionbirth standards
 onActiveUse(i.D17, function()
 	local entities = Isaac.GetRoomEntities()
 	player = Isaac.GetPlayer(0)
@@ -1598,7 +1611,7 @@ onEntityTick(EntityType.ENTITY_PICKUP, function(ent)
 	end
 end, nil, nil)
 
--- DOESN'T WORK: crossing between normal and greed mode isnt as easy as it seems, maybe someday :O
+-- DOESN'T WORK: crossing between normal and greed mode appears to crash the game, maybe someday :O
 -- onActiveUse(i.KeepersKey, function()
 -- 	level = game:GetLevel()
 -- 	if level:GetStageType() ==  StageType.STAGETYPE_GREEDMODE then
@@ -3061,6 +3074,8 @@ onEntityTick(Isaac.GetEntityTypeByName("??? but Red"), function(entity)
 	end
 end, Isaac.GetEntityVariantByName("??? but Red"))
 
+-- a lot of these bosses dont work properly, and implementing them correctly would
+-- require modification of base borty code. sowwy!!
 -- onEntityTick(Isaac.GetEntityTypeByName("Ultra Envy"), function(entity)
 -- 	if entity:IsDead() then
 -- 		if entity.SubType == es.DeliriumUltraEnvy then
