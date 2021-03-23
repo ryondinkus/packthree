@@ -10,7 +10,10 @@ local rng = RNG()
 -- big shoutouts to you genius programmer, im sorry i couldnt find your name
 
 local i = {
+<<<<<<< HEAD
 	-- items
+=======
+>>>>>>> 8e49d869441948794aa5e78b749e3abd9dd880d5
 	-- the dice
 	DNeg1 = "D Negative 1", -- rerolls items into black holes
 	D0 = "D0", -- deletes itself from your inventory immediately
