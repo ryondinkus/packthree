@@ -183,7 +183,12 @@ local s = {
 	RoleReveal = "Role Reveal",
 	Gunshot = "Gunshot",
 	Death = "Death",
-	Victory = "Victory"
+	Victory = "Victory",
+	RustedPenny = "Rusted Penny",
+	RustedKey = "Rusted Key",
+	RustedBomb = "Rusted Bomb",
+	RustedHeart = "Rusted Heart",
+	RustedBattery = "Rusted Battery"
 }
 
 local d17Stats = {
@@ -232,7 +237,8 @@ local enemyNumbers = { --entity numbers corresponding to enemies
 	239,240,241,242,243,244,
 	246,247,248,249,250,251,252,253,254,255,256,257,258,259,
 	276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,
-	295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310
+	295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,
+	Isaac.GetEntityTypeByName("Muro")
 }
 
 local bossNumbers = { --entity numbers corresponding to bosses
@@ -249,7 +255,9 @@ local bossNumbers = { --entity numbers corresponding to bosses
 	Isaac.GetEntityTypeByName("Nerve Ending 3"), Isaac.GetEntityTypeByName("Mega Ultra Envy"),
 	Isaac.GetEntityTypeByName("Medium Horn"), Isaac.GetEntityTypeByName("Santa"),
 	Isaac.GetEntityTypeByName("Ultra Envy"), Isaac.GetEntityTypeByName("Skinless Hush"),
-	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), LittlestHorn
+	Isaac.GetEntityTypeByName("Abortionbirth SECRET BOSS"), Isaac.GetEntityTypeByName("Littlest Horn"),
+	Isaac.GetEntityTypeByName("Monstro III"), Isaac.GetEntityTypeByName("Imposter"),
+	Isaac.GetEntityTypeByName("Skinless Delirium")
 }
 
 local flyNumbers = {
@@ -274,7 +282,11 @@ local familiarNumbers = {
 	Isaac.GetItemIdByName("Sack of Nothing"),Isaac.GetItemIdByName("Sack of Rockets"),
 	Isaac.GetItemIdByName("Sack of Sack of Sacks"),Isaac.GetItemIdByName("Sacrificial Bean"),
 	Isaac.GetItemIdByName("Skinless ???'s Body'"),Isaac.GetItemIdByName("Skinless Hushy"),
-	Isaac.GetItemIdByName("The Ghost")
+	Isaac.GetItemIdByName("The Ghost"),
+	Isaac.GetItemIdByName("Envious Bum"), Isaac.GetItemIdByName("Prideful Bum"), Isaac.GetItemIdByName("Slothly Bum"),
+	Isaac.GetItemIdByName("Wrathful Bum"), Isaac.GetItemIdByName("Lustful Bum"), Isaac.GetItemIdByName("Gluttonous Bum"),
+	Isaac.GetItemIdByName("Greedy Bum"),  Isaac.GetItemIdByName("Lil D10"), Isaac.GetItemIdByName("Lil Forgotten"),
+	Isaac.GetItemIdByName("Lil Kamikaze"),
 }
 
 local championable = {
@@ -289,7 +301,8 @@ local championable = {
 	220,237,
 	246,247,248,252,254,259,
 	278,279,280,282,283,284,290,
-	298,299,300,301,303,304,305,307,308,309,310
+	298,299,300,301,303,304,305,307,308,309,310,
+	Isaac.GetEntityTypeByName("Muro")
 }
 
 local bugs = {
@@ -1039,7 +1052,7 @@ onActiveUse(i.DOtherHalf, function()
 end)
 
 onActiveUse(i.D2, function()
-	local flip = api.Random(1)
+	local flip = api.Random(0,1)
 	if flip == 0 then
 		game:End(2)
 	elseif flip == 1 then
@@ -1078,7 +1091,7 @@ onActiveUse(i.D5, function()
 end)
 
 onActiveUse(i.D9, function()
-	local floor = api.Random(11) + 1
+	local floor = api.Random(1, 12)
 	local sub = api.Random(2)
 	local level = game:GetLevel()
 	level:SetStage(floor, sub)
@@ -1146,7 +1159,7 @@ onActiveUse(i.D16, function()
 	for i, entity in pairs(entities) do
 		for i, fly in pairs(flyNumbers) do
 			if entity.Type == fly then
-				Isaac.Spawn(flyNumbers[api.Random(#flyNumbers)+1], 0, 0, entity.Position, Vector(0,0), nil)
+				Isaac.Spawn(flyNumbers[api.Random(1, #flyNumbers)], 0, 0, entity.Position, Vector(0,0), nil)
 				entity:Remove()
 			end
 		end
@@ -1255,6 +1268,9 @@ onActiveUse(i.D22, function()
 			room:RemoveDoor(i)
 	    end
 	end
+	player:RemoveCollectible(i.D22)
+
+	return true
 end)
 
 onActiveUse(i.D23, function()
@@ -1348,7 +1364,7 @@ onActiveUse(i.D120, function()
 	for i, v in pairs (allHeld) do
 		for j, w in pairs(familiarNumbers) do
 			if v == w then
-				newFamiliar = familiarNumbers[api.Random(#familiarNumbers)+1]
+				newFamiliar = familiarNumbers[api.Random(1,#familiarNumbers)]
 				table.insert(itemsToGive, newFamiliar)
 				player:RemoveCollectible(v)
 			end
@@ -1367,7 +1383,7 @@ onActiveUse(i.D666, function()
 	for i, entity in pairs(entities) do
 		if entity.Type == EntityType.ENTITY_PICKUP
 		and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
-			newEnemy = enemyNumbers[api.Random(#enemyNumbers)+1]
+			newEnemy = enemyNumbers[api.Random(1, #enemyNumbers)]
 			Isaac.Spawn(newEnemy, 0, 0, entity.Position, Vector(0,0), nil)
 			entity:Remove()
 		end
@@ -1528,7 +1544,6 @@ onPassiveTick(i.LilUltraHard, function()
 end)
 
 onItemPickup(i.MrMeaty, function()
-	player:AddNullCostume(c.MrMeaty)
 	room = game:GetRoom()
 	local inv = getInventory()
 	local allHeld = {}
@@ -1549,6 +1564,8 @@ onItemPickup(i.MrMeaty, function()
 	for i=1, bozos do
 		player:AddCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT, 0, false)
 	end
+
+	player:AddNullCostume(c.MrMeaty)
 end)
 
 onItemPickup(i.Tech0001, function()
@@ -1704,7 +1721,10 @@ bumAI(ev.WrathfulBum, wrathfulBumCollects, wrathfulBumRewards, 1)
 local lustfulBumCollects = {
 	[tostring(EntityType.ENTITY_PICKUP)] = {
 		[tostring(PickupVariant.PICKUP_HEART)] = {
-			HeartSubType.HEART_FULL
+			HeartSubType.HEART_FULL,
+			HeartSubType.HEART_HALF,
+			HeartSubType.HEART_DOUBLEPACK,
+			HeartSubType.HEART_SCARED
 		}
 	}
 }
@@ -1712,7 +1732,10 @@ local lustfulBumCollects = {
 local lustfulBumRewards = {
 	[tostring(EntityType.ENTITY_PICKUP)] = {
 		[tostring(PickupVariant.PICKUP_HEART)] = {
-			HeartSubType.HEART_DOUBLEPACK
+			HeartSubType.HEART_FULL,
+			HeartSubType.HEART_HALF,
+			HeartSubType.HEART_DOUBLEPACK,
+			HeartSubType.HEART_SCARED
 		}
 	}
 }
@@ -1735,7 +1758,7 @@ local gluttonousBumCollects = {
 			Isaac.GetItemIdByName("Oatmeal"),
 			Isaac.GetItemIdByName("Desert 2"),
 			Isaac.GetItemIdByName("Chicken n' Chips"),
-
+			i.Burger
 		}
 	}
 }
@@ -2283,23 +2306,28 @@ replaceEntity(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, nil, E
 
 
 onPickupPickup(ev.RustedPenny, function(p)
+	sfx:Play(s.RustedPenny, 1, 0, false, 1)
     f.RustedPenny = true
 end)
 
 onPickupPickup(ev.RustedKey, function(p)
+	sfx:Play(s.RustedKey, 1, 0, false, 1)
     f.RustedKey = true
 end)
 
 onPickupPickup(ev.RustedBomb, function(p)
-    f.RustedBomb = true
+	sfx:Play(s.RustedBomb, 1, 0, false, 1)
+	f.RustedBomb = true
 end)
 
 onPickupPickup(ev.RustedHeart, function(p)
-    player:AddHearts(-2)
+	sfx:Play(s.RustedHeart, 1, 0, false, 1)
+	player:AddHearts(-2)
 end)
 
 onPickupPickup(ev.RustedBattery, function(p)
-    f.RustedBattery = true
+	sfx:Play(s.RustedBattery, 1, 0, false, 1)
+	f.RustedBattery = true
 end)
 
 whenVar("RustedPenny", function()

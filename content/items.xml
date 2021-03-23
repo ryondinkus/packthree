@@ -346,9 +346,10 @@
 		description="Slippery foes"
 		gfx="icecube.png"
 	/>
-	<trinket name="REALLY Lazy Worm"
+	<!-- <trinket name="REALLY Lazy Worm"
 		description="PFFFFFFTTTTTTTTT"
 		gfx="passived6.png"
 		cache="range shotspeed"
 	/>
+	coming soon....	-->
 </items>

@@ -23,4 +23,19 @@
 	<sound name="Victory">
 		<sample weight="1" path="victory.wav"/>
 	</sound>
+	<sound name="Rusted Penny">
+		<sample weight="1" path="rustedpenny.wav"/>
+	</sound>
+	<sound name="Rusted Key">
+		<sample weight="1" path="rustedkey.wav"/>
+	</sound>
+	<sound name="Rusted Heart">
+		<sample weight="1" path="rustedheart.wav"/>
+	</sound>
+	<sound name="Rusted Bomb">
+		<sample weight="1" path="rustedbomb.wav"/>
+	</sound>
+	<sound name="Rusted Battery">
+		<sample weight="1" path="rustedbattery.wav"/>
+	</sound>
 </sounds>
