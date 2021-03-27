@@ -16,4 +16,13 @@
         bigportrait="playerportraitbig_thebean.png"
         skinColor="-1"
     />
+	<!-- <player name="Aborted Isaac"
+        id="0"
+        skin="character_abortedisaac.png"
+        hp="6"
+        nameimage="playername_thebean.png"
+        portrait="playerportrait_thebean.png"
+        bigportrait="playerportraitbig_thebean.png"
+        skinColor="-1"
+    /> -->
 </players>

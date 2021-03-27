@@ -438,6 +438,7 @@ local invStuff = {}
 local api
 local sfx = SFXManager()
 local mus = MusicManager()
+local aborted
 
 local function convert(tbl, contentType)
     local ret = {}
@@ -991,12 +992,12 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
 	end
 end)
 
-
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, continued)
 	player = Isaac.GetPlayer(0)
     invStuff = {}
 	d17Stats.Luck = 0
 	d21Info.used = false
+	aborted = false
 	f.deaf = false
 	f.DamageDownTimesUsed = 0
 	f.taxAdded = false
@@ -1006,6 +1007,16 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	f.deliCountdown = 60
 	f.attackCountdown = 30
 	mus:Enable()
+	if Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) and not continued then
+		if player:GetName() == "Isaac" then
+			player:AddCollectible(i.DInfinityPlus, 2, false)
+			local sprite = player:GetSprite()
+			sprite:Load("gfx/characters/abortedisaac.anm2", true)
+			sprite:LoadGraphics()
+			sfx:Play(SoundEffect.SOUND_SATAN_GROW, 1, 0, false, 1)
+			aborted = true
+		end
+	end
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
 end)
@@ -1993,7 +2004,7 @@ mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function()
 end, EntityType.ENTITY_HUSH)
 
 local dice = {
-	{i.DNeg1, "d-1"}, --{i.D0, "d0"},
+	{i.DNeg1, "d-1"}, {i.D0, "d0"},
 	{i.DHalf, "dhalf"}, {i.DOtherHalf, "dotherhalf"},
 	{CollectibleType.COLLECTIBLE_D1, "d1"}, --i.D2,
 	{i.D3, "d3"}, {CollectibleType.COLLECTIBLE_D4, "d4"}, {i.D5, "d5"}, {CollectibleType.COLLECTIBLE_D6, "d6"},
