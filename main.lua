@@ -10,10 +10,7 @@ local rng = RNG()
 -- big shoutouts to you genius programmer, im sorry i couldnt find your name
 
 local i = {
-<<<<<<< HEAD
 	-- items
-=======
->>>>>>> 8e49d869441948794aa5e78b749e3abd9dd880d5
 	-- the dice
 	DNeg1 = "D Negative 1", -- rerolls items into black holes
 	D0 = "D0", -- deletes itself from your inventory immediately
@@ -79,7 +76,10 @@ local i = {
 	GreedyBum = "Greedy Bum", -- picks up pennies, drops nothing
 	LilKamikaze = "Lil Kamikaze", -- explodes every 4 rooms
 	LilForgotten = "Lil Forgotten", -- drops moms foot every 6 rooms
-	LilD10 = "Lil D10" -- rerolls enemies every 4 rooms
+	LilD10 = "Lil D10", -- rerolls enemies every 4 rooms
+
+	--RE:Unpentance
+	DInfinityPlus = "D Infinity Plus One" -- d infinity but with all custom dice
 }
 
 local c = {
@@ -1992,6 +1992,78 @@ mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function()
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, i.DeliriousVeggie, room:FindFreePickupSpawnPosition(room:GetCenterPos(), 0, false), zeroVector, nil)
 end, EntityType.ENTITY_HUSH)
 
+local dice = {
+	{i.DNeg1, "d-1"}, --{i.D0, "d0"},
+	{i.DHalf, "dhalf"}, {i.DOtherHalf, "dotherhalf"},
+	{CollectibleType.COLLECTIBLE_D1, "d1"}, --i.D2,
+	{i.D3, "d3"}, {CollectibleType.COLLECTIBLE_D4, "d4"}, {i.D5, "d5"}, {CollectibleType.COLLECTIBLE_D6, "d6"},
+	{CollectibleType.COLLECTIBLE_D7, "d7"}, {CollectibleType.COLLECTIBLE_D8, "d8"}, {i.D9, "d9"},
+	{CollectibleType.COLLECTIBLE_D10, "d10"}, {i.D11, "d11"}, {CollectibleType.COLLECTIBLE_D12, "d12"},
+	{i.D13, "d13"}, {i.D14, "d14"}, {i.D15, "d15"}, {i.D16, "d16"}, {i.D17, "d17"}, {i.D18, "d18"}, {i.D19, "d19"}, {CollectibleType.COLLECTIBLE_D20, "d20"},
+	{i.D21, "d21"}, {i.D22, "d22"}, {i.D23, "d23"}, {i.D69, "d69"}, {i.D99, "d99"}, {CollectibleType.COLLECTIBLE_D100, "d100"}, {i.D120, "d120"},
+	{i.D666, "d666"}, --i.D1337,
+	{i.D2K, "d2k"}, {i.DF, "df"}, {i.FlatD6, "flatd6"}, {i.BigD6, "bigd6"}, {Isaac.GetItemIdByName("The DBean"), "dbean"}
+} -- commented out the ones that are a lil too crazy :)
+
+local dinfo = {
+	sprite = nil
+}
+
+onItemPickup(i.DInfinityPlus, function()
+	dinfo.sprite = Sprite()
+	dinfo.sprite:Load("gfx/animations/dinfinityplus.anm2", true)
+	f.DIDice = dice[api.Random(1,#dice)][1]
+end)
+
+mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, function()
+	if f.DIDice == CollectibleType.COLLECTIBLE_D4 or f.DIDice == CollectibleType.COLLECTIBLE_D100 or f.DIDice == i.D69 or f.DIDice == i.D11 then
+		f.dieCharge = player:GetActiveCharge()
+		player:RemoveCollectible(i.DInfinityPlus)
+		f.dieCharged = true
+	end
+end, i.DInfinityPlus)
+
+onActiveUse(i.DInfinityPlus, function()
+	player:UseActiveItem(f.DIDice, true, false, false, false)
+	player:AddCollectible(i.DInfinityPlus, 0, false)
+	if f.dieCharged then
+		player:SetActiveCharge(f.dieCharge)
+		f.dieCharged = false
+	end
+	f.DIDice = dice[api.Random(1,#dice)][1]
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, function(_, entity)
+	level = game:GetLevel()
+	if level:GetCurses() & LevelCurse.CURSE_OF_BLIND ~= LevelCurse.CURSE_OF_BLIND then
+		if entity.SubType == i.DInfinityPlus then
+			local sprite = entity:GetSprite()
+			sprite:ReplaceSpritesheet(1, "gfx/items/collectibles/dinfinityplus.png")
+			sprite:LoadGraphics()
+		end
+	elseif entity.SubType == i.DInfinityPlus then
+		local sprite = entity:GetSprite()
+		if sprite:GetFilename() ~= "gfx/items/collectibles/questionmark.png" then
+			sprite:ReplaceSpritesheet(1, "gfx/items/collectibles/questionmark.png")
+			sprite:LoadGraphics()
+		end
+	end
+end)
+
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+	player = Isaac.GetPlayer(0)
+	local sprite
+	if player:HasCollectible(i.DInfinityPlus) then
+		sprite = dinfo.sprite
+		for i, v in pairs(dice) do
+			if f.DIDice == dice[i][1] then
+				sprite:Play(dice[i][2], true)
+			end
+		end
+	end
+	if not sprite then return end
+	sprite:RenderLayer(0, Vector(16, 16))
+end)
 -- !!!!!TWINEKTS!!!!!!
 
 mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function()

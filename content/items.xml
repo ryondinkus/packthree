@@ -326,9 +326,14 @@
 	<active name="Delirious Vegetable Peeler"
 		description="Reveal what lies beneath"
 		gfx="deliriousveggie.png"
-		maxcharge="0"
+		maxcharges="0"
 	/>
-
+	<!--RE:Unpentance-->
+	<active name="D Infinity Plus One"
+		description="Reroll forever and ever"
+		gfx="d0.png"
+		maxcharges="2"
+	/>
 
 	<trinket name="Streamdeck"
 		description="Funny sounds"
