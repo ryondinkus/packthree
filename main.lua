@@ -1164,7 +1164,7 @@ end)
 onActiveUse(i.D14, function()
 	room = game:GetRoom()
 	if room:IsClear() and not roomClosed then
-		Isaac.Spawn(13, 0, 0, room:GetCenterPos(), Vector(0,0), nil)
+		--Isaac.Spawn(13, 0, 0, room:GetCenterPos(), Vector(0,0), nil)
 		TriggerRoomAmbush()
 	end
 

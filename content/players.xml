@@ -15,6 +15,7 @@
         portrait="playerportrait_thebean.png"
         bigportrait="playerportraitbig_thebean.png"
         skinColor="-1"
+		costumeSuffix = "bean"
     />
 	<!-- <player name="Aborted Isaac"
         id="0"
