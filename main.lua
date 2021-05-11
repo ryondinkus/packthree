@@ -856,7 +856,7 @@ local function Nearest(pos, entlist)
 end
 
 
-local function bumAI(variant, thingsToCollect, rewards, numNeededPerReward, thingCheck)
+local function bumAI(variant, thingsToCollect, rewards, numNeededPerReward, pickupSound, thingCheck)
     onFamiliarTick(variant, function(fam)
         local data = fam:GetData()
         local collect = GetEntityList(thingsToCollect)
@@ -875,44 +875,49 @@ local function bumAI(variant, thingsToCollect, rewards, numNeededPerReward, thin
         end
 
         if not fam:GetSprite():IsPlaying("Spawn") and not fam:GetSprite():IsFinished("Spawn") and not fam:GetSprite():IsPlaying("PreSpawn") and not fam:GetSprite():IsFinished("PreSpawn") then
-            fam:GetSprite():Play("FloatDown", true)
+            fam:GetSprite():Play("FloatDown", false)
         end
 
         if #validEnts > 0 and not fam:GetSprite():IsPlaying("Spawn") and not fam:GetSprite():IsFinished("Spawn") and not fam:GetSprite():IsPlaying("PreSpawn") and not fam:GetSprite():IsFinished("PreSpawn") then
             local nearest = Nearest(fam.Position, validEnts)
             local dir = (nearest.Position - fam.Position):Normalized()
             fam.Velocity = dir * 2
-            if nearest:GetData().Collected and not nearest:GetSprite():IsPlaying("Collect") then
-                nearest:Remove()
+            if nearest:GetData().Collected and nearest.Variant ~= PickupVariant.PICKUP_COLLECTIBLE and not nearest:GetSprite():IsPlaying("Collect") then
+                 nearest:Remove()
             end
 
-            if not nearest:GetSprite():IsPlaying("Collect") and not nearest:GetData().Collected and entsCollide(fam, nearest) then
+            if (not nearest:GetSprite():IsPlaying("Collect") or nearest.Variant == PickupVariant.PICKUP_COLLECTIBLE) and not nearest:GetData().Collected and entsCollide(fam, nearest) then
                 if not data.Collect then
                     data.Collect = 1
                 else
                     data.Collect = data.Collect + 1
                 end
-
-                if data.Collect > numNeededPerReward then
+				if (nearest.Variant == PickupVariant.PICKUP_COLLECTIBLE) then
+					sfx:Play(pickupSound, 1, 0, false, 1)
+					nearest:Remove()
+				end
+                if data.Collect >= numNeededPerReward then
                     fam:GetSprite():Play("PreSpawn", true)
                 end
 
-                nearest:GetSprite():Play("Collect", true)
+                if nearest.Variant ~= PickupVariant.PICKUP_COLLECTIBLE then
+	 				nearest:GetSprite():Play("Collect", true)
+					sfx:Play(pickupSound, 1, 0, false, 1)
+				end
                 nearest:GetData().Collected = true
             end
         else
             if fam:GetSprite():IsFinished("PreSpawn") then
                 fam:GetSprite():Play("Spawn", true)
+				while data.Collect >= numNeededPerReward do
+					data.Collect = data.Collect - numNeededPerReward
+					local possibleRewards = GetAllEntries(rewards)
+					local reward = possibleRewards[api.Random(1, #possibleRewards)]
+					Isaac.Spawn(reward[1], reward[2] or 0, reward[3] or 0, room:FindFreePickupSpawnPosition(fam.Position, 0, true), RandomVector() * 4, fam)
+				end
             end
 
             if fam:GetSprite():IsFinished("Spawn") then
-                while data.Collect > numNeededPerReward do
-                    data.Collect = data.Collect - numNeededPerReward
-                    local possibleRewards = GetAllEntries(rewards)
-                    local reward = possibleRewards[api.Random(1, #possibleRewards)]
-                    Isaac.Spawn(reward[1], reward[2] or 0, reward[3] or 0, room:FindFreePickupSpawnPosition(fam.Position, 0, true), RandomVector() * 4, fam)
-                end
-
                 fam:GetSprite():Play("FloatDown", true)
             end
 
@@ -1691,7 +1696,9 @@ local enviousBumRewards = {
     }
 }
 
-bumAI(ev.EnviousBum, enviousBumCollects, enviousBumRewards, 1)
+bumAI(ev.EnviousBum, enviousBumCollects, enviousBumRewards, 1, SoundEffect.SOUND_POWERUP1, function(ent)
+	return ent.SpawnerVariant ~= ev.EnviousBum and ent.SubType ~= CollectibleType.COLLECTIBLE_NULL
+end)
 
 local pridefulBumCollects = {
     [tostring(EntityType.ENTITY_PICKUP)] = {
@@ -1707,7 +1714,9 @@ local pridefulBumRewards = {
     }
 }
 
-bumAI(ev.PridefulBum, pridefulBumCollects, pridefulBumRewards, 1)
+bumAI(ev.PridefulBum, pridefulBumCollects, pridefulBumRewards, 1, SoundEffect.SOUND_POWERUP3, function(ent)
+	return ent.SpawnerVariant ~= ev.PridefulBum and ent.SubType ~= CollectibleType.COLLECTIBLE_NULL
+end)
 
 local slothlyBumCollects = {
 
@@ -1727,30 +1736,21 @@ local wrathfulBumCollects = {
 	[tostring(EntityType.ENTITY_PICKUP)] = {
 		[tostring(PickupVariant.PICKUP_BOMB)] = {
 			BombSubType.BOMB_NORMAL,
-			BombSubType.BOMB_DOUBLEPACK,
-			BombSubType.BOMB_GOLDEN,
-			ev.RustedBomb
 		}
 	}
 }
 
 local wrathfulBumRewards = {
-	[tostring(EntityType.ENTITY_PICKUP)] = {
-		[tostring(PickupVariant.PICKUP_BOMB)] = {
-			BombSubType.BOMB_TROLL,
-			BombSubType.BOMB_SUPERTROLL,
-		}
-	}
+	EntityType.ENTITY_BOMBDROP
 }
 
-bumAI(ev.WrathfulBum, wrathfulBumCollects, wrathfulBumRewards, 1)
+bumAI(ev.WrathfulBum, wrathfulBumCollects, wrathfulBumRewards, 1, SoundEffect.SOUND_FETUS_FEET)
 
 local lustfulBumCollects = {
 	[tostring(EntityType.ENTITY_PICKUP)] = {
 		[tostring(PickupVariant.PICKUP_HEART)] = {
 			HeartSubType.HEART_FULL,
 			HeartSubType.HEART_HALF,
-			HeartSubType.HEART_DOUBLEPACK,
 			HeartSubType.HEART_SCARED
 		}
 	}
@@ -1759,15 +1759,12 @@ local lustfulBumCollects = {
 local lustfulBumRewards = {
 	[tostring(EntityType.ENTITY_PICKUP)] = {
 		[tostring(PickupVariant.PICKUP_HEART)] = {
-			HeartSubType.HEART_FULL,
-			HeartSubType.HEART_HALF,
 			HeartSubType.HEART_DOUBLEPACK,
-			HeartSubType.HEART_SCARED
 		}
 	}
 }
 
-bumAI(ev.LustfulBum, lustfulBumCollects, lustfulBumRewards, 1)
+bumAI(ev.LustfulBum, lustfulBumCollects, lustfulBumRewards, 1, SoundEffect.SOUND_BOSS2_BUBBLES)
 
 local gluttonousBumCollects = {
 	[tostring(EntityType.ENTITY_PICKUP)] = {
@@ -1817,7 +1814,7 @@ local greedyBumRewards = {
 
 }
 
-bumAI(ev.GreedyBum, greedyBumCollects, greedyBumRewards, 1)
+bumAI(ev.GreedyBum, greedyBumCollects, greedyBumRewards, 1, SoundEffect.SOUND_PENNYPICKUP)
 
 onFamiliarTick(ev.LilKamikaze, function(fam)
     local data = fam:GetData()
@@ -3002,12 +2999,12 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 	local data = entity:GetData()
 	local sprite = entity:GetSprite()
 
-	if entity.FrameCount <= 0 then
+	if entity.FrameCount <= 1 then
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		data.boss = nil
 		f.deliCoundtown = 60
 		f.attackCountdown = 30
-		sprite:Play("Idle", false)
+		sprite:Play("Blink", true)
 	else
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK | EntityFlag.FLAG_NO_KNOCKBACK)
 		f.deliCountdown = f.deliCountdown - 1
@@ -3031,7 +3028,7 @@ onEntityTick(et.SkinlessDelirium, function(entity)
 				entity.Visible = true
 				entity.MaxHitPoints = 10001
 				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
-				sprite:Play("Blink", false)
+				sprite:Play("Blink", true)
 			else
 				entity.Visible = false
 				entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
